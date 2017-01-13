@@ -17,6 +17,7 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "dependencies": {
+    "eslint": "^3.13.1",
     "prettier": "^0.0.5"
   },
   "devDependencies": {
@@ -30,7 +31,6 @@
     "codecov": "^1.0.1",
     "commitizen": "^2.8.6",
     "cz-conventional-changelog": "^1.2.0",
-    "eslint": "^3.13.1",
     "eslint-config-kentcdodds": "^11.1.0",
     "husky": "0.12.0",
     "jest-cli": "18.1.0",
