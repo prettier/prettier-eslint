@@ -45,7 +45,7 @@ npm install --save-dev prettier-eslint
 
 ### Example
 
-```
+```javascript
 const format = require('prettier-eslint')
 
 // notice, no semicolon in the original text
