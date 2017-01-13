@@ -43,7 +43,14 @@ function prettify(text, formatOptions) {
 }
 
 function eslintFix(text, eslintConfig) {
-  const eslintOptions = {...eslintConfig, fix: true}
+  const eslintOptions = {
+    ...eslintConfig,
+    fix: true,
+    // there's some trouble with `globals`...
+    // I'm pretty sure it's not necessary to have them
+    // for a --fix though so :shrug:
+    globals: [],
+  }
   const eslint = new CLIEngine(eslintOptions)
   try {
     const report = eslint.executeOnText(text)
