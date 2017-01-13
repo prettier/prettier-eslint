@@ -98,6 +98,10 @@ options based on the `eslintConfig` (whether that's provided or derived via `fil
 
 None that I'm aware of. Feel free to file a PR if you know of any other solutions.
 
+## Related
+
+- [`prettier-eslint-atom`](https://github.com/kentcdodds/prettier-eslint-atom) - Atom plugin
+
 ## Contributors
 
 Thanks goes to these people ([emoji key][emojis]):
