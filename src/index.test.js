@@ -91,6 +91,18 @@ test(`when prettier throws, log to console.error but don't fail`, () => {
   prettierMockFormat.throwError = null
 })
 
+test('can disable log on a single call as part of the options', () => {
+  const {format: prettierMockFormat} = prettierMock
+  prettierMockFormat.throwError = new Error('something bad happened')
+
+  format({text: '', disableLog: true})
+  expect(console.error).toHaveBeenCalledTimes(0)
+  format({text: ''})
+  expect(console.error).toHaveBeenCalledTimes(1)
+
+  prettierMockFormat.throwError = null
+})
+
 function getESLintConfigWithDefaultRules(overrides) {
   return {
     rules: {

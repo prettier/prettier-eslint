@@ -89,6 +89,13 @@ The config to use for formatting with ESLint. If this is provided, then `filePat
 The options to pass for formatting with `prettier`. If not provided, `prettier-eslint` will attempt to create the
 options based on the `eslintConfig` (whether that's provided or derived via `filePath`.
 
+
+#### disableLog (?Boolean)
+
+When there's an error, `prettier-eslint` will log it to the console. To disable this behavior you can either pass
+`disableLog` as an option to the call to `format` or you can set: `format.options.disableLog = true` to disable it
+"globally."
+
 ## Inspiration
 
 - [`prettier`][prettier]

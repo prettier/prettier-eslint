@@ -25,11 +25,18 @@ module.exports.options = options
 function format({
   text,
   filePath,
+  disableLog = options.disableLog,
   eslintConfig = getConfig(filePath),
   prettierOptions = getPrettierOptionsFromESLintRules(eslintConfig),
 }) {
+  const originalLogValue = options.disableLog
+  options.disableLog = disableLog
+
   const pretty = prettify(text, prettierOptions)
-  return eslintFix(pretty, eslintConfig)
+  const fixed = eslintFix(pretty, eslintConfig)
+
+  options.disableLog = originalLogValue
+  return fixed
 }
 
 function prettify(text, formatOptions) {
