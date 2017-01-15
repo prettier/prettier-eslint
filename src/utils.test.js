@@ -25,3 +25,13 @@ test('getPrettierOptionsFromESLintRules eslint-config-kentcdodds rules', () => {
     arrowParensAlways: false,
   })
 })
+
+test('getPrettierOptionsFromESLintRules handles value that is not an array', () => {
+  const rules = {
+    'max-len': 2,
+  }
+  const options = getPrettierOptionsFromESLintRules({rules})
+  expect(options).toMatchObject({
+    printWidth: 80,
+  })
+})

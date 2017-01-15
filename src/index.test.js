@@ -55,16 +55,18 @@ tests.forEach(({title, modifier, input, output}) => {
 
 test('failure to get the config results in a console.error call', () => {
   const {getConfigForFile} = eslintMock.mock
-  getConfigForFile.throwError = new Error('Something happened')
-  format({text: ''})
+  const error = 'Something happened'
+  getConfigForFile.throwError = new Error(error)
+  expect(() => format({text: ''})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(1)
   getConfigForFile.throwError = null
 })
 
 test('failure to fix with eslint results in a console.error call', () => {
   const {executeOnText} = eslintMock.mock
-  executeOnText.throwError = new Error('Something happened')
-  format({text: ''})
+  const error = 'Something happened'
+  executeOnText.throwError = new Error(error)
+  expect(() => format({text: ''})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(1)
   executeOnText.throwError = null
 })
@@ -73,8 +75,9 @@ test('console.error will not be called if disableLog is set', () => {
   format.options.disableLog = true
 
   const {getConfigForFile} = eslintMock.mock
-  getConfigForFile.throwError = new Error('Something happened')
-  format({text: ''})
+  const error = 'Something happened'
+  getConfigForFile.throwError = new Error(error)
+  expect(() => format({text: ''})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(0)
 
   format.options.disableLog = false
@@ -83,9 +86,10 @@ test('console.error will not be called if disableLog is set', () => {
 
 test(`when prettier throws, log to console.error but don't fail`, () => {
   const {format: prettierMockFormat} = prettierMock
-  prettierMockFormat.throwError = new Error('something bad happened')
-
-  format({text: ''})
+  const error = 'something bad happened'
+  prettierMockFormat.throwError = new Error(error)
+  
+  expect(() => format({text: ''})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(1)
 
   prettierMockFormat.throwError = null
@@ -93,11 +97,12 @@ test(`when prettier throws, log to console.error but don't fail`, () => {
 
 test('can disable log on a single call as part of the options', () => {
   const {format: prettierMockFormat} = prettierMock
-  prettierMockFormat.throwError = new Error('something bad happened')
-
-  format({text: '', disableLog: true})
+  const error = 'something bad happened'
+  prettierMockFormat.throwError = new Error(error)
+  
+  expect(() => format({text: '', disableLog: true})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(0)
-  format({text: ''})
+  expect(() => format({text: ''})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(1)
 
   prettierMockFormat.throwError = null

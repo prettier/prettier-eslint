@@ -15,6 +15,7 @@ module.exports.options = options
  * @param {String} options.filePath - the path of the file being formatted
  *  can be used in leu of `eslintConfig` (eslint will be used to find the
  *  relevant config for the file)
+ * @param {Boolean} options.disableLog - disables any logging
  * @param {String} options.eslintConfig - the config to use for formatting
  *  with ESLint.
  * @param {Object} options.prettierOptions - the options to pass for
@@ -32,11 +33,12 @@ function format({
   const originalLogValue = options.disableLog
   options.disableLog = disableLog
 
-  const pretty = prettify(text, prettierOptions)
-  const fixed = eslintFix(pretty, eslintConfig)
-
-  options.disableLog = originalLogValue
-  return fixed
+  try {
+    const pretty = prettify(text, prettierOptions)
+    return eslintFix(pretty, eslintConfig)
+  } finally {
+    options.disableLog = originalLogValue
+  }
 }
 
 function prettify(text, formatOptions) {
@@ -45,7 +47,7 @@ function prettify(text, formatOptions) {
   } catch (e) {
     // is this noisy? Try setting options.disableLog to false
     logError('prettier formatting failed', e.stack)
-    return text
+    throw e
   }
 }
 
@@ -70,7 +72,7 @@ function eslintFix(text, eslintConfig) {
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
     logError('eslint fix failed', error.stack)
-    return text
+    throw error.stack
   }
 }
 
@@ -86,8 +88,8 @@ function getConfig(filePath) {
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
     logError('Unable to find config', error.stack)
+    throw error
   }
-  return {rules: {}}
 }
 
 function logError(...args) {
