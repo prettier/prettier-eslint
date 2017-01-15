@@ -44,10 +44,10 @@ function format({
 function prettify(text, formatOptions) {
   try {
     return prettier.format(text, formatOptions)
-  } catch (e) {
+  } catch (error) {
     // is this noisy? Try setting options.disableLog to false
-    logError('prettier formatting failed', e.stack)
-    throw e
+    logError('prettier formatting failed', error.stack)
+    throw error
   }
 }
 
@@ -72,7 +72,7 @@ function eslintFix(text, eslintConfig) {
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
     logError('eslint fix failed', error.stack)
-    throw error.stack
+    throw error
   }
 }
 
