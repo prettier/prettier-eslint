@@ -16,6 +16,24 @@ const tests = [
     output: defaultOutput(),
   },
   {
+    title: 'README example',
+    input: {
+      text: 'const {foo} = bar',
+      eslintConfig: {
+        parserOptions: {
+          ecmaVersion: 7,
+        },
+        rules: {
+          semi: ['error', 'never'],
+        },
+      },
+      prettierOptions: {
+        bracketSpacing: true,
+      },
+    },
+    output: 'const { foo } = bar',
+  },
+  {
     title: 'with a filePath and no config',
     input: {
       text: defaultInputText(),
@@ -110,7 +128,11 @@ test('can disable log on a single call as part of the options', () => {
 
 function getESLintConfigWithDefaultRules(overrides) {
   return {
+    parserOptions: {
+      ecmaVersion: 7,
+    },
     rules: {
+      semi: [2, 'never'],
       'max-len': [2, 120, 2],
       indent: [2, 2, {SwitchCase: 1}],
       quotes: [2, 'single', {avoidEscape: true, allowTemplateLiterals: true}],
