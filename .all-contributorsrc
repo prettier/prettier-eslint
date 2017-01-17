@@ -18,6 +18,33 @@
         "infra",
         "test"
       ]
+    },
+    {
+      "login": "gyandeeps",
+      "name": "Gyandeep Singh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5554486?v=3",
+      "profile": "http://gyandeeps.com",
+      "contributions": [
+        "review"
+      ]
+    },
+    {
+      "login": "exdeniz",
+      "name": "Igor Pnev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/682584?v=3",
+      "profile": "https://github.com/exdeniz",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "demoneaux",
+      "name": "Benjamin Tan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/813865?v=3",
+      "profile": "https://demoneaux.github.io/",
+      "contributions": [
+        "question"
+      ]
     }
   ]
 }

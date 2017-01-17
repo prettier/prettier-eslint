@@ -35,7 +35,8 @@ function format({
 
   try {
     const pretty = prettify(text, prettierOptions)
-    return eslintFix(pretty, eslintConfig)
+    const eslintFixed = eslintFix(pretty, eslintConfig)
+    return eslintFixed
   } finally {
     options.disableLog = originalLogValue
   }
@@ -53,7 +54,13 @@ function prettify(text, formatOptions) {
 
 function eslintFix(text, eslintConfig) {
   const eslintOptions = {
+    // overrideables
+    useEslintrc: false,
+
+    // user-given config
     ...eslintConfig,
+
+    // overrides
     fix: true,
     // there's some trouble with `globals`...
     // I'm pretty sure it's not necessary to have them

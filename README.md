@@ -9,7 +9,7 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -54,6 +54,9 @@ const sourceCode = 'const {foo} = bar'
 const options = {
   text: sourceCode,
   eslintConfig: {
+    parserOptions: {
+      ecmaVersion: 7,
+    },
     rules: {
       semi: ['error', 'never'],
     },
@@ -118,8 +121,8 @@ None that I'm aware of. Feel free to file a PR if you know of any other solution
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) |
-| :---: |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) | [<img src="https://avatars.githubusercontent.com/u/5554486?v=3" width="100px;"/><br /><sub>Gyandeep Singh</sub>](http://gyandeeps.com)<br />👀 | [<img src="https://avatars.githubusercontent.com/u/682584?v=3" width="100px;"/><br /><sub>Igor Pnev</sub>](https://github.com/exdeniz)<br />[🐛](https://github.com/kentcdodds/prettier-eslint/issues?q=author%3Aexdeniz) | [<img src="https://avatars.githubusercontent.com/u/813865?v=3" width="100px;"/><br /><sub>Benjamin Tan</sub>](https://demoneaux.github.io/)<br />💁 |
+| :---: | :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!
