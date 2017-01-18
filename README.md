@@ -125,6 +125,7 @@ None that I'm aware of. Feel free to file a PR if you know of any other solution
 
 ## Related
 
+- [`prettier-eslint-cli`](https://github.com/kentcdodds/prettier-eslint-cli) - Command Line Interface
 - [`prettier-eslint-atom`](https://github.com/kentcdodds/prettier-eslint-atom) - Atom plugin
 
 ## Contributors
