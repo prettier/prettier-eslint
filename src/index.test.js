@@ -1,4 +1,5 @@
 /* eslint no-console:0 */
+import path from 'path'
 import stripIndent from 'strip-indent'
 import eslintMock from 'eslint'
 import prettierMock from 'prettier'
@@ -54,6 +55,9 @@ const tests = [
 
 beforeEach(() => {
   console.error.mockClear()
+  eslintMock.mock.executeOnText.mockClear()
+  eslintMock.mock.getConfigForFile.mockClear()
+  prettierMock.format.mockClear()
 })
 
 tests.forEach(({title, modifier, input, output}) => {
@@ -124,6 +128,40 @@ test('can disable log on a single call as part of the options', () => {
   expect(console.error).toHaveBeenCalledTimes(1)
 
   prettierMockFormat.throwError = null
+})
+
+test('can accept a path to an eslint module and uses that instead.', () => {
+  const eslintPath = path.join(__dirname, './__mocks__/eslint')
+  const {executeOnText} = eslintMock.mock
+  format({text: '', eslintPath})
+  expect(executeOnText).toHaveBeenCalledTimes(1)
+})
+
+test('fails with an error if the eslint module cannot be resolved.', () => {
+  const eslintPath = path.join(__dirname, './__mocks__/non-existant-eslint-module')
+  expect(() => format({text: '', eslintPath})).toThrowError(/non-existant-eslint-module/)
+  expect(console.error).toHaveBeenCalledTimes(1)
+  expect(console.error).toHaveBeenCalledWith(
+    'prettier-eslint error:',
+    expect.stringMatching(/ESLint.*?eslintPath.*non-existant-eslint-module/),
+  )
+})
+
+test('can accept a path to a prettier module and uses that instead.', () => {
+  const prettierPath = path.join(__dirname, './__mocks__/prettier')
+  const {format: prettierMockFormat} = prettierMock
+  format({text: '', prettierPath})
+  expect(prettierMockFormat).toHaveBeenCalledTimes(1)
+})
+
+test('fails with an error if the prettier module cannot be resolved.', () => {
+  const prettierPath = path.join(__dirname, './__mocks__/non-existant-prettier-module')
+  expect(() => format({text: '', prettierPath})).toThrowError(/non-existant-prettier-module/)
+  expect(console.error).toHaveBeenCalledTimes(1)
+  expect(console.error).toHaveBeenCalledWith(
+    'prettier-eslint error:',
+    expect.stringMatching(/prettier.*?prettierPath.*non-existant-prettier-module/),
+  )
 })
 
 function getESLintConfigWithDefaultRules(overrides) {
