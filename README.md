@@ -98,6 +98,17 @@ When there's an error, `prettier-eslint` will log it to the console. To disable 
 `disableLog` as an option to the call to `format` or you can set: `format.options.disableLog = true` to disable it
 "globally."
 
+#### eslintPath (?String)
+
+By default, `prettier-eslint` will try to find your project's version of `eslint` (and `prettier`). If it cannot find
+one, then it will use the version that `prettier-eslint` has installed locally. If you'd like to specify a path to the
+`eslint` module you would like to have `prettier-eslint` use, then you can provide the full path to it with the
+`eslintPath` option.
+
+#### prettierPath (?String)
+
+This is basically the same as `eslintPath` except for the `prettier` module.
+
 ### throws
 
 `prettier-eslint` will propagate errors when either `prettier` or `eslint` fails for one reason or another. In addition
