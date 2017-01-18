@@ -38,8 +38,11 @@ function format({
   options.disableLog = disableLog
 
   try {
+    // console.log('text', text)
     const pretty = prettify(text, prettierOptions, prettierPath)
+    // console.log('pretty', pretty)
     const eslintFixed = eslintFix(pretty, eslintConfig, eslintPath)
+    // console.log('eslintFixed', eslintFixed)
     return eslintFixed
   } finally {
     options.disableLog = originalLogValue
@@ -81,7 +84,9 @@ function eslintFix(text, eslintConfig, eslintPath) {
   const eslint = getESLintCLIEngine(eslintPath, eslintOptions)
   try {
     const report = eslint.executeOnText(text)
-    const [{output}] = report.results
+    // default the output to text because if there's nothing
+    // to fix, eslint doesn't provide `output`
+    const [{output = text}] = report.results
     // NOTE: We're ignoring linting errors/warnings here and
     // defaulting to the given text if there are any
     // because all we're trying to do is fix what we can.

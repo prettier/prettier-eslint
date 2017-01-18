@@ -49,6 +49,14 @@ const tests = [
     },
     output: defaultOutput(),
   },
+  {
+    title: 'with code that needs no fixing',
+    input: {
+      text: 'var [foo, {bar}] = window.APP;',
+      eslintConfig: {rules: {}},
+    },
+    output: 'var [foo, {bar}] = window.APP;',
+  },
   // if you have a bug report or something,
   // go ahead and add a test case here
 ]
