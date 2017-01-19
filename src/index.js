@@ -1,4 +1,3 @@
-
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
 import path from 'path'
 import {getPrettierOptionsFromESLintRules} from './utils'
@@ -39,13 +38,7 @@ function format({
 }) {
   const originalLogValue = options.disableLog
   options.disableLog = disableLog
-  if (sillyLogs) {
-    console.log('😜 logs for eslintConfig and prettierOptions:')
-    console.dir({
-      eslintConfig,
-      prettierOptions,
-    }, null, true)
-  }
+  logSilliness(sillyLogs, eslintConfig, prettierOptions)
 
   try {
     // console.log('text', text)
@@ -138,5 +131,15 @@ function getESLintCLIEngine(eslintPath, eslintOptions) {
 function logError(...args) {
   if (!options.disableLog) {
     console.error('prettier-eslint error:', ...args)
+  }
+}
+
+function logSilliness(sillyLogs, eslintConfig, prettierOptions) {
+  if (sillyLogs) {
+    console.log('😜 logs for eslintConfig and prettierOptions:')
+    console.dir({
+      eslintConfig,
+      prettierOptions,
+    }, null, true)
   }
 }

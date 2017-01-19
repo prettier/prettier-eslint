@@ -125,7 +125,12 @@ test('console receives output of both eslintConfig and prettierOptions when sill
   format({text: ''})
   // TODO: fix this test, since it fails on the matcher toHaveBeenCalledTimes
   expect(console.log).toHaveBeenCalledWith('😜 logs for eslintConfig and prettierOptions:')
-  expect(console.dir).toHaveBeenCalled()
+  expect(console.log).toHaveBeenCalledTimes(1)
+  expect(console.dir).toHaveBeenCalledWith(expect.objectContaining({
+    eslintConfig: expect.anything(),
+    prettierOptions: expect.anything(),
+  }), null, true)
+  expect(console.dir).toHaveBeenCalledTimes(1)
 
   format.options.sillyLogs = false
 })
