@@ -109,6 +109,12 @@ one, then it will use the version that `prettier-eslint` has installed locally. 
 
 This is basically the same as `eslintPath` except for the `prettier` module.
 
+#### sillyLogs (?Boolean)
+
+When set to `true`, `prettier-eslint` will dump the contents of both the detected `eslintConfig` and `prettierOptions` 
+configuration objects to the console. This defaults to `false` as it is primarily for debugging.
+"globally."
+
 ### throws
 
 `prettier-eslint` will propagate errors when either `prettier` or `eslint` fails for one reason or another. In addition

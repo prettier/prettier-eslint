@@ -114,6 +114,17 @@ test('console.error will not be called if disableLog is set', () => {
   getConfigForFile.throwError = null
 })
 
+test('console receives output of both eslintConfig and prettierOptions when sillyLogs is set', () => {
+  format.options.sillyLogs = true
+
+  format({text: ''})
+  // TODO: fix this test, since it fails on the matcher toHaveBeenCalledTimes
+  expect(console.log).toHaveBeenCalledTimes(1)
+  expect(console.dir).toHaveBeenCalledTimes(1)
+
+  format.options.sillyLogs = false
+})
+
 test(`when prettier throws, log to console.error but don't fail`, () => {
   const {format: prettierMockFormat} = prettierMock
   const error = 'something bad happened'
