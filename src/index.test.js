@@ -6,6 +6,8 @@ import prettierMock from 'prettier'
 import format from './' // eslint-disable-line import/default
 
 console.error = jest.fn()
+console.log = jest.fn()
+console.dir = jest.fn()
 
 const tests = [
   {
@@ -63,6 +65,8 @@ const tests = [
 
 beforeEach(() => {
   console.error.mockClear()
+  console.log.mockClear()
+  console.dir.mockClear()
   eslintMock.mock.executeOnText.mockClear()
   eslintMock.mock.getConfigForFile.mockClear()
   prettierMock.format.mockClear()
@@ -112,6 +116,23 @@ test('console.error will not be called if disableLog is set', () => {
 
   format.options.disableLog = false
   getConfigForFile.throwError = null
+})
+
+test('console receives output of both eslintConfig and prettierOptions when sillyLogs is set', () => {
+  format.options.sillyLogs = true
+
+  // expect(format({text: ''})).toHaveBeenCalledWith(console.log, console.dir)
+  format({text: ''})
+  // TODO: fix this test, since it fails on the matcher toHaveBeenCalledTimes
+  expect(console.log).toHaveBeenCalledWith('😜 logs for eslintConfig and prettierOptions:')
+  expect(console.log).toHaveBeenCalledTimes(1)
+  expect(console.dir).toHaveBeenCalledWith(expect.objectContaining({
+    eslintConfig: expect.anything(),
+    prettierOptions: expect.anything(),
+  }), null, true)
+  expect(console.dir).toHaveBeenCalledTimes(1)
+
+  format.options.sillyLogs = false
 })
 
 test(`when prettier throws, log to console.error but don't fail`, () => {

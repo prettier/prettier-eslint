@@ -2,7 +2,7 @@
 import path from 'path'
 import {getPrettierOptionsFromESLintRules} from './utils'
 
-const options = {disableLog: false}
+const options = {disableLog: false, sillyLogs: false}
 // CommonJS + ES6 modules... is it worth it? Probably not...
 module.exports = format
 module.exports.options = options
@@ -23,6 +23,7 @@ module.exports.options = options
  * @param {Object} options.prettierOptions - the options to pass for
  *  formatting with `prettier`. If not provided, prettier-eslint will attempt
  *  to create the options based on the eslintConfig
+ * @param {Boolean} options.sillyLogs - enables silly logging (default: false)
  * @return {String} - the formatted string
  */
 function format({
@@ -33,9 +34,11 @@ function format({
   disableLog = options.disableLog,
   eslintConfig = getConfig(filePath, eslintPath),
   prettierOptions = getPrettierOptionsFromESLintRules(eslintConfig),
+  sillyLogs = options.sillyLogs,
 }) {
   const originalLogValue = options.disableLog
   options.disableLog = disableLog
+  logSilliness(sillyLogs, eslintConfig, prettierOptions)
 
   try {
     // console.log('text', text)
@@ -128,5 +131,15 @@ function getESLintCLIEngine(eslintPath, eslintOptions) {
 function logError(...args) {
   if (!options.disableLog) {
     console.error('prettier-eslint error:', ...args)
+  }
+}
+
+function logSilliness(sillyLogs, eslintConfig, prettierOptions) {
+  if (sillyLogs) {
+    console.log('😜 logs for eslintConfig and prettierOptions:')
+    console.dir({
+      eslintConfig,
+      prettierOptions,
+    }, null, true)
   }
 }
