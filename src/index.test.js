@@ -40,7 +40,7 @@ const tests = [
     title: 'with a filePath and no config',
     input: {
       text: defaultInputText(),
-      filePath: '/mock/default-config',
+      filePath: path.resolve('./mock/default-config'),
     },
     output: defaultOutput(),
   },
@@ -70,6 +70,7 @@ beforeEach(() => {
   eslintMock.mock.executeOnText.mockClear()
   eslintMock.mock.getConfigForFile.mockClear()
   prettierMock.format.mockClear()
+  global.__PRETTIER_ESLINT_TEST_STATE__ = {}
 })
 
 tests.forEach(({title, modifier, input, output}) => {
@@ -139,7 +140,7 @@ test(`when prettier throws, log to console.error but don't fail`, () => {
   const {format: prettierMockFormat} = prettierMock
   const error = 'something bad happened'
   prettierMockFormat.throwError = new Error(error)
-  
+
   expect(() => format({text: ''})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(1)
 
@@ -150,7 +151,7 @@ test('can disable log on a single call as part of the options', () => {
   const {format: prettierMockFormat} = prettierMock
   const error = 'something bad happened'
   prettierMockFormat.throwError = new Error(error)
-  
+
   expect(() => format({text: '', disableLog: true})).toThrowError(error)
   expect(console.error).toHaveBeenCalledTimes(0)
   expect(() => format({text: ''})).toThrowError(error)
@@ -191,6 +192,15 @@ test('fails with an error if the prettier module cannot be resolved.', () => {
     'prettier-eslint error:',
     expect.stringMatching(/prettier.*?prettierPath.*non-existant-prettier-module/),
   )
+})
+
+test('resolves to the eslint module relative to the given filePath', () => {
+  const filePath = require.resolve('../tests/fixtures/paths/foo.js')
+  format({text: '', filePath})
+  expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
+    eslintPath: require.resolve('../tests/fixtures/paths/node_modules/eslint/index.js'),
+    prettierPath: require.resolve('../tests/fixtures/paths/node_modules/prettier/index.js'),
+  })
 })
 
 function getESLintConfigWithDefaultRules(overrides) {

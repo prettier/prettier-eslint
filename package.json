@@ -18,7 +18,8 @@
   "license": "MIT",
   "dependencies": {
     "eslint": "^3.13.1",
-    "prettier": "^0.0.9"
+    "prettier": "^0.0.9",
+    "require-relative": "^0.8.7"
   },
   "devDependencies": {
     "all-contributors-cli": "^3.0.7",

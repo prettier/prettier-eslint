@@ -101,10 +101,10 @@ When there's an error, `prettier-eslint` will log it to the console. To disable 
 
 #### eslintPath (?String)
 
-By default, `prettier-eslint` will try to find your project's version of `eslint` (and `prettier`). If it cannot find
-one, then it will use the version that `prettier-eslint` has installed locally. If you'd like to specify a path to the
-`eslint` module you would like to have `prettier-eslint` use, then you can provide the full path to it with the
-`eslintPath` option.
+By default, `prettier-eslint` will try to find the relevant `eslint` (and `prettier`) module based on the `filePath`. If
+it cannot find one, then it will use the version that `prettier-eslint` has installed locally. If you'd like to specify
+a path to the `eslint` module you would like to have `prettier-eslint` use, then you can provide the full path to it
+with the `eslintPath` option.
 
 #### prettierPath (?String)
 
@@ -112,7 +112,7 @@ This is basically the same as `eslintPath` except for the `prettier` module.
 
 #### sillyLogs (?Boolean)
 
-When set to `true`, `prettier-eslint` will dump the contents of both the detected `eslintConfig` and `prettierOptions` 
+When set to `true`, `prettier-eslint` will dump the contents of both the detected `eslintConfig` and `prettierOptions`
 configuration objects to the console. This defaults to `false` as it is primarily for debugging.
 "globally."
 

@@ -1,5 +1,6 @@
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
 import path from 'path'
+import requireRelative from 'require-relative'
 import {getPrettierOptionsFromESLintRules} from './utils'
 
 const options = {disableLog: false, sillyLogs: false}
@@ -29,8 +30,8 @@ module.exports.options = options
 function format({
   text,
   filePath,
-  eslintPath = require.resolve('eslint'),
-  prettierPath = require.resolve('prettier'),
+  eslintPath = getModulePath(filePath, 'eslint'),
+  prettierPath = getModulePath(filePath, 'prettier'),
   disableLog = options.disableLog,
   eslintConfig = getConfig(filePath, eslintPath),
   prettierOptions = getPrettierOptionsFromESLintRules(eslintConfig),
@@ -116,6 +117,10 @@ function getConfig(filePath, eslintPath) {
     logError('Unable to find config', error.stack)
     throw error
   }
+}
+
+function getModulePath(filePath = __filename, moduleName) {
+  return requireRelative.resolve(moduleName, filePath)
 }
 
 function getESLintCLIEngine(eslintPath, eslintOptions) {

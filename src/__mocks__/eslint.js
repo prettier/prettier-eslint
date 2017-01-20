@@ -29,11 +29,8 @@ function mockGetConfigForFile(filePath) {
   if (mockGetConfigForFileSpy.throwError) {
     throw mockGetConfigForFileSpy.throwError
   }
-  if (!filePath) {
-    filePath = '/mock/default-config'
-  }
-  return {
-    '/mock/default-config': {
+  if (!filePath || filePath.includes('default-config')) {
+    return {
       rules: {
         semi: [2, 'never'],
         'max-len': [2, 120, 2],
@@ -48,8 +45,16 @@ function mockGetConfigForFile(filePath) {
         }],
         'arrow-parens': [2, 'as-needed'],
       },
-    },
-  }[filePath]
+    }
+  } else if (filePath.includes('fixtures/paths')) {
+    return {
+      rules: {},
+    }
+  } else {
+    throw new Error(
+      `Your mock filePath (${filePath}) does not have a handler for finding the config`,
+    )
+  }
 }
 
 function mockExecuteOnText(...args) {
