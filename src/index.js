@@ -120,7 +120,12 @@ function getConfig(filePath, eslintPath) {
 }
 
 function getModulePath(filePath = __filename, moduleName) {
-  return requireRelative.resolve(moduleName, filePath)
+  try {
+    return requireRelative.resolve(moduleName, filePath)
+  } catch (error) {
+    logError(`There was a problem finding the ${moduleName} module. Using prettier-eslint's version`, error.stack)
+    return require.resolve(moduleName)
+  }
 }
 
 function getESLintCLIEngine(eslintPath, eslintOptions) {

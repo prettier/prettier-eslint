@@ -10,6 +10,7 @@ Object.assign(prettier, {
 })
 
 function mockFormat(...args) {
+  global.__PRETTIER_ESLINT_TEST_STATE__.prettierPath = __filename
   if (mockFormatSpy.throwError) {
     throw mockFormatSpy.throwError
   }

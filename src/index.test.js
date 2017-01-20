@@ -203,6 +203,18 @@ test('resolves to the eslint module relative to the given filePath', () => {
   })
 })
 
+test('resolves to the local eslint module if none is found via the filePath', () => {
+  const filePath = '/blah-blah/default-config'
+  format({text: '', filePath})
+  expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
+    // without Jest's mocking, these would actually resolve to the
+    // project modules :) The fact that jest's mocking is being
+    // applied is good enough for this test.
+    eslintPath: require.resolve('./__mocks__/eslint'),
+    prettierPath: require.resolve('./__mocks__/prettier'),
+  })
+})
+
 function getESLintConfigWithDefaultRules(overrides) {
   return {
     parserOptions: {

@@ -52,7 +52,7 @@
     }
   },
   "jest": {
-    "testEnvironment": "node",
+    "testEnvironment": "jest-environment-node",
     "coverageThreshold": {
       "global": {
         "branches": 100,
