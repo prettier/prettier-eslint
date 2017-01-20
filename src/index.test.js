@@ -1,9 +1,9 @@
-/* eslint no-console:0 */
+/* eslint no-console:0, import/default:0 */
 import path from 'path'
 import stripIndent from 'strip-indent'
 import eslintMock from 'eslint'
 import prettierMock from 'prettier'
-import format from './' // eslint-disable-line import/default
+import format from './'
 
 console.error = jest.fn()
 console.log = jest.fn()
@@ -23,16 +23,10 @@ const tests = [
     input: {
       text: 'const {foo} = bar',
       eslintConfig: {
-        parserOptions: {
-          ecmaVersion: 7,
-        },
-        rules: {
-          semi: ['error', 'never'],
-        },
+        parserOptions: {ecmaVersion: 7},
+        rules: {semi: ['error', 'never']},
       },
-      prettierOptions: {
-        bracketSpacing: true,
-      },
+      prettierOptions: {bracketSpacing: true},
     },
     output: 'const { foo } = bar',
   },
@@ -46,21 +40,16 @@ const tests = [
   },
   {
     title: 'without a filePath and no config',
-    input: {
-      text: defaultInputText(),
-    },
+    input: {text: defaultInputText()},
     output: defaultOutput(),
-  },
-  {
-    title: 'with code that needs no fixing',
-    input: {
-      text: 'var [foo, {bar}] = window.APP;',
-      eslintConfig: {rules: {}},
-    },
-    output: 'var [foo, {bar}] = window.APP;',
   },
   // if you have a bug report or something,
   // go ahead and add a test case here
+  {
+    title: 'with code that needs no fixing',
+    input: {text: 'var [foo, {bar}] = window.APP;', eslintConfig: {rules: {}}},
+    output: 'var [foo, {bar}] = window.APP;',
+  },
 ]
 
 beforeEach(() => {
@@ -119,18 +108,17 @@ test('console.error will not be called if disableLog is set', () => {
   getConfigForFile.throwError = null
 })
 
-test('console receives output of both eslintConfig and prettierOptions when sillyLogs is set', () => {
+test('console receives silly output when sillyLogs is set', () => {
   format.options.sillyLogs = true
-
-  // expect(format({text: ''})).toHaveBeenCalledWith(console.log, console.dir)
   format({text: ''})
-  // TODO: fix this test, since it fails on the matcher toHaveBeenCalledTimes
-  expect(console.log).toHaveBeenCalledWith('😜 logs for eslintConfig and prettierOptions:')
+  const sillyOutput = 'silly logs for eslintConfig and prettierOptions:'
+  expect(console.log).toHaveBeenCalledWith(sillyOutput)
   expect(console.log).toHaveBeenCalledTimes(1)
-  expect(console.dir).toHaveBeenCalledWith(expect.objectContaining({
+  const dirObj = expect.objectContaining({
     eslintConfig: expect.anything(),
     prettierOptions: expect.anything(),
-  }), null, true)
+  })
+  expect(console.dir).toHaveBeenCalledWith(dirObj, null, true)
   expect(console.dir).toHaveBeenCalledTimes(1)
 
   format.options.sillyLogs = false
@@ -168,13 +156,23 @@ test('can accept a path to an eslint module and uses that instead.', () => {
 })
 
 test('fails with an error if the eslint module cannot be resolved.', () => {
-  const eslintPath = path.join(__dirname, './__mocks__/non-existant-eslint-module')
-  expect(() => format({text: '', eslintPath})).toThrowError(/non-existant-eslint-module/)
-  expect(console.error).toHaveBeenCalledTimes(1)
-  expect(console.error).toHaveBeenCalledWith(
-    'prettier-eslint error:',
-    expect.stringMatching(/ESLint.*?eslintPath.*non-existant-eslint-module/),
+  const eslintPath = path.join(
+    __dirname,
+    './__mocks__/non-existant-eslint-module',
   )
+
+  expect(
+    () => format({text: '', eslintPath}),
+  ).toThrowError(/non-existant-eslint-module/)
+  expect(console.error).toHaveBeenCalledTimes(1)
+
+  const errorString = expect.stringMatching(
+    /ESLint.*?eslintPath.*non-existant-eslint-module/,
+  )
+
+  expect(
+    console.error,
+  ).toHaveBeenCalledWith('prettier-eslint error:', errorString)
 })
 
 test('can accept a path to a prettier module and uses that instead.', () => {
@@ -185,25 +183,37 @@ test('can accept a path to a prettier module and uses that instead.', () => {
 })
 
 test('fails with an error if the prettier module cannot be resolved.', () => {
-  const prettierPath = path.join(__dirname, './__mocks__/non-existant-prettier-module')
-  expect(() => format({text: '', prettierPath})).toThrowError(/non-existant-prettier-module/)
-  expect(console.error).toHaveBeenCalledTimes(1)
-  expect(console.error).toHaveBeenCalledWith(
-    'prettier-eslint error:',
-    expect.stringMatching(/prettier.*?prettierPath.*non-existant-prettier-module/),
+  const prettierPath = path.join(
+    __dirname,
+    './__mocks__/non-existant-prettier-module',
   )
+  expect(
+    () => format({text: '', prettierPath}),
+  ).toThrowError(/non-existant-prettier-module/)
+  expect(console.error).toHaveBeenCalledTimes(1)
+  const errorString = expect.stringMatching(
+    /prettier.*?prettierPath.*non-existant-prettier-module/,
+  )
+  expect(
+    console.error,
+  ).toHaveBeenCalledWith('prettier-eslint error:', errorString)
 })
 
 test('resolves to the eslint module relative to the given filePath', () => {
   const filePath = require.resolve('../tests/fixtures/paths/foo.js')
   format({text: '', filePath})
-  expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
-    eslintPath: require.resolve('../tests/fixtures/paths/node_modules/eslint/index.js'),
-    prettierPath: require.resolve('../tests/fixtures/paths/node_modules/prettier/index.js'),
-  })
+  const stateObj = {
+    eslintPath: require.resolve(
+      '../tests/fixtures/paths/node_modules/eslint/index.js',
+    ),
+    prettierPath: require.resolve(
+      '../tests/fixtures/paths/node_modules/prettier/index.js',
+    ),
+  }
+  expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj)
 })
 
-test('resolves to the local eslint module if none is found via the filePath', () => {
+test('resolves to the local eslint module', () => {
   const filePath = '/blah-blah/default-config'
   format({text: '', filePath})
   expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
@@ -217,21 +227,22 @@ test('resolves to the local eslint module if none is found via the filePath', ()
 
 function getESLintConfigWithDefaultRules(overrides) {
   return {
-    parserOptions: {
-      ecmaVersion: 7,
-    },
+    parserOptions: {ecmaVersion: 7},
     rules: {
       semi: [2, 'never'],
       'max-len': [2, 120, 2],
       indent: [2, 2, {SwitchCase: 1}],
       quotes: [2, 'single', {avoidEscape: true, allowTemplateLiterals: true}],
-      'comma-dangle': [2, {
-        arrays: 'always-multiline',
-        objects: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'always-multiline',
-        functions: 'always-multiline',
-      }],
+      'comma-dangle': [
+        2,
+        {
+          arrays: 'always-multiline',
+          objects: 'always-multiline',
+          imports: 'always-multiline',
+          exports: 'always-multiline',
+          functions: 'always-multiline',
+        },
+      ],
       'arrow-parens': [2, 'as-needed'],
       ...overrides,
     },

@@ -1,4 +1,5 @@
-export {getPrettierOptionsFromESLintRules} // eslint-disable-line import/prefer-default-export
+/* eslint import/prefer-default-export:0 */
+export {getPrettierOptionsFromESLintRules}
 
 /**
  * This accepts an eslintConfig object and converts
@@ -9,10 +10,12 @@ function getPrettierOptionsFromESLintRules(eslintConfig) {
   const options = {
     printWidth: getPrintWidth(rules),
     tabWidth: getTabWidth(rules),
-    useFlowParser: false, // TODO: handle flow parser config
+    // TODO: handle flow parser config
+    useFlowParser: false,
     singleQuote: getSingleQuote(rules),
     trailingComma: getTrailingComma(rules),
-    bracketSpacing: false, // TODO: handle this one
+    // TODO: handle braketSpacing
+    bracketSpacing: false,
     arrowParensAlways: getArrowParens(rules),
   }
 

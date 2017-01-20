@@ -16,7 +16,7 @@ module.exports.options = options
  *  relevant config for the file)
  * @param {String} options.eslintPath - the path to the eslint module to use.
  *   Will default to require.resolve('eslint')
- * @param {String} options.prettierPath - the path to the prettier module to use.
+ * @param {String} options.prettierPath - the path to the prettier module.
  *   Will default to require.resovlve('prettierPath')
  * @param {Boolean} options.disableLog - disables any logging
  * @param {String} options.eslintConfig - the config to use for formatting
@@ -27,16 +27,18 @@ module.exports.options = options
  * @param {Boolean} options.sillyLogs - enables silly logging (default: false)
  * @return {String} - the formatted string
  */
-function format({
-  text,
-  filePath,
-  eslintPath = getModulePath(filePath, 'eslint'),
-  prettierPath = getModulePath(filePath, 'prettier'),
-  disableLog = options.disableLog,
-  eslintConfig = getConfig(filePath, eslintPath),
-  prettierOptions = getPrettierOptionsFromESLintRules(eslintConfig),
-  sillyLogs = options.sillyLogs,
-}) {
+function format(
+  {
+    text,
+    filePath,
+    eslintPath = getModulePath(filePath, 'eslint'),
+    prettierPath = getModulePath(filePath, 'prettier'),
+    disableLog = options.disableLog,
+    eslintConfig = getConfig(filePath, eslintPath),
+    prettierOptions = getPrettierOptionsFromESLintRules(eslintConfig),
+    sillyLogs = options.sillyLogs,
+  },
+) {
   const originalLogValue = options.disableLog
   options.disableLog = disableLog
   logSilliness(sillyLogs, eslintConfig, prettierOptions)
@@ -58,7 +60,11 @@ function prettify(text, formatOptions, prettierPath) {
   try {
     prettier = require(prettierPath)
   } catch (error) {
-    logError(`There was trouble getting prettier. Is "prettierPath: ${prettierPath}" a correct path to the prettier module?`)
+    logError(
+      'There was trouble getting prettier. ' +
+        `Is "prettierPath: ${prettierPath}" ` +
+        'a correct path to the prettier module?',
+    )
     throw error
   }
   try {
@@ -74,10 +80,8 @@ function eslintFix(text, eslintConfig, eslintPath) {
   const eslintOptions = {
     // overrideables
     useEslintrc: false,
-
     // user-given config
     ...eslintConfig,
-
     // overrides
     fix: true,
     // there's some trouble with `globals`...
@@ -123,7 +127,11 @@ function getModulePath(filePath = __filename, moduleName) {
   try {
     return requireRelative.resolve(moduleName, filePath)
   } catch (error) {
-    logError(`There was a problem finding the ${moduleName} module. Using prettier-eslint's version`, error.stack)
+    logError(
+      `There was a problem finding the ${moduleName} ` +
+        `module. Using prettier-eslint's version`,
+      error.stack,
+    )
     return require.resolve(moduleName)
   }
 }
@@ -133,7 +141,10 @@ function getESLintCLIEngine(eslintPath, eslintOptions) {
     const {CLIEngine} = require(eslintPath)
     return new CLIEngine(eslintOptions)
   } catch (error) {
-    logError(`There was trouble creating the ESLint CLIEngine. Is "eslintPath: ${eslintPath}" a correct path to the ESLint module?`)
+    logError(
+      'There was trouble creating the ESLint CLIEngine. ' +
+        `Is "eslintPath: ${eslintPath}" a correct path to the ESLint module?`,
+    )
     throw error
   }
 }
@@ -146,10 +157,7 @@ function logError(...args) {
 
 function logSilliness(sillyLogs, eslintConfig, prettierOptions) {
   if (sillyLogs) {
-    console.log('😜 logs for eslintConfig and prettierOptions:')
-    console.dir({
-      eslintConfig,
-      prettierOptions,
-    }, null, true)
+    console.log('silly logs for eslintConfig and prettierOptions:')
+    console.dir({eslintConfig, prettierOptions}, null, true)
   }
 }
