@@ -22,9 +22,10 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 
 ## The problem
 
-[`prettier`][prettier] can do some really fantastic automatic formatting. And one of the nice things about it is how
-opinionated it is. Unfortunately it's either not opinionated enough in some respects and other opinions differ from my
-own.
+The [`fix`][fix] feature of [`eslint`][eslint] is pretty great and can auto-format/fix much of your code according to
+your ESLint config. [`prettier`][prettier] is a more powerful automatic formatter. One of the nice things about prettier
+is how opinionated it is. Unfortunately it's not opinionated enough and/or some opinions differ from my own. So after
+prettier formats the code, I start getting linting errors.
 
 ## This solution
 
@@ -151,6 +152,7 @@ MIT
 
 [prettier]: https://github.com/jlongster/prettier
 [eslint]: http://eslint.org/
+[fix]: http://eslint.org/docs/user-guide/command-line-interface#fix
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
 [build-badge]: https://img.shields.io/travis/kentcdodds/prettier-eslint.svg?style=flat-square
