@@ -4,4 +4,3 @@ coverage
 dist
 .opt-in
 .opt-out
-yarn.lock

@@ -26,7 +26,7 @@ module.exports = {
     },
     validate: {
       description: 'This runs several scripts to make sure things look good before committing or on clean install',
-      script: 'p-s -p lint,build,test',
+      script: 'nps -p lint,build,test',
     },
     addContributor: {
       description: 'When new people contribute to the project, run this',

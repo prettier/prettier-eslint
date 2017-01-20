@@ -7,13 +7,11 @@ notifications:
   email: false
 node_js:
   - '6'
-before_script:
-  - npm prune
 script:
-  - npm start validate
+  - yarn start validate
 after_success:
-  - npm start report-coverage
-  - npm start release
+  - yarn start report-coverage
+  - yarn start release
 branches:
   only:
     - master
