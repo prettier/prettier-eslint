@@ -3930,9 +3930,9 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-0.0.9.tgz#af32f6ad26b67365ebf2f4b48f7149dd1a21d177"
+prettier@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-0.0.10.tgz#f27303bc130ed769a2708b11c235ebae97092f14"
   dependencies:
     ast-types "git+https://github.com/jlongster/ast-types.git"
     babylon "6.15.0"
