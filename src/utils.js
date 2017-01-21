@@ -36,7 +36,8 @@ function getSingleQuote(rules) {
 }
 
 function getTrailingComma(rules) {
-  return getRuleValue(rules, 'comma-dangle', true)
+  const value = getRuleValue(rules, 'comma-dangle', 'always')
+  return value !== 'never'
 }
 
 function getArrowParens(rules) {
