@@ -158,6 +158,6 @@ function logError(...args) {
 function logSilliness(sillyLogs, eslintConfig, prettierOptions) {
   if (sillyLogs) {
     console.log('silly logs for eslintConfig and prettierOptions:')
-    console.dir({eslintConfig, prettierOptions}, null, true)
+    console.dir({eslintConfig, prettierOptions}, {depth: null, colors: true})
   }
 }

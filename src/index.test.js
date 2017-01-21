@@ -115,10 +115,11 @@ test('console receives silly output when sillyLogs is set', () => {
   expect(console.log).toHaveBeenCalledWith(sillyOutput)
   expect(console.log).toHaveBeenCalledTimes(1)
   const dirObj = expect.objectContaining({
-    eslintConfig: expect.anything(),
-    prettierOptions: expect.anything(),
+    eslintConfig: expect.objectContaining({}),
+    prettierOptions: expect.objectContaining({}),
   })
-  expect(console.dir).toHaveBeenCalledWith(dirObj, null, true)
+  const options = {depth: null, colors: true}
+  expect(console.dir).toHaveBeenCalledWith(dirObj, options)
   expect(console.dir).toHaveBeenCalledTimes(1)
 
   format.options.sillyLogs = false
