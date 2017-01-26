@@ -57,6 +57,15 @@
         "doc",
         "test"
       ]
+    },
+    {
+      "login": "lydell",
+      "name": "Simon Lydell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2142817?v=3",
+      "profile": "https://github.com/lydell",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
