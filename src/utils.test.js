@@ -21,11 +21,10 @@ const getPrettierOptionsFromESLintRulesTests = [
     options: {
       printWidth: 120,
       tabWidth: 2,
-      useFlowParser: false,
+      parser: 'babylon',
       singleQuote: true,
       trailingComma: true,
       bracketSpacing: false,
-      arrowParensAlways: false,
     },
   },
   {rules: {'max-len': 2}, options: {printWidth: 80}},

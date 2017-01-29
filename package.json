@@ -18,13 +18,13 @@
   "license": "MIT",
   "dependencies": {
     "eslint": "^3.13.1",
-    "prettier": "^0.0.10",
+    "prettier": "^0.13.1",
     "require-relative": "^0.8.7"
   },
   "devDependencies": {
     "all-contributors-cli": "^3.0.7",
     "babel-cli": "^6.18.0",
-    "babel-jest": "18.0.0",
+    "babel-jest": "^18.0.0",
     "babel-polyfill": "^6.16.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-stage-2": "^6.18.0",
@@ -33,8 +33,8 @@
     "commitizen": "^2.8.6",
     "cz-conventional-changelog": "^1.2.0",
     "eslint-config-kentcdodds": "^11.1.0",
-    "husky": "0.12.0",
-    "jest-cli": "18.1.0",
+    "husky": "^0.13.1",
+    "jest-cli": "^18.1.0",
     "opt-cli": "^1.5.1",
     "p-s": "^3.0.3",
     "prettier-eslint-cli": "^1.0.1",

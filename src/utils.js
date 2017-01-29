@@ -11,12 +11,11 @@ function getPrettierOptionsFromESLintRules(eslintConfig) {
     printWidth: getPrintWidth(rules),
     tabWidth: getTabWidth(rules),
     // TODO: handle flow parser config
-    useFlowParser: false,
+    parser: 'babylon',
     singleQuote: getSingleQuote(rules),
     trailingComma: getTrailingComma(rules),
     // TODO: handle braketSpacing
     bracketSpacing: false,
-    arrowParensAlways: getArrowParens(rules),
   }
 
   return options
@@ -38,11 +37,6 @@ function getSingleQuote(rules) {
 function getTrailingComma(rules) {
   const value = getRuleValue(rules, 'comma-dangle', 'always')
   return value !== 'never'
-}
-
-function getArrowParens(rules) {
-  const value = getRuleValue(rules, 'arrow-parens', 'as-needed')
-  return value !== 'as-needed'
 }
 
 function getRuleValue(rules, name, defaultValue) {

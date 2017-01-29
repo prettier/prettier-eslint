@@ -162,18 +162,19 @@ test('fails with an error if the eslint module cannot be resolved.', () => {
     './__mocks__/non-existant-eslint-module',
   )
 
-  expect(
-    () => format({text: '', eslintPath}),
-  ).toThrowError(/non-existant-eslint-module/)
+  expect(() => format({text: '', eslintPath})).toThrowError(
+    /non-existant-eslint-module/,
+  )
   expect(console.error).toHaveBeenCalledTimes(1)
 
   const errorString = expect.stringMatching(
     /ESLint.*?eslintPath.*non-existant-eslint-module/,
   )
 
-  expect(
-    console.error,
-  ).toHaveBeenCalledWith('prettier-eslint error:', errorString)
+  expect(console.error).toHaveBeenCalledWith(
+    'prettier-eslint error:',
+    errorString,
+  )
 })
 
 test('can accept a path to a prettier module and uses that instead.', () => {
@@ -188,16 +189,17 @@ test('fails with an error if the prettier module cannot be resolved.', () => {
     __dirname,
     './__mocks__/non-existant-prettier-module',
   )
-  expect(
-    () => format({text: '', prettierPath}),
-  ).toThrowError(/non-existant-prettier-module/)
+  expect(() => format({text: '', prettierPath})).toThrowError(
+    /non-existant-prettier-module/,
+  )
   expect(console.error).toHaveBeenCalledTimes(1)
   const errorString = expect.stringMatching(
     /prettier.*?prettierPath.*non-existant-prettier-module/,
   )
-  expect(
-    console.error,
-  ).toHaveBeenCalledWith('prettier-eslint error:', errorString)
+  expect(console.error).toHaveBeenCalledWith(
+    'prettier-eslint error:',
+    errorString,
+  )
 })
 
 test('resolves to the eslint module relative to the given filePath', () => {
