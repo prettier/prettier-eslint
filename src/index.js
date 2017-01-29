@@ -35,10 +35,14 @@ function format(
     prettierPath = getModulePath(filePath, 'prettier'),
     disableLog = options.disableLog,
     eslintConfig = getConfig(filePath, eslintPath),
-    prettierOptions = getPrettierOptionsFromESLintRules(eslintConfig),
+    prettierOptions,
     sillyLogs = options.sillyLogs,
   },
 ) {
+  prettierOptions = getPrettierOptionsFromESLintRules(
+    eslintConfig,
+    prettierOptions,
+  )
   const originalLogValue = options.disableLog
   options.disableLog = disableLog
   logSilliness(sillyLogs, eslintConfig, prettierOptions)

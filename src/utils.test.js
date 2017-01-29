@@ -16,7 +16,6 @@ const getPrettierOptionsFromESLintRulesTests = [
           functions: 'always-multiline',
         },
       ],
-      'arrow-parens': [2, 'as-needed'],
     },
     options: {
       printWidth: 120,
@@ -36,4 +35,12 @@ getPrettierOptionsFromESLintRulesTests.forEach(({rules, options}, index) => {
     const actualOptions = getPrettierOptionsFromESLintRules({rules})
     expect(actualOptions).toMatchObject(options)
   })
+})
+
+test('if prettierOptions are provided, those are preferred', () => {
+  const actualOptions = getPrettierOptionsFromESLintRules(
+    {rules: {quotes: [2, 'single']}},
+    {singleQuote: false},
+  )
+  expect(actualOptions).toMatchObject({singleQuote: false})
 })

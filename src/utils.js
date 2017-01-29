@@ -5,20 +5,24 @@ export {getPrettierOptionsFromESLintRules}
  * This accepts an eslintConfig object and converts
  * it to the `prettier` options object
  */
-function getPrettierOptionsFromESLintRules(eslintConfig) {
+function getPrettierOptionsFromESLintRules(eslintConfig, prettierOptions = {}) {
   const {rules} = eslintConfig
-  const options = {
-    printWidth: getPrintWidth(rules),
-    tabWidth: getTabWidth(rules),
-    // TODO: handle flow parser config
-    parser: 'babylon',
-    singleQuote: getSingleQuote(rules),
-    trailingComma: getTrailingComma(rules),
-    // TODO: handle braketSpacing
-    bracketSpacing: false,
+  const optionGetters = {
+    printWidth: getPrintWidth,
+    tabWidth: getTabWidth,
+    parser: getParser,
+    singleQuote: getSingleQuote,
+    trailingComma: getTrailingComma,
+    bracketSpacing: getBraketSpacing,
   }
 
-  return options
+  return Object.keys(optionGetters).reduce((options, key) => {
+    const givenOption = prettierOptions[key]
+    const optionIsGiven = prettierOptions[key] !== undefined
+    const getter = optionGetters[key]
+    options[key] = optionIsGiven ? givenOption : getter(rules)
+    return options
+  }, {})
 }
 
 function getPrintWidth(rules) {
@@ -37,6 +41,16 @@ function getSingleQuote(rules) {
 function getTrailingComma(rules) {
   const value = getRuleValue(rules, 'comma-dangle', 'always')
   return value !== 'never'
+}
+
+function getParser() {
+  // TODO: handle flow parser config
+  return 'babylon'
+}
+
+function getBraketSpacing() {
+  // TODO: handle braketSpacing
+  return false
 }
 
 function getRuleValue(rules, name, defaultValue) {

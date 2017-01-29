@@ -91,7 +91,8 @@ The config to use for formatting with ESLint. If this is provided, then `filePat
 #### prettierOptions (?Object)
 
 The options to pass for formatting with `prettier`. If not provided, `prettier-eslint` will attempt to create the
-options based on the `eslintConfig` (whether that's provided or derived via `filePath`.
+options based on the `eslintConfig` (whether that's provided or derived via `filePath`). You can also provide _some_ of
+the options and have the remaining options derived via your eslint config. This is useful for options like `parser`.
 
 #### disableLog (?Boolean)
 
