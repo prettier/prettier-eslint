@@ -253,10 +253,6 @@ ast-types@0.9.4:
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/ast-types/-/ast-types-0.9.4.tgz#410d1f81890aeb8e0a38621558ba5869ae53c91b"
 
-"ast-types@git+https://github.com/jlongster/ast-types.git":
-  version "0.9.3"
-  resolved "git+https://github.com/jlongster/ast-types.git#4b373d7e710105b07b22a12389ef2d8e1bcf2412"
-
 async-each@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
@@ -2285,6 +2281,17 @@ glob@7.1.1, glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
+glob@~7.0.6:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.0.6.tgz#211bafaf49e525b8cd93260d14ab136152b3f57a"
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.0.2"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 global-modules@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/global-modules/-/global-modules-0.2.3.tgz#ea5a3bed42c6d6ce995a4f8a1269b5dae223828d"
@@ -3036,10 +3043,6 @@ jsdom@^9.9.1:
     whatwg-url "^4.1.0"
     xml-name-validator ">= 2.0.1 < 3.0.0"
 
-jsesc@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.4.0.tgz#8568d223ff69c0b5e081b4f8edf5a23d978c9867"
-
 jsesc@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-1.3.0.tgz#46c3fec8c1892b12b0833db9bc7622176dbab34b"
@@ -3335,6 +3338,12 @@ loud-rejection@^1.0.0:
     currently-unhandled "^0.4.1"
     signal-exit "^3.0.0"
 
+make-plural@~3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/make-plural/-/make-plural-3.0.6.tgz#2033a03bac290b8f3bb91258f65b9df7e8b01ca7"
+  optionalDependencies:
+    minimist "^1.2.0"
+
 makeerror@1.0.x:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/makeerror/-/makeerror-1.0.11.tgz#e01a5c9109f2af79660e4e8b9587790184f5a96c"
@@ -3396,6 +3405,20 @@ meow@^3.3.0:
 merge@^1.1.3, merge@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
+
+messageformat-parser@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/messageformat-parser/-/messageformat-parser-1.0.0.tgz#3dea21419f141c50026a29d4b2239203ad613d3f"
+
+messageformat@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/messageformat/-/messageformat-1.0.2.tgz#908f4691f29ff28dae35c45436a24cff93402388"
+  dependencies:
+    glob "~7.0.6"
+    make-plural "~3.0.6"
+    messageformat-parser "^1.0.0"
+    nopt "~3.0.6"
+    reserved-words "^0.1.1"
 
 micromatch@^2.1.5, micromatch@^2.3.11, micromatch@^2.3.7:
   version "2.3.11"
@@ -3967,39 +3990,27 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier-eslint-cli@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/prettier-eslint-cli/-/prettier-eslint-cli-1.0.3.tgz#5ad601e2f86f7ac982a0f4daed8bbd96b103392a"
+prettier-eslint-cli@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/prettier-eslint-cli/-/prettier-eslint-cli-1.1.0.tgz#90611aff0c1a3d4683a37dbfa068f5d09ee75934"
   dependencies:
     babel-runtime "^6.20.0"
     chalk "^1.1.3"
     find-up "^2.1.0"
     get-stdin "^5.0.1"
     glob "^7.1.1"
-    prettier-eslint "^2.3.3"
+    messageformat "^1.0.2"
+    prettier-eslint "^3.0.0"
     rxjs "^5.0.3"
     yargs "^6.6.0"
 
-prettier-eslint@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/prettier-eslint/-/prettier-eslint-2.3.3.tgz#497abf94d5a9b09c94384fe98218093e5fd91c46"
+prettier-eslint@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/prettier-eslint/-/prettier-eslint-3.0.0.tgz#b33a438f77e913dd43f7140f4baf203d03c5b563"
   dependencies:
     eslint "^3.13.1"
-    prettier "^0.0.10"
+    prettier "^0.13.1"
     require-relative "^0.8.7"
-
-prettier@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-0.0.10.tgz#f27303bc130ed769a2708b11c235ebae97092f14"
-  dependencies:
-    ast-types "git+https://github.com/jlongster/ast-types.git"
-    babylon "6.15.0"
-    esutils "2.0.2"
-    flow-parser "0.38.0"
-    get-stdin "5.0.1"
-    jsesc "2.4.0"
-    minimist "1.2.0"
-    private "0.1.6"
 
 prettier@^0.13.1:
   version "0.13.1"
@@ -4021,7 +4032,7 @@ pretty-format@^18.1.0:
   dependencies:
     ansi-styles "^2.2.1"
 
-private@0.1.6, private@^0.1.6:
+private@^0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/private/-/private-0.1.6.tgz#55c6a976d0f9bafb9924851350fe47b9b5fbb7c1"
 
@@ -4329,6 +4340,10 @@ require-uncached@^1.0.2:
   dependencies:
     caller-path "^0.1.0"
     resolve-from "^1.0.0"
+
+reserved-words@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/reserved-words/-/reserved-words-0.1.1.tgz#6f7c15e5e5614c50da961630da46addc87c0cef2"
 
 resolve-dir@^0.1.0:
   version "0.1.1"
