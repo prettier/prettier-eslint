@@ -30,7 +30,11 @@ function getPrintWidth(rules) {
 }
 
 function getTabWidth(rules) {
-  return getRuleValue(rules, 'indent', 2)
+  const value = getRuleValue(rules, 'indent', 2)
+  // if the value is not a number, default to 2
+  // use-case is 'tab' where prettier doesn't
+  // allow tabs.
+  return typeof value === 'number' ? value : 2
 }
 
 function getSingleQuote(rules) {

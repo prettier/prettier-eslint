@@ -28,6 +28,9 @@ const getPrettierOptionsFromESLintRulesTests = [
   },
   {rules: {'max-len': 2}, options: {printWidth: 80}},
   {rules: {'comma-dangle': [2, 'never']}, options: {trailingComma: false}},
+  // prettier doesn't allow tabs,
+  // so we'll just go with the default and let eslint fix it
+  {rules: {indent: [2, 'tab']}, options: {tabWidth: 2}},
 ]
 
 getPrettierOptionsFromESLintRulesTests.forEach(({rules, options}, index) => {
