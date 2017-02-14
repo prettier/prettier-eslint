@@ -1,5 +1,7 @@
 # prettier-eslint
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kentcdodds/prettier-eslint.svg)](https://greenkeeper.io/)
+
 Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`][eslint]
 
 [![Build Status][build-badge]][build]
