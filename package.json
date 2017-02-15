@@ -22,7 +22,7 @@
     "require-relative": "^0.8.7"
   },
   "devDependencies": {
-    "all-contributors-cli": "^3.0.7",
+    "all-contributors-cli": "^4.0.0",
     "babel-cli": "^6.18.0",
     "babel-jest": "^18.0.0",
     "babel-polyfill": "^6.16.0",
