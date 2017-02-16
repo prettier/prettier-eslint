@@ -19,7 +19,7 @@
   "dependencies": {
     "dlv": "^1.1.0",
     "eslint": "^3.13.1",
-    "prettier": "^0.17.0",
+    "prettier": "^0.18.0",
     "require-relative": "^0.8.7"
   },
   "devDependencies": {
