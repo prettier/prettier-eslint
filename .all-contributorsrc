@@ -76,6 +76,15 @@
         "doc",
         "example"
       ]
+    },
+    {
+      "login": "PAkerstrand",
+      "name": "Patrik Åkerstrand",
+      "avatar_url": "https://avatars.githubusercontent.com/u/463105?v=3",
+      "profile": "https://github.com/PAkerstrand",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }

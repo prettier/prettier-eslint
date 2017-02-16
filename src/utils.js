@@ -1,3 +1,5 @@
+import delve from 'dlv'
+
 /* eslint import/prefer-default-export:0 */
 export {getPrettierOptionsFromESLintRules}
 
@@ -26,7 +28,7 @@ function getPrettierOptionsFromESLintRules(eslintConfig, prettierOptions = {}) {
 }
 
 function getPrintWidth(rules) {
-  return getRuleValue(rules, 'max-len', 80)
+  return getRuleValue(rules, 'max-len', 80, 'code')
 }
 
 function getTabWidth(rules) {
@@ -57,12 +59,14 @@ function getBraketSpacing() {
   return false
 }
 
-function getRuleValue(rules, name, defaultValue) {
+function getRuleValue(rules, name, defaultValue, objPath) {
   const ruleConfig = rules[name]
   if (Array.isArray(ruleConfig)) {
     const [, value] = ruleConfig
     if (typeof value === 'object') {
-      // TODO: handle object configuration
+      if (objPath) {
+        return delve(value, objPath, defaultValue)
+      }
     } else {
       return value
     }
