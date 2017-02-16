@@ -17,6 +17,7 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "dependencies": {
+    "dlv": "^1.1.0",
     "eslint": "^3.13.1",
     "prettier": "^0.17.0",
     "require-relative": "^0.8.7"
