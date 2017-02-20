@@ -1,13 +1,16 @@
 /* eslint no-console:0, import/default:0 */
 import path from 'path'
+import fsMock from 'fs'
 import stripIndent from 'strip-indent'
 import eslintMock from 'eslint'
 import prettierMock from 'prettier'
+import loglevelMock from 'loglevel'
 import format from './'
 
-console.error = jest.fn()
-console.log = jest.fn()
-console.dir = jest.fn()
+jest.mock('fs')
+
+const {mock: {logger}} = loglevelMock
+// loglevelMock.mock.logThings = ['debug']
 
 const tests = [
   {
@@ -53,12 +56,11 @@ const tests = [
 ]
 
 beforeEach(() => {
-  console.error.mockClear()
-  console.log.mockClear()
-  console.dir.mockClear()
   eslintMock.mock.executeOnText.mockClear()
   eslintMock.mock.getConfigForFile.mockClear()
   prettierMock.format.mockClear()
+  fsMock.readFileSync.mockClear()
+  loglevelMock.mock.clearAll()
   global.__PRETTIER_ESLINT_TEST_STATE__ = {}
 })
 
@@ -77,74 +79,38 @@ tests.forEach(({title, modifier, input, output}) => {
   })
 })
 
-test('failure to get the config results in a console.error call', () => {
+test('failure to get the config throws and logs an error', () => {
   const {getConfigForFile} = eslintMock.mock
   const error = 'Something happened'
   getConfigForFile.throwError = new Error(error)
   expect(() => format({text: ''})).toThrowError(error)
-  expect(console.error).toHaveBeenCalledTimes(1)
+  expect(logger.error).toHaveBeenCalledTimes(1)
   getConfigForFile.throwError = null
 })
 
-test('failure to fix with eslint results in a console.error call', () => {
+test('failure to fix with eslint throws and logs an error', () => {
   const {executeOnText} = eslintMock.mock
   const error = 'Something happened'
   executeOnText.throwError = new Error(error)
   expect(() => format({text: ''})).toThrowError(error)
-  expect(console.error).toHaveBeenCalledTimes(1)
+  expect(logger.error).toHaveBeenCalledTimes(1)
   executeOnText.throwError = null
 })
 
-test('console.error will not be called if disableLog is set', () => {
-  format.options.disableLog = true
-
-  const {getConfigForFile} = eslintMock.mock
-  const error = 'Something happened'
-  getConfigForFile.throwError = new Error(error)
-  expect(() => format({text: ''})).toThrowError(error)
-  expect(console.error).toHaveBeenCalledTimes(0)
-
-  format.options.disableLog = false
-  getConfigForFile.throwError = null
+test('logLevel is used to configure the logger', () => {
+  logger.setLevel = jest.fn()
+  format({text: '', logLevel: 'silent'})
+  expect(logger.setLevel).toHaveBeenCalledTimes(2)
+  expect(logger.setLevel.mock.calls).toEqual([['silent'], ['WARN']])
 })
 
-test('console receives silly output when sillyLogs is set', () => {
-  format.options.sillyLogs = true
-  format({text: ''})
-  const sillyOutput = 'silly logs for eslintConfig and prettierOptions:'
-  expect(console.log).toHaveBeenCalledWith(sillyOutput)
-  expect(console.log).toHaveBeenCalledTimes(1)
-  const dirObj = expect.objectContaining({
-    eslintConfig: expect.objectContaining({}),
-    prettierOptions: expect.objectContaining({}),
-  })
-  const options = {depth: null, colors: true}
-  expect(console.dir).toHaveBeenCalledWith(dirObj, options)
-  expect(console.dir).toHaveBeenCalledTimes(1)
-
-  format.options.sillyLogs = false
-})
-
-test(`when prettier throws, log to console.error but don't fail`, () => {
+test(`when prettier throws, log to logger.error and throw the error`, () => {
   const {format: prettierMockFormat} = prettierMock
   const error = 'something bad happened'
   prettierMockFormat.throwError = new Error(error)
 
   expect(() => format({text: ''})).toThrowError(error)
-  expect(console.error).toHaveBeenCalledTimes(1)
-
-  prettierMockFormat.throwError = null
-})
-
-test('can disable log on a single call as part of the options', () => {
-  const {format: prettierMockFormat} = prettierMock
-  const error = 'something bad happened'
-  prettierMockFormat.throwError = new Error(error)
-
-  expect(() => format({text: '', disableLog: true})).toThrowError(error)
-  expect(console.error).toHaveBeenCalledTimes(0)
-  expect(() => format({text: ''})).toThrowError(error)
-  expect(console.error).toHaveBeenCalledTimes(1)
+  expect(logger.error).toHaveBeenCalledTimes(1)
 
   prettierMockFormat.throwError = null
 })
@@ -165,16 +131,13 @@ test('fails with an error if the eslint module cannot be resolved.', () => {
   expect(() => format({text: '', eslintPath})).toThrowError(
     /non-existant-eslint-module/,
   )
-  expect(console.error).toHaveBeenCalledTimes(1)
+  expect(logger.error).toHaveBeenCalledTimes(1)
 
   const errorString = expect.stringMatching(
     /ESLint.*?eslintPath.*non-existant-eslint-module/,
   )
 
-  expect(console.error).toHaveBeenCalledWith(
-    'prettier-eslint error:',
-    errorString,
-  )
+  expect(logger.error).toHaveBeenCalledWith(errorString)
 })
 
 test('can accept a path to a prettier module and uses that instead.', () => {
@@ -192,14 +155,11 @@ test('fails with an error if the prettier module cannot be resolved.', () => {
   expect(() => format({text: '', prettierPath})).toThrowError(
     /non-existant-prettier-module/,
   )
-  expect(console.error).toHaveBeenCalledTimes(1)
+  expect(logger.error).toHaveBeenCalledTimes(1)
   const errorString = expect.stringMatching(
     /prettier.*?prettierPath.*non-existant-prettier-module/,
   )
-  expect(console.error).toHaveBeenCalledWith(
-    'prettier-eslint error:',
-    errorString,
-  )
+  expect(logger.error).toHaveBeenCalledWith(errorString)
 })
 
 test('resolves to the eslint module relative to the given filePath', () => {
@@ -226,6 +186,27 @@ test('resolves to the local eslint module', () => {
     eslintPath: require.resolve('./__mocks__/eslint'),
     prettierPath: require.resolve('./__mocks__/prettier'),
   })
+})
+
+test('reads text from fs if filePath is provided but not text', () => {
+  const filePath = '/blah-blah/some-file.js'
+  try {
+    format({filePath})
+  } catch (e) {
+    // ignore
+  }
+  expect(fsMock.readFileSync).toHaveBeenCalledTimes(1)
+  expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, 'utf8')
+})
+
+test('logs error if it cannot read the file from the filePath', () => {
+  const originalMock = fsMock.readFileSync
+  fsMock.readFileSync = jest.fn(() => {
+    throw new Error('some error')
+  })
+  expect(() => format({filePath: '/some-path.js'})).toThrowError(/some error/)
+  expect(logger.error).toHaveBeenCalledTimes(1)
+  fsMock.readFileSync = originalMock
 })
 
 function getESLintConfigWithDefaultRules(overrides) {

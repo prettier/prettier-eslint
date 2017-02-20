@@ -1,13 +1,70 @@
+import {oneLine} from 'common-tags'
 import delve from 'dlv'
+import getLogger from './log'
+
+const logger = getLogger()
 
 /* eslint import/prefer-default-export:0 */
-export {getPrettierOptionsFromESLintRules}
+export {getOptionsForFormatting}
+
+function getOptionsForFormatting(eslintConfig, prettierOptions = {}) {
+  const eslint = getRelevantESLintConfig(eslintConfig)
+  const prettier = getPrettierOptionsFromESLintRules(eslint, prettierOptions)
+  return {eslint, prettier}
+}
+
+function getRelevantESLintConfig(eslintConfig) {
+  const {rules} = eslintConfig
+  // TODO: remove rules that are not fixable for perf
+  // this will require we load the config for every rule...
+  // not sure that'll be worth the effort
+  // but we may be able to maintain a manual list of rules that
+  // are definitely not fixable. Which is what we'll do for now...
+  const rulesThatWillNeverBeFixable = [
+    // TODO add more
+    'no-var',
+    'prefer-const',
+    'valid-jsdoc',
+    'global-require',
+    'no-with',
+  ]
+
+  logger.debug('reducing eslint rules down to relevant rules only')
+  const relevantRules = Object.keys(rules).reduce((
+    rulesAccumulator,
+    ruleName,
+  ) => {
+    if (rulesThatWillNeverBeFixable.indexOf(ruleName) === -1) {
+      logger.trace(
+        `  adding to relevant rules:`,
+        JSON.stringify({[ruleName]: rules[ruleName]}),
+      )
+      rulesAccumulator[ruleName] = rules[ruleName]
+    } else {
+      logger.trace(
+        `  omitting from relevant rules:`,
+        JSON.stringify({[ruleName]: rules[ruleName]}),
+      )
+    }
+    return rulesAccumulator
+  }, {})
+
+  return {
+    // defaults
+    useEslintrc: false,
+    ...eslintConfig,
+    // overrides
+    rules: relevantRules,
+    fix: true,
+    global: null,
+  }
+}
 
 /**
  * This accepts an eslintConfig object and converts
  * it to the `prettier` options object
  */
-function getPrettierOptionsFromESLintRules(eslintConfig, prettierOptions = {}) {
+function getPrettierOptionsFromESLintRules(eslintConfig, prettierOptions) {
   const {rules} = eslintConfig
   const optionGetters = {
     printWidth: getPrintWidth,
@@ -65,12 +122,40 @@ function getRuleValue(rules, name, defaultValue, objPath) {
     const [, value] = ruleConfig
     if (typeof value === 'object') {
       if (objPath) {
+        logger.trace(
+          oneLine`
+            Getting the value from object configuration of ${name}.
+            delving into ${JSON.stringify(value)} with path "${objPath}"
+          `,
+        )
         return delve(value, objPath, defaultValue)
+      } else {
+        logger.debug(
+          oneLine`
+            The ${name} rule is using an object configuration
+            of ${JSON.stringify(value)} but prettier-eslint is
+            not currently capable of getting the prettier value
+            based on an object configuration for ${name}.
+            Please file an issue (and make a pull request?)
+          `,
+        )
       }
     } else {
+      logger.trace(
+        oneLine`
+          The ${name} rule is configured with a
+          non-object value of ${value}. Using that value.
+        `,
+      )
       return value
     }
   }
+  logger.debug(
+    oneLine`
+      The ${name} rule is not configured,
+      using default of ${defaultValue}
+    `,
+  )
   // no value configured
   return defaultValue
 }

@@ -94,11 +94,10 @@ The options to pass for formatting with `prettier`. If not provided, `prettier-e
 options based on the `eslintConfig` (whether that's provided or derived via `filePath`). You can also provide _some_ of
 the options and have the remaining options derived via your eslint config. This is useful for options like `parser`.
 
-#### disableLog (?Boolean)
+#### logLevel (?Enum: ['trace', 'debug', 'info', 'warn', 'error', 'silent'])
 
-When there's an error, `prettier-eslint` will log it to the console. To disable this behavior you can either pass
-`disableLog` as an option to the call to `format` or you can set: `format.options.disableLog = true` to disable it
-"globally."
+`prettier-eslint` does quite a bit of logging if you want it to. Pass this to set the amount of logs you want to see.
+Default is `process.env.LOG_LEVEL || 'warn'`.
 
 #### eslintPath (?String)
 
@@ -110,12 +109,6 @@ with the `eslintPath` option.
 #### prettierPath (?String)
 
 This is basically the same as `eslintPath` except for the `prettier` module.
-
-#### sillyLogs (?Boolean)
-
-When set to `true`, `prettier-eslint` will dump the contents of both the detected `eslintConfig` and `prettierOptions`
-configuration objects to the console. This defaults to `false` as it is primarily for debugging.
-"globally."
 
 ### throws
 
