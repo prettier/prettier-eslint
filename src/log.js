@@ -12,10 +12,10 @@ function setupLogger(level = 'WARN') {
   const prefix = chalk.dim('prettier-eslint')
   const levelPrefix = {
     TRACE: chalk.dim('[TRACE]'),
-    DEBUG: chalk.dim.cyan('[DEBUG]'),
-    INFO: chalk.dim.blue('[INFO]'),
-    WARN: chalk.dim.yellow('[WARN]'),
-    ERROR: chalk.dim.red('[ERROR]'),
+    DEBUG: chalk.cyan('[DEBUG]'),
+    INFO: chalk.blue('[INFO]'),
+    WARN: chalk.yellow('[WARN]'),
+    ERROR: chalk.red('[ERROR]'),
   }
 
   logger = getLogger(`prettier-eslint-logger`)
