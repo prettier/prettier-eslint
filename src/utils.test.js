@@ -1,4 +1,4 @@
-import {getPrettierOptionsFromESLintRules} from './utils'
+import {getOptionsForFormatting} from './utils'
 
 const getPrettierOptionsFromESLintRulesTests = [
   {
@@ -36,15 +36,31 @@ const getPrettierOptionsFromESLintRulesTests = [
 
 getPrettierOptionsFromESLintRulesTests.forEach(({rules, options}, index) => {
   test(`getPrettierOptionsFromESLintRulesTests ${index}`, () => {
-    const actualOptions = getPrettierOptionsFromESLintRules({rules})
-    expect(actualOptions).toMatchObject(options)
+    const {prettier} = getOptionsForFormatting({rules})
+    expect(prettier).toMatchObject(options)
   })
 })
 
 test('if prettierOptions are provided, those are preferred', () => {
-  const actualOptions = getPrettierOptionsFromESLintRules(
-    {rules: {quotes: [2, 'single']}},
-    {singleQuote: false},
-  )
-  expect(actualOptions).toMatchObject({singleQuote: false})
+  const {prettier} = getOptionsForFormatting({rules: {quotes: [2, 'single']}}, {
+    singleQuote: false,
+  })
+  expect(prettier).toMatchObject({singleQuote: false})
+})
+
+test('eslint config has only necessary properties', () => {
+  const {eslint} = getOptionsForFormatting({
+    globals: {window: false},
+    rules: {'no-var': 'error', quotes: [2, 'single']},
+  })
+  expect(eslint).toMatchObject({
+    fix: true,
+    useEslintrc: false,
+    rules: {quotes: [2, 'single']},
+  })
+})
+
+test('useEslintrc is set to the given config value', () => {
+  const {eslint} = getOptionsForFormatting({useEslintrc: true, rules: {}})
+  expect(eslint).toMatchObject({fix: true, useEslintrc: true})
 })

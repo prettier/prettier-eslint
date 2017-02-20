@@ -1294,6 +1294,12 @@ commitizen@^2.8.6:
     shelljs "0.7.5"
     strip-json-comments "2.0.1"
 
+common-tags@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.4.0.tgz#1187be4f3d4cf0c0427d43f74eef1f73501614c0"
+  dependencies:
+    babel-runtime "^6.18.0"
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -2498,6 +2504,10 @@ indent-string@^2.1.0:
   dependencies:
     repeating "^2.0.0"
 
+indent-string@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-3.1.0.tgz#08ff4334603388399b329e6b9538dc7a3cf5de7d"
+
 indexof@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/indexof/-/indexof-0.0.1.tgz#82dc336d232b9062179d05ab3293a66059fd435d"
@@ -3362,6 +3372,10 @@ lodash@~1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-1.3.1.tgz#a4663b53686b895ff074e2ba504dfb76a8e2b770"
 
+loglevel@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.4.1.tgz#95b383f91a3c2756fd4ab093667e4309161f2bcd"
+
 longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
@@ -4081,9 +4095,9 @@ prettier@^0.13.1:
     jest-validate "18.2.0"
     minimist "1.2.0"
 
-prettier@^0.17.0:
-  version "0.17.1"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-0.17.1.tgz#a56cdf72b6ed31cae408b8306f4aeae985570e72"
+prettier@^0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-0.18.0.tgz#9ef5918d53a56946cbc90c213be0db0b0aaea73c"
   dependencies:
     ast-types "0.9.4"
     babel-code-frame "6.22.0"
