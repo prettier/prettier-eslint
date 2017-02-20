@@ -56,7 +56,7 @@ function getRelevantESLintConfig(eslintConfig) {
     // overrides
     rules: relevantRules,
     fix: true,
-    global: null,
+    global: [], // must be an array for some reason :-/
   }
 }
 
