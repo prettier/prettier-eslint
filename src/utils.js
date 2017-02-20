@@ -36,13 +36,13 @@ function getRelevantESLintConfig(eslintConfig) {
   ) => {
     if (rulesThatWillNeverBeFixable.indexOf(ruleName) === -1) {
       logger.trace(
-        `  adding to relevant rules:`,
+        `adding to relevant rules:`,
         JSON.stringify({[ruleName]: rules[ruleName]}),
       )
       rulesAccumulator[ruleName] = rules[ruleName]
     } else {
       logger.trace(
-        `  omitting from relevant rules:`,
+        `omitting from relevant rules:`,
         JSON.stringify({[ruleName]: rules[ruleName]}),
       )
     }
@@ -56,7 +56,7 @@ function getRelevantESLintConfig(eslintConfig) {
     // overrides
     rules: relevantRules,
     fix: true,
-    global: [], // must be an array for some reason :-/
+    globals: [], // must be an array for some reason :-/
   }
 }
 
