@@ -100,8 +100,8 @@ test('failure to fix with eslint throws and logs an error', () => {
 test('logLevel is used to configure the logger', () => {
   logger.setLevel = jest.fn()
   format({text: '', logLevel: 'silent'})
-  expect(logger.setLevel).toHaveBeenCalledTimes(2)
-  expect(logger.setLevel.mock.calls).toEqual([['silent'], ['WARN']])
+  expect(logger.setLevel).toHaveBeenCalledTimes(1)
+  expect(logger.setLevel).toHaveBeenCalledWith('silent')
 })
 
 test(`when prettier throws, log to logger.error and throw the error`, () => {

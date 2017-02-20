@@ -8,8 +8,7 @@ import indentString from 'indent-string'
 import {getOptionsForFormatting} from './utils'
 import getLogger from './log'
 
-const defaultLogLevel = process.env.LOG_LEVEL || 'WARN'
-const logger = getLogger(defaultLogLevel)
+const logger = getLogger(getDefaultLogLevel())
 
 // CommonJS + ES6 modules... is it worth it? Probably not...
 module.exports = format
@@ -35,64 +34,60 @@ module.exports = format
  * @return {String} - the formatted string
  */
 function format(options) {
-  try {
-    const {logLevel = defaultLogLevel} = options
-    logger.setLevel(logLevel)
-    logger.trace('called format with options:', prettyFormat(options))
+  const {logLevel = getDefaultLogLevel()} = options
+  logger.setLevel(logLevel)
+  logger.trace('called format with options:', prettyFormat(options))
 
-    const {
+  const {
+    filePath,
+    text = getTextFromFilePath(filePath),
+    eslintPath = getModulePath(filePath, 'eslint'),
+    prettierPath = getModulePath(filePath, 'prettier'),
+    eslintConfig = getConfig(filePath, eslintPath),
+    prettierOptions,
+  } = options
+  const formattingOptions = getOptionsForFormatting(
+    eslintConfig,
+    prettierOptions,
+  )
+  logger.debug(
+    'inferred options:',
+    prettyFormat({
       filePath,
-      text = getTextFromFilePath(filePath),
-      eslintPath = getModulePath(filePath, 'eslint'),
-      prettierPath = getModulePath(filePath, 'prettier'),
-      eslintConfig = getConfig(filePath, eslintPath),
-      prettierOptions,
-    } = options
-    const formattingOptions = getOptionsForFormatting(
-      eslintConfig,
-      prettierOptions,
-    )
-    logger.debug(
-      'inferred options:',
-      prettyFormat({
-        filePath,
-        text,
-        eslintPath,
-        prettierPath,
-        eslintConfig: formattingOptions.eslint,
-        prettierOptions: formattingOptions.prettier,
-        logLevel,
-      }),
-    )
+      text,
+      eslintPath,
+      prettierPath,
+      eslintConfig: formattingOptions.eslint,
+      prettierOptions: formattingOptions.prettier,
+      logLevel,
+    }),
+  )
 
-    logger.debug('calling prettier on text')
-    logger.trace(
-      stripIndent`
-        prettier input:
+  logger.debug('calling prettier on text')
+  logger.trace(
+    stripIndent`
+      prettier input:
 
-        ${indentString(text, 2)}
-      `,
-    )
-    const pretty = prettify(text, formattingOptions.prettier, prettierPath)
-    logger.trace(
-      stripIndent`
-        prettier output (eslint input):
+      ${indentString(text, 2)}
+    `,
+  )
+  const pretty = prettify(text, formattingOptions.prettier, prettierPath)
+  logger.trace(
+    stripIndent`
+      prettier output (eslint input):
 
-        ${indentString(pretty, 2)}
-      `,
-    )
-    const eslintFixed = eslintFix(pretty, formattingOptions.eslint, eslintPath)
-    logger.trace(
-      stripIndent`
-        eslint --fix output (final formatted result):
+      ${indentString(pretty, 2)}
+    `,
+  )
+  const eslintFixed = eslintFix(pretty, formattingOptions.eslint, eslintPath)
+  logger.trace(
+    stripIndent`
+      eslint --fix output (final formatted result):
 
-        ${indentString(pretty, 2)}
-      `,
-    )
-    return eslintFixed
-  } finally {
-    logger.setLevel(defaultLogLevel)
-  }
+      ${indentString(pretty, 2)}
+    `,
+  )
+  return eslintFixed
 }
 
 function prettify(text, formatOptions, prettierPath) {
@@ -222,4 +217,8 @@ function getESLintCLIEngine(eslintPath, eslintOptions) {
     )
     throw error
   }
+}
+
+function getDefaultLogLevel() {
+  return process.env.LOG_LEVEL || 'warn'
 }
