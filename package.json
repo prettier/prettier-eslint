@@ -40,7 +40,7 @@
     "cz-conventional-changelog": "^2.0.0",
     "eslint-config-kentcdodds": "^11.1.0",
     "husky": "^0.13.1",
-    "jest-cli": "^18.1.0",
+    "jest-cli": "^19.0.1",
     "opt-cli": "^1.5.1",
     "p-s": "^3.0.3",
     "prettier-eslint-cli": "^3.0.0",
