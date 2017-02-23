@@ -22,7 +22,7 @@
     "eslint": "^3.13.1",
     "indent-string": "^3.1.0",
     "loglevel": "^1.4.1",
-    "prettier": "^0.18.0",
+    "prettier": "^0.19.0",
     "pretty-format": "^19.0.0",
     "require-relative": "^0.8.7"
   },
