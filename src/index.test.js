@@ -46,6 +46,30 @@ const tests = [
     input: {text: defaultInputText()},
     output: defaultOutput(),
   },
+  {
+    title: 'inferring bracketSpacing',
+    input: {
+      text: 'var foo = {bar: baz};',
+      eslintConfig: {rules: {'object-curly-spacing': ['error', 'always']}},
+    },
+    output: 'var foo = { bar: baz };',
+  },
+  {
+    title: 'inferring bracketSpacing with eslint object-curly-spacing options',
+    input: {
+      text: 'var foo = {bar: {baz: qux}};\nvar fop = {bar: [1, 2, 3]};',
+      eslintConfig: {
+        rules: {
+          'object-curly-spacing': [
+            'error',
+            'always',
+            {objectsInObjects: false, arraysInObjects: false},
+          ],
+        },
+      },
+    },
+    output: 'var foo = { bar: { baz: qux }};\nvar fop = { bar: [1, 2, 3]};',
+  },
   // if you have a bug report or something,
   // go ahead and add a test case here
   {

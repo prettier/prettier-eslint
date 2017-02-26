@@ -126,9 +126,9 @@ function getParser() {
   return 'babylon'
 }
 
-function getBraketSpacing() {
-  // TODO: handle braketSpacing
-  return false
+function getBraketSpacing(rules) {
+  const value = getRuleValue(rules, 'object-curly-spacing', 'never')
+  return value !== 'never'
 }
 
 function getRuleValue(rules, name, defaultValue, objPath) {
