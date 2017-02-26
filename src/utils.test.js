@@ -22,12 +22,43 @@ const getPrettierOptionsFromESLintRulesTests = [
       tabWidth: 2,
       parser: 'babylon',
       singleQuote: true,
-      trailingComma: true,
+      trailingComma: 'all',
       bracketSpacing: false,
     },
   },
   {rules: {'max-len': 2}, options: {printWidth: 80}},
-  {rules: {'comma-dangle': [2, 'never']}, options: {trailingComma: false}},
+  {rules: {'comma-dangle': [2, 'never']}, options: {trailingComma: 'none'}},
+  {rules: {'comma-dangle': [2, 'always']}, options: {trailingComma: 'all'}},
+  {
+    rules: {
+      'comma-dangle': [
+        2,
+        {
+          arrays: 'always-multiline',
+          objects: 'always-multiline',
+          imports: 'always-multiline',
+          exports: 'always-multiline',
+          functions: 'never-multiline',
+        },
+      ],
+    },
+    options: {trailingComma: 'es5'},
+  },
+  {
+    rules: {
+      'comma-dangle': [
+        2,
+        {
+          arrays: 'never',
+          objects: 'never',
+          imports: 'never',
+          exports: 'never',
+          functions: 'never',
+        },
+      ],
+    },
+    options: {trailingComma: 'none'},
+  },
   // prettier doesn't allow tabs,
   // so we'll just go with the default and let eslint fix it
   {rules: {indent: [2, 'tab']}, options: {tabWidth: 2}},

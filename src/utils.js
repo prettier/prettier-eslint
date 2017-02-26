@@ -102,8 +102,23 @@ function getSingleQuote(rules) {
 }
 
 function getTrailingComma(rules) {
-  const value = getRuleValue(rules, 'comma-dangle', 'always')
-  return value !== 'never'
+  const value = getRuleValue(rules, 'comma-dangle')
+  if (typeof value === 'undefined') {
+    const actualValue = rules['comma-dangle']
+    if (typeof actualValue === 'object') {
+      return getValFromObjectConfig(actualValue)
+    }
+  }
+
+  return value === 'never' ? 'none' : 'all'
+
+  function getValFromObjectConfig(eslintValue) {
+    const [, {arrays, objects, functions}] = eslintValue
+    const es5 = [arrays, objects].some(isAlways)
+    const fns = isAlways(functions)
+    // eslint-disable-next-line no-nested-ternary
+    return fns ? 'all' : es5 ? 'es5' : 'none'
+  }
 }
 
 function getParser() {
@@ -158,4 +173,8 @@ function getRuleValue(rules, name, defaultValue, objPath) {
   )
   // no value configured
   return defaultValue
+}
+
+function isAlways(val) {
+  return val.indexOf('always') === 0
 }
