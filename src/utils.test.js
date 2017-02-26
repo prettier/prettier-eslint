@@ -26,6 +26,14 @@ const getPrettierOptionsFromESLintRulesTests = [
       bracketSpacing: false,
     },
   },
+  {
+    rules: {'object-curly-spacing': [2, 'always']},
+    options: {bracketSpacing: true},
+  },
+  {
+    rules: {'object-curly-spacing': [2, 'never']},
+    options: {bracketSpacing: false},
+  },
   {rules: {'max-len': 2}, options: {printWidth: 80}},
   {rules: {'comma-dangle': [2, 'never']}, options: {trailingComma: 'none'}},
   {rules: {'comma-dangle': [2, 'always']}, options: {trailingComma: 'all'}},
