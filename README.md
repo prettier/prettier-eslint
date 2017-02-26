@@ -129,6 +129,7 @@ None that I'm aware of. Feel free to file a PR if you know of any other solution
 - [`prettier-eslint-cli`](https://github.com/kentcdodds/prettier-eslint-cli) - Command Line Interface
 - [`prettier-eslint-atom`](https://github.com/kentcdodds/prettier-eslint-atom) - Atom plugin
 - [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) - ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and integrates it with the regular ESLint workflow.
+- [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) - Webpack plugin
 
 ## Contributors
 
