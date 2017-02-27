@@ -80,10 +80,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kentcdodds/prettier-eslint.git"
+    "url": "https://github.com/prettier/prettier-eslint.git"
   },
   "bugs": {
-    "url": "https://github.com/kentcdodds/prettier-eslint/issues"
+    "url": "https://github.com/prettier/prettier-eslint/issues"
   },
-  "homepage": "https://github.com/kentcdodds/prettier-eslint#readme"
+  "homepage": "https://github.com/prettier/prettier-eslint#readme"
 }

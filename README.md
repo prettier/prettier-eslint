@@ -126,7 +126,7 @@ None that I'm aware of. Feel free to file a PR if you know of any other solution
 
 ## Related
 
-- [`prettier-eslint-cli`](https://github.com/kentcdodds/prettier-eslint-cli) - Command Line Interface
+- [`prettier-eslint-cli`](https://github.com/prettier/prettier-eslint-cli) - Command Line Interface
 - [`prettier-eslint-atom`](https://github.com/kentcdodds/prettier-eslint-atom) - Atom plugin
 - [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) - ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and integrates it with the regular ESLint workflow.
 - [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) - Prettier ESlint Webpack Plugin
@@ -136,9 +136,9 @@ None that I'm aware of. Feel free to file a PR if you know of any other solution
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) [📖](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/kentcdodds/prettier-eslint/commits?author=kentcdodds) | [<img src="https://avatars.githubusercontent.com/u/5554486?v=3" width="100px;"/><br /><sub>Gyandeep Singh</sub>](http://gyandeeps.com)<br />👀 | [<img src="https://avatars.githubusercontent.com/u/682584?v=3" width="100px;"/><br /><sub>Igor Pnev</sub>](https://github.com/exdeniz)<br />[🐛](https://github.com/kentcdodds/prettier-eslint/issues?q=author%3Aexdeniz) | [<img src="https://avatars.githubusercontent.com/u/813865?v=3" width="100px;"/><br /><sub>Benjamin Tan</sub>](https://demoneaux.github.io/)<br />💬 👀 | [<img src="https://avatars.githubusercontent.com/u/622118?v=3" width="100px;"/><br /><sub>Eric McCormick</sub>](https://ericmccormick.io)<br />[💻](https://github.com/kentcdodds/prettier-eslint/commits?author=edm00se) [📖](https://github.com/kentcdodds/prettier-eslint/commits?author=edm00se) [⚠️](https://github.com/kentcdodds/prettier-eslint/commits?author=edm00se) | [<img src="https://avatars.githubusercontent.com/u/2142817?v=3" width="100px;"/><br /><sub>Simon Lydell</sub>](https://github.com/lydell)<br />[📖](https://github.com/kentcdodds/prettier-eslint/commits?author=lydell) | [<img src="https://avatars0.githubusercontent.com/u/981957?v=3" width="100px;"/><br /><sub>Tom McKearney</sub>](https://github.com/tommck)<br />[📖](https://github.com/kentcdodds/prettier-eslint/commits?author=tommck) 💡 |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds) [📖](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds) | [<img src="https://avatars.githubusercontent.com/u/5554486?v=3" width="100px;"/><br /><sub>Gyandeep Singh</sub>](http://gyandeeps.com)<br />👀 | [<img src="https://avatars.githubusercontent.com/u/682584?v=3" width="100px;"/><br /><sub>Igor Pnev</sub>](https://github.com/exdeniz)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Aexdeniz) | [<img src="https://avatars.githubusercontent.com/u/813865?v=3" width="100px;"/><br /><sub>Benjamin Tan</sub>](https://demoneaux.github.io/)<br />💬 👀 | [<img src="https://avatars.githubusercontent.com/u/622118?v=3" width="100px;"/><br /><sub>Eric McCormick</sub>](https://ericmccormick.io)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=edm00se) [📖](https://github.com/prettier/prettier-eslint/commits?author=edm00se) [⚠️](https://github.com/prettier/prettier-eslint/commits?author=edm00se) | [<img src="https://avatars.githubusercontent.com/u/2142817?v=3" width="100px;"/><br /><sub>Simon Lydell</sub>](https://github.com/lydell)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=lydell) | [<img src="https://avatars0.githubusercontent.com/u/981957?v=3" width="100px;"/><br /><sub>Tom McKearney</sub>](https://github.com/tommck)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=tommck) 💡 |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://avatars.githubusercontent.com/u/463105?v=3" width="100px;"/><br /><sub>Patrik Åkerstrand</sub>](https://github.com/PAkerstrand)<br />[💻](https://github.com/kentcdodds/prettier-eslint/commits?author=PAkerstrand) | [<img src="https://avatars.githubusercontent.com/u/1560301?v=3" width="100px;"/><br /><sub>Lochlan Bunn</sub>](https://twitter.com/loklaan)<br />[💻](https://github.com/kentcdodds/prettier-eslint/commits?author=loklaan) | [<img src="https://avatars.githubusercontent.com/u/25886902?v=3" width="100px;"/><br /><sub>Daniël Terwiel</sub>](https://github.com/danielterwiel)<br />[🔌 🔧](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) |
+| [<img src="https://avatars.githubusercontent.com/u/463105?v=3" width="100px;"/><br /><sub>Patrik Åkerstrand</sub>](https://github.com/PAkerstrand)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=PAkerstrand) | [<img src="https://avatars.githubusercontent.com/u/1560301?v=3" width="100px;"/><br /><sub>Lochlan Bunn</sub>](https://twitter.com/loklaan)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=loklaan) | [<img src="https://avatars.githubusercontent.com/u/25886902?v=3" width="100px;"/><br /><sub>Daniël Terwiel</sub>](https://github.com/danielterwiel)<br />[🔌 🔧](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!
@@ -152,33 +152,33 @@ MIT
 [fix]: http://eslint.org/docs/user-guide/command-line-interface#fix
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/kentcdodds/prettier-eslint.svg?style=flat-square
-[build]: https://travis-ci.org/kentcdodds/prettier-eslint
-[coverage-badge]: https://img.shields.io/codecov/c/github/kentcdodds/prettier-eslint.svg?style=flat-square
-[coverage]: https://codecov.io/github/kentcdodds/prettier-eslint
-[dependencyci-badge]: https://dependencyci.com/github/kentcdodds/prettier-eslint/badge?style=flat-square
-[dependencyci]: https://dependencyci.com/github/kentcdodds/prettier-eslint
+[build-badge]: https://img.shields.io/travis/prettier/prettier-eslint.svg?style=flat-square
+[build]: https://travis-ci.org/prettier/prettier-eslint
+[coverage-badge]: https://img.shields.io/codecov/c/github/prettier/prettier-eslint.svg?style=flat-square
+[coverage]: https://codecov.io/github/prettier/prettier-eslint
+[dependencyci-badge]: https://dependencyci.com/github/prettier/prettier-eslint/badge?style=flat-square
+[dependencyci]: https://dependencyci.com/github/prettier/prettier-eslint
 [version-badge]: https://img.shields.io/npm/v/prettier-eslint.svg?style=flat-square
 [package]: https://www.npmjs.com/package/prettier-eslint
 [downloads-badge]: https://img.shields.io/npm/dm/prettier-eslint.svg?style=flat-square
 [npm-stat]: http://npm-stat.com/charts.html?package=prettier-eslint&from=2016-04-01
 [license-badge]: https://img.shields.io/npm/l/prettier-eslint.svg?style=flat-square
-[license]: https://github.com/kentcdodds/prettier-eslint/blob/master/other/LICENSE
+[license]: https://github.com/prettier/prettier-eslint/blob/master/other/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
 [donate]: http://kcd.im/donate
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/kentcdodds/prettier-eslint/blob/master/other/CODE_OF_CONDUCT.md
+[coc]: https://github.com/prettier/prettier-eslint/blob/master/other/CODE_OF_CONDUCT.md
 [roadmap-badge]: https://img.shields.io/badge/%F0%9F%93%94-roadmap-CD9523.svg?style=flat-square
-[roadmap]: https://github.com/kentcdodds/prettier-eslint/blob/master/other/ROADMAP.md
+[roadmap]: https://github.com/prettier/prettier-eslint/blob/master/other/ROADMAP.md
 [examples-badge]: https://img.shields.io/badge/%F0%9F%92%A1-examples-8C8E93.svg?style=flat-square
-[examples]: https://github.com/kentcdodds/prettier-eslint/blob/master/other/EXAMPLES.md
-[github-watch-badge]: https://img.shields.io/github/watchers/kentcdodds/prettier-eslint.svg?style=social
-[github-watch]: https://github.com/kentcdodds/prettier-eslint/watchers
-[github-star-badge]: https://img.shields.io/github/stars/kentcdodds/prettier-eslint.svg?style=social
-[github-star]: https://github.com/kentcdodds/prettier-eslint/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20prettier-eslint!%20https://github.com/kentcdodds/prettier-eslint%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/kentcdodds/prettier-eslint.svg?style=social
+[examples]: https://github.com/prettier/prettier-eslint/blob/master/other/EXAMPLES.md
+[github-watch-badge]: https://img.shields.io/github/watchers/prettier/prettier-eslint.svg?style=social
+[github-watch]: https://github.com/prettier/prettier-eslint/watchers
+[github-star-badge]: https://img.shields.io/github/stars/prettier/prettier-eslint.svg?style=social
+[github-star]: https://github.com/prettier/prettier-eslint/stargazers
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20prettier-eslint!%20https://github.com/prettier/prettier-eslint%20%F0%9F%91%8D
+[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/prettier/prettier-eslint.svg?style=social
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
