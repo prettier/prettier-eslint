@@ -1,8 +1,8 @@
 import {oneLine} from 'common-tags'
 import delve from 'dlv'
-import getLogger from './log'
+import getLogger from 'loglevel-colored-level-prefix'
 
-const logger = getLogger()
+const logger = getLogger({prefix: 'prettier-eslint'})
 
 /* eslint import/prefer-default-export:0 */
 export {getOptionsForFormatting}

@@ -4,7 +4,7 @@ import fsMock from 'fs'
 import stripIndent from 'strip-indent'
 import eslintMock from 'eslint'
 import prettierMock from 'prettier'
-import loglevelMock from 'loglevel'
+import loglevelMock from 'loglevel-colored-level-prefix'
 import format from './'
 
 jest.mock('fs')

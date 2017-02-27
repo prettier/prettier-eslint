@@ -5,10 +5,10 @@ import requireRelative from 'require-relative'
 import prettyFormat from 'pretty-format'
 import {oneLine, stripIndent} from 'common-tags'
 import indentString from 'indent-string'
+import getLogger from 'loglevel-colored-level-prefix'
 import {getOptionsForFormatting} from './utils'
-import getLogger from './log'
 
-const logger = getLogger(getDefaultLogLevel())
+const logger = getLogger({prefix: 'prettier-eslint'})
 
 // CommonJS + ES6 modules... is it worth it? Probably not...
 module.exports = format

@@ -1,3 +1,4 @@
+module.exports = getLogger
 const logger = {
   setLevel: jest.fn(),
   trace: jest.fn(getTestImplementation('trace')),
@@ -7,7 +8,10 @@ const logger = {
   error: jest.fn(getTestImplementation('error')),
 }
 const mock = {clearAll, logger, logThings: []}
-module.exports = {getLogger: jest.fn(getLogger), mock}
+
+Object.assign(module.exports, {
+  mock,
+})
 
 function getLogger() {
   return logger
