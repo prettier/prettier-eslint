@@ -101,7 +101,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/25886902?v=3",
       "profile": "https://github.com/danielterwiel",
       "contributions": [
-        "doc"
+        "plugin",
+        "tool"
       ]
     }
   ]
