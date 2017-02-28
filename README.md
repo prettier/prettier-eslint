@@ -115,6 +115,25 @@ This is basically the same as `eslintPath` except for the `prettier` module.
 `prettier-eslint` will propagate errors when either `prettier` or `eslint` fails for one reason or another. In addition
 to propagating the errors, it will also log a specific message indicating what it was doing at the time of the failure.
 
+## Technical details
+
+> Code ➡️ prettier ➡️ eslint --fix ➡️ Formatted Code ✨
+
+### inferring prettierOptions via eslintConfig
+
+The `eslintConfig` and `prettierOptions` can each be provided as an argument. If
+the `eslintConfig` is not provided, then `prettier-eslint` will look for them
+based on the `fileName` (if no `fileName` is provided then it uses
+`process.cwd()`). Once `prettier-eslint` has found the `eslintConfig`, the
+`prettierOptions` are inferred from the `eslintConfig`. If some of the
+`prettierOptions` have already been provided, then `prettier-eslint` will only
+infer the remaining options. This inference happens in `src/utils.js`.
+
+**An important thing to note** about this inference is that it may not support
+your specific eslint config. So you'll want to check `src/utils.js` to see how
+the inference is done for each option (what rule(s) are referenced, etc.) and
+[make a pull request][prs] if your configuration is supported.
+
 ## Inspiration
 
 - [`prettier`][prettier]
