@@ -104,6 +104,15 @@
         "plugin",
         "tool"
       ]
+    },
+    {
+      "login": "RobinMalfait",
+      "name": "Robin Malfait",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1834413?v=3",
+      "profile": "https://robinmalfait.com",
+      "contributions": [
+        "tool"
+      ]
     }
   ]
 }
