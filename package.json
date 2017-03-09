@@ -19,7 +19,7 @@
   "dependencies": {
     "common-tags": "^1.4.0",
     "dlv": "^1.1.0",
-    "eslint": "^3.13.1",
+    "eslint": "^3.17.0",
     "indent-string": "^3.1.0",
     "loglevel-colored-level-prefix": "^1.0.0",
     "prettier": "^0.19.0",
