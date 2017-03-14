@@ -34,7 +34,12 @@ function mockGetConfigForFile(filePath) {
   if (mockGetConfigForFileSpy.throwError) {
     throw mockGetConfigForFileSpy.throwError
   }
-  if (!filePath || filePath.includes('default-config')) {
+  if (!filePath) {
+    return {
+      rules: {},
+    }
+  }
+  if (filePath.includes('default-config')) {
     return {
       rules: {
         semi: [2, 'never'],
