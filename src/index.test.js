@@ -42,9 +42,30 @@ const tests = [
     output: defaultOutput(),
   },
   {
+    title: 'with a default config and overrides',
+    input: {
+      text: 'const { foo } = bar;',
+      eslintConfig: {
+        foo: true,
+        // Won't be overridden
+        parserOptions: {
+          ecmaVersion: 7,
+        },
+        rules: {
+          // Will be overridden
+          semi: ['error', 'always'],
+          // Won't be overridden
+          'object-curly-spacing': ['error', 'never'],
+        },
+      },
+      filePath: path.resolve('./mock/default-config'),
+    },
+    output: 'const {foo} = bar',
+  },
+  {
     title: 'without a filePath and no config',
     input: {text: defaultInputText()},
-    output: defaultOutput(),
+    output: noopOutput(),
   },
   {
     title: 'inferring bracketSpacing',
@@ -261,6 +282,15 @@ function defaultInputText() {
   return `
     function  foo (){ // stuff
       console.log( "Hello world!",  and, stuff );
+    }
+  `
+}
+
+function noopOutput() {
+  return `
+    function foo() {
+      // stuff
+      console.log('Hello world!', and, stuff);
     }
   `
 }

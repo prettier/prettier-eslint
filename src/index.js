@@ -6,7 +6,7 @@ import prettyFormat from 'pretty-format'
 import {oneLine, stripIndent} from 'common-tags'
 import indentString from 'indent-string'
 import getLogger from 'loglevel-colored-level-prefix'
-import {getOptionsForFormatting} from './utils'
+import {getOptionsForFormatting, defaultEslintConfig} from './utils'
 
 const logger = getLogger({prefix: 'prettier-eslint'})
 
@@ -43,13 +43,19 @@ function format(options) {
     text = getTextFromFilePath(filePath),
     eslintPath = getModulePath(filePath, 'eslint'),
     prettierPath = getModulePath(filePath, 'prettier'),
-    eslintConfig = getConfig(filePath, eslintPath),
     prettierOptions,
   } = options
+
+  const eslintConfig = defaultEslintConfig(
+    getConfig(filePath, eslintPath),
+    options.eslintConfig,
+  )
+
   const formattingOptions = getOptionsForFormatting(
     eslintConfig,
     prettierOptions,
   )
+
   logger.debug(
     'inferred options:',
     prettyFormat({
