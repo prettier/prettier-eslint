@@ -188,8 +188,8 @@ function getConfig(filePath, eslintPath) {
     return config
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
-    logger.error('Unable to find config')
-    throw error
+    logger.warn('Unable to find config')
+    return { rules: {} }
   }
 }
 

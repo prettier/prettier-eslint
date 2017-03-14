@@ -124,15 +124,6 @@ tests.forEach(({title, modifier, input, output}) => {
   })
 })
 
-test('failure to get the config throws and logs an error', () => {
-  const {getConfigForFile} = eslintMock.mock
-  const error = 'Something happened'
-  getConfigForFile.throwError = new Error(error)
-  expect(() => format({text: ''})).toThrowError(error)
-  expect(logger.error).toHaveBeenCalledTimes(1)
-  getConfigForFile.throwError = null
-})
-
 test('failure to fix with eslint throws and logs an error', () => {
   const {executeOnText} = eslintMock.mock
   const error = 'Something happened'
@@ -240,7 +231,8 @@ test('reads text from fs if filePath is provided but not text', () => {
   } catch (e) {
     // ignore
   }
-  expect(fsMock.readFileSync).toHaveBeenCalledTimes(1)
+  // Two hits to .eslintignore
+  expect(fsMock.readFileSync).toHaveBeenCalledTimes(3)
   expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, 'utf8')
 })
 

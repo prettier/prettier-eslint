@@ -63,6 +63,11 @@ const defaultEslintConfigTests = [
     },
   },
   {
+    config: undefined,
+    defaults: undefined,
+    result: {},
+  },
+  {
     config: {},
     defaults: {},
     result: {},
