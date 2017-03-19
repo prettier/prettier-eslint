@@ -134,6 +134,24 @@ your specific eslint config. So you'll want to check `src/utils.js` to see how
 the inference is done for each option (what rule(s) are referenced, etc.) and
 [make a pull request][prs] if your configuration is supported.
 
+**Defaults** if you have all of the relevant ESLint rules disabled (or have
+ESLint disabled entirely via `/* eslint-disable */` then prettier options will
+fall back to the defaults:
+
+```javascript
+{
+  printWidth: 80,
+  tabWidth: 2,
+  parser: 'babylon',
+  singleQuote: true,
+  trailingComma: 'all',
+  bracketSpacing: false,
+}
+```
+
+I set these defaults based on my own preferences. If you'd like to see these
+defaults changed, please [make a pull request][pr].
+
 ## Inspiration
 
 - [`prettier`][prettier]
