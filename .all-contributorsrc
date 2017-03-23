@@ -140,6 +140,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "briandipalma",
+      "name": "Brian Di Palma",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1597820?v=3",
+      "profile": "https://github.com/briandipalma",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
