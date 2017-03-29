@@ -29,8 +29,9 @@ module.exports = format
  * @param {Object} options.prettierOptions - the options to pass for
  *  formatting with `prettier`. If not provided, prettier-eslint will attempt
  *  to create the options based on the eslintConfig
- * @param {Boolean} options.logLevel - the level for the logs
+ * @param {String} options.logLevel - the level for the logs
  *  (error, warn, info, debug, trace)
+ * @param {Boolean} options.prettierLast - Run Prettier Last
  * @return {String} - the formatted string
  */
 function format(options) {
@@ -44,6 +45,7 @@ function format(options) {
     eslintPath = getModulePath(filePath, 'eslint'),
     prettierPath = getModulePath(filePath, 'prettier'),
     prettierOptions,
+    prettierLast,
   } = options
 
   const eslintConfig = defaultEslintConfig(
@@ -66,83 +68,93 @@ function format(options) {
       eslintConfig: formattingOptions.eslint,
       prettierOptions: formattingOptions.prettier,
       logLevel,
+      prettierLast,
     }),
   )
 
-  logger.debug('calling prettier on text')
-  logger.trace(
-    stripIndent`
+  const prettify = createPrettify(formattingOptions.prettier, prettierPath)
+  const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
+
+  if (prettierLast) {
+    return prettify(eslintFix(text))
+  }
+
+  return eslintFix(prettify(text))
+}
+
+function createPrettify(formatOptions, prettierPath) {
+  return function prettify(text) {
+    logger.debug('calling prettier on text')
+    logger.trace(
+      stripIndent`
       prettier input:
 
       ${indentString(text, 2)}
     `,
-  )
-  const pretty = prettify(text, formattingOptions.prettier, prettierPath)
-  logger.trace(
-    stripIndent`
-      prettier output (eslint input):
-
-      ${indentString(pretty, 2)}
-    `,
-  )
-  const eslintFixed = eslintFix(pretty, formattingOptions.eslint, eslintPath)
-  logger.trace(
-    stripIndent`
-      eslint --fix output (final formatted result):
-
-      ${indentString(pretty, 2)}
-    `,
-  )
-  return eslintFixed
-}
-
-function prettify(text, formatOptions, prettierPath) {
-  let prettier
-  try {
-    logger.trace(`requiring prettier module at "${prettierPath}"`)
-    prettier = require(prettierPath)
-  } catch (error) {
-    logger.error(
-      oneLine`
+    )
+    let prettier
+    try {
+      logger.trace(`requiring prettier module at "${prettierPath}"`)
+      prettier = require(prettierPath)
+    } catch (error) {
+      logger.error(
+        oneLine`
         There was trouble getting prettier.
         Is "prettierPath: ${prettierPath}"
         a correct path to the prettier module?
       `,
-    )
-    throw error
-  }
-  try {
-    logger.trace(`calling prettier.format with the text and prettierOptions`)
-    const output = prettier.format(text, formatOptions)
-    logger.trace('prettier: output === input', output === text)
-    return output
-  } catch (error) {
-    logger.error('prettier formatting failed due to a prettier error')
-    throw error
+      )
+      throw error
+    }
+    try {
+      logger.trace(`calling prettier.format with the text and prettierOptions`)
+      const output = prettier.format(text, formatOptions)
+      logger.trace('prettier: output === input', output === text)
+      logger.trace(
+        stripIndent`
+        prettier output:
+
+        ${indentString(output, 2)}
+      `,
+      )
+      return output
+    } catch (error) {
+      logger.error('prettier formatting failed due to a prettier error')
+      throw error
+    }
   }
 }
 
-function eslintFix(text, eslintConfig, eslintPath) {
-  const eslint = getESLintCLIEngine(eslintPath, eslintConfig)
-  try {
-    logger.trace(`calling eslint.executeOnText with the text`)
-    const report = eslint.executeOnText(text)
-    logger.trace(
-      `executeOnText returned the following report:`,
-      prettyFormat(report),
-    )
-    // default the output to text because if there's nothing
-    // to fix, eslint doesn't provide `output`
-    const [{output = text}] = report.results
-    logger.trace('eslint --fix: output === input', output === text)
-    // NOTE: We're ignoring linting errors/warnings here and
-    // defaulting to the given text if there are any
-    // because all we're trying to do is fix what we can.
-    // We don't care about what we can't
-    return output
-  } catch (error) {
-    logger.error('eslint fix failed due to an eslint error')
-    throw error
+function createEslintFix(eslintConfig, eslintPath) {
+  return function eslintFix(text) {
+    const eslint = getESLintCLIEngine(eslintPath, eslintConfig)
+    try {
+      logger.trace(`calling eslint.executeOnText with the text`)
+      const report = eslint.executeOnText(text)
+      logger.trace(
+        `executeOnText returned the following report:`,
+        prettyFormat(report),
+      )
+      // default the output to text because if there's nothing
+      // to fix, eslint doesn't provide `output`
+      const [{output = text}] = report.results
+      logger.trace('eslint --fix: output === input', output === text)
+      // NOTE: We're ignoring linting errors/warnings here and
+      // defaulting to the given text if there are any
+      // because all we're trying to do is fix what we can.
+      // We don't care about what we can't
+      logger.trace(
+        stripIndent`
+        eslint --fix output:
+
+        ${indentString(output, 2)}
+      `,
+      )
+      return output
+    } catch (error) {
+      logger.error('eslint fix failed due to an eslint error')
+      throw error
+    }
   }
 }
 
@@ -189,7 +201,7 @@ function getConfig(filePath, eslintPath) {
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
     logger.debug('Unable to find config')
-    return { rules: {} }
+    return {rules: {}}
   }
 }
 

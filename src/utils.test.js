@@ -172,9 +172,12 @@ getPrettierOptionsFromESLintRulesTests.forEach(({rules, options}, index) => {
 })
 
 test('if prettierOptions are provided, those are preferred', () => {
-  const {prettier} = getOptionsForFormatting({rules: {quotes: [2, 'single']}}, {
-    singleQuote: false,
-  })
+  const {prettier} = getOptionsForFormatting(
+    {rules: {quotes: [2, 'single']}},
+    {
+      singleQuote: false,
+    },
+  )
   expect(prettier).toMatchObject({singleQuote: false})
 })
 
