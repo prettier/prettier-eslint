@@ -34,6 +34,15 @@ const tests = [
     output: 'const { foo } = bar',
   },
   {
+    title: 'with prettierLast: true',
+    input: {
+      text: defaultInputText(),
+      filePath: path.resolve('./mock/default-config'),
+      prettierLast: true,
+    },
+    output: prettierLastOutput(),
+  },
+  {
     title: 'with a filePath and no config',
     input: {
       text: defaultInputText(),
@@ -292,6 +301,15 @@ function defaultOutput() {
     function foo() {
       // stuff
       console.log('Hello world!', and, stuff)
+    }
+  `
+}
+
+function prettierLastOutput() {
+  return `
+    function foo() {
+      // stuff
+      console.log('Hello world!', and, stuff);
     }
   `
 }

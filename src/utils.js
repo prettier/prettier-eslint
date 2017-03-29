@@ -35,24 +35,24 @@ function getRelevantESLintConfig(eslintConfig) {
   ]
 
   logger.debug('reducing eslint rules down to relevant rules only')
-  const relevantRules = Object.keys(rules).reduce((
-    rulesAccumulator,
-    ruleName,
-  ) => {
-    if (rulesThatWillNeverBeFixable.indexOf(ruleName) === -1) {
-      logger.trace(
-        `adding to relevant rules:`,
-        JSON.stringify({[ruleName]: rules[ruleName]}),
-      )
-      rulesAccumulator[ruleName] = rules[ruleName]
-    } else {
-      logger.trace(
-        `omitting from relevant rules:`,
-        JSON.stringify({[ruleName]: rules[ruleName]}),
-      )
-    }
-    return rulesAccumulator
-  }, {})
+  const relevantRules = Object.keys(rules).reduce(
+    (rulesAccumulator, ruleName) => {
+      if (rulesThatWillNeverBeFixable.indexOf(ruleName) === -1) {
+        logger.trace(
+          `adding to relevant rules:`,
+          JSON.stringify({[ruleName]: rules[ruleName]}),
+        )
+        rulesAccumulator[ruleName] = rules[ruleName]
+      } else {
+        logger.trace(
+          `omitting from relevant rules:`,
+          JSON.stringify({[ruleName]: rules[ruleName]}),
+        )
+      }
+      return rulesAccumulator
+    },
+    {},
+  )
 
   return {
     // defaults
@@ -80,13 +80,16 @@ function getPrettierOptionsFromESLintRules(eslintConfig, prettierOptions) {
     bracketSpacing: getBraketSpacing,
   }
 
-  return Object.keys(optionGetters).reduce((options, key) => {
-    const givenOption = prettierOptions[key]
-    const optionIsGiven = prettierOptions[key] !== undefined
-    const getter = optionGetters[key]
-    options[key] = optionIsGiven ? givenOption : getter(rules)
-    return options
-  }, {})
+  return Object.keys(optionGetters).reduce(
+    (options, key) => {
+      const givenOption = prettierOptions[key]
+      const optionIsGiven = prettierOptions[key] !== undefined
+      const getter = optionGetters[key]
+      options[key] = optionIsGiven ? givenOption : getter(rules)
+      return options
+    },
+    {},
+  )
 }
 
 function getPrintWidth(rules) {
