@@ -4,6 +4,33 @@ import getLogger from 'loglevel-colored-level-prefix'
 import merge from 'lodash.merge'
 
 const logger = getLogger({prefix: 'prettier-eslint'})
+const RULE_DISABLED = {}
+const OPTION_GETTERS = {
+  printWidth: {
+    ruleValue: rules => getRuleValue(rules, 'max-len', 80, 'code'),
+    ruleValueToPrettierOption: value => value,
+  },
+  tabWidth: {
+    ruleValue: rules => getRuleValue(rules, 'indent', 2),
+    ruleValueToPrettierOption: value => getTabWidth(value),
+  },
+  parser: {
+    ruleValue: getParser,
+    ruleValueToPrettierOption: getParser,
+  },
+  singleQuote: {
+    ruleValue: rules => getRuleValue(rules, 'quotes', 'single'),
+    ruleValueToPrettierOption: value => getSingleQuote(value),
+  },
+  trailingComma: {
+    ruleValue: rules => getRuleValue(rules, 'comma-dangle'),
+    ruleValueToPrettierOption: (value, rules) => getTrailingComma(value, rules),
+  },
+  bracketSpacing: {
+    ruleValue: rules => getRuleValue(rules, 'object-curly-spacing', 'never'),
+    ruleValueToPrettierOption: value => getBraketSpacing(value),
+  },
+}
 
 /* eslint import/prefer-default-export:0 */
 export {getOptionsForFormatting, defaultEslintConfig}
@@ -71,46 +98,55 @@ function getRelevantESLintConfig(eslintConfig) {
  */
 function getPrettierOptionsFromESLintRules(eslintConfig, prettierOptions) {
   const {rules} = eslintConfig
-  const optionGetters = {
-    printWidth: getPrintWidth,
-    tabWidth: getTabWidth,
-    parser: getParser,
-    singleQuote: getSingleQuote,
-    trailingComma: getTrailingComma,
-    bracketSpacing: getBraketSpacing,
-  }
 
-  return Object.keys(optionGetters).reduce(
-    (options, key) => {
-      const givenOption = prettierOptions[key]
-      const optionIsGiven = prettierOptions[key] !== undefined
-      const getter = optionGetters[key]
-      options[key] = optionIsGiven ? givenOption : getter(rules)
-      return options
-    },
+  return Object.keys(OPTION_GETTERS).reduce(
+    (options, key) => configureOptions(prettierOptions, key, options, rules),
     {},
   )
 }
 
-function getPrintWidth(rules) {
-  return getRuleValue(rules, 'max-len', 80, 'code')
+// If an ESLint rule that prettier can be configured with is enabled create a
+// prettier configuration object that reflects the ESLint rule configuration.
+function configureOptions(prettierOptions, key, options, rules) {
+  const givenOption = prettierOptions[key]
+  const optionIsGiven = givenOption !== undefined
+
+  if (optionIsGiven) {
+    options[key] = givenOption
+  } else {
+    const {ruleValue, ruleValueToPrettierOption} = OPTION_GETTERS[key]
+    const getterRuleValue = ruleValue(rules)
+
+    if (getterRuleValue !== RULE_DISABLED) {
+      const prettierOptionValue = ruleValueToPrettierOption(
+        getterRuleValue,
+        rules,
+      )
+
+      if (prettierOptionValue !== RULE_DISABLED) {
+        options[key] = prettierOptionValue
+      }
+    }
+  }
+
+  return options
 }
 
-function getTabWidth(rules) {
-  const value = getRuleValue(rules, 'indent', 2)
-  // if the value is not a number, default to 2
-  // use-case is 'tab' where prettier doesn't
-  // allow tabs.
-  return typeof value === 'number' ? value : 2
+function getTabWidth(value) {
+  // Fallback to prettier default if `value` is `tab`.
+  return value === 'tab' ? RULE_DISABLED : value
 }
 
-function getSingleQuote(rules) {
-  const value = getRuleValue(rules, 'quotes', 'single')
+function getParser() {
+  // TODO: handle flow parser config
+  return 'babylon'
+}
+
+function getSingleQuote(value) {
   return value === 'single'
 }
 
-function getTrailingComma(rules) {
-  const value = getRuleValue(rules, 'comma-dangle')
+function getTrailingComma(value, rules) {
   if (typeof value === 'undefined') {
     const actualValue = rules['comma-dangle']
     if (typeof actualValue === 'object') {
@@ -129,40 +165,51 @@ function getTrailingComma(rules) {
   }
 }
 
-function getParser() {
-  // TODO: handle flow parser config
-  return 'babylon'
+function getBraketSpacing(value) {
+  return value !== 'never'
 }
 
-function getBraketSpacing(rules) {
-  const value = getRuleValue(rules, 'object-curly-spacing', 'never')
-  return value !== 'never'
+function extractRuleValue(objPath, name, value, defaultValue) {
+  if (objPath) {
+    logger.trace(
+      oneLine`
+        Getting the value from object configuration of ${name}.
+        delving into ${JSON.stringify(value)} with path "${objPath}"
+      `,
+    )
+
+    return delve(value, objPath, defaultValue)
+  }
+
+  logger.debug(
+    oneLine`
+      The ${name} rule is using an object configuration
+      of ${JSON.stringify(value)} but prettier-eslint is
+      not currently capable of getting the prettier value
+      based on an object configuration for ${name}.
+      Please file an issue (and make a pull request?)
+    `,
+  )
+
+  return undefined
 }
 
 function getRuleValue(rules, name, defaultValue, objPath) {
   const ruleConfig = rules[name]
+
   if (Array.isArray(ruleConfig)) {
-    const [, value] = ruleConfig
+    const [ruleSetting, value] = ruleConfig
+
+    // If `ruleSetting` is set to disable the ESLint rule don't use `value` as
+    // it might be a value provided by an overriden config package e.g. airbnb
+    // overriden by config-prettier. The airbnb values are provided even though
+    // config-prettier disables the rule. Instead fallback to prettier defaults.
+    if (ruleSetting === 0 || ruleSetting === 'off') {
+      return RULE_DISABLED
+    }
+
     if (typeof value === 'object') {
-      if (objPath) {
-        logger.trace(
-          oneLine`
-            Getting the value from object configuration of ${name}.
-            delving into ${JSON.stringify(value)} with path "${objPath}"
-          `,
-        )
-        return delve(value, objPath, defaultValue)
-      } else {
-        logger.debug(
-          oneLine`
-            The ${name} rule is using an object configuration
-            of ${JSON.stringify(value)} but prettier-eslint is
-            not currently capable of getting the prettier value
-            based on an object configuration for ${name}.
-            Please file an issue (and make a pull request?)
-          `,
-        )
-      }
+      return extractRuleValue(objPath, name, value, defaultValue)
     } else {
       logger.trace(
         oneLine`
@@ -173,12 +220,14 @@ function getRuleValue(rules, name, defaultValue, objPath) {
       return value
     }
   }
+
   logger.debug(
     oneLine`
       The ${name} rule is not configured,
       using default of ${defaultValue}
     `,
   )
+
   // no value configured
   return defaultValue
 }
