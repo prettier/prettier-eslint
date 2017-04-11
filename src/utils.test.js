@@ -153,8 +153,11 @@ const getPrettierOptionsFromESLintRulesTests = [
   },
   // prettier doesn't allow tabs,
   // so we'll just go with the default and let eslint fix it
-  {rules: {indent: [2, 'tab']}, options: {tabWidth: 2}},
+  {rules: {indent: [2, 'tab']}, options: {}},
   {rules: {'max-len': ['error', {code: 120}]}, options: {printWidth: 120}},
+  // If an ESLint rule is disabled fall back to prettier defaults.
+  {rules: {'max-len': [0, {code: 120}]}, options: {}},
+  {rules: {quotes: ['off', {code: 120}]}, options: {}},
 ]
 
 defaultEslintConfigTests.forEach(({config, defaults, result}, index) => {
