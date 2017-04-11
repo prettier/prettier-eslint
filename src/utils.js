@@ -115,11 +115,11 @@ function configureOptions(prettierOptions, key, options, rules) {
     options[key] = givenOption
   } else {
     const {ruleValue, ruleValueToPrettierOption} = OPTION_GETTERS[key]
-    const getterRuleValue = ruleValue(rules)
+    const eslintRuleValue = ruleValue(rules)
 
-    if (getterRuleValue !== RULE_DISABLED) {
+    if (eslintRuleValue !== RULE_DISABLED) {
       const prettierOptionValue = ruleValueToPrettierOption(
-        getterRuleValue,
+        eslintRuleValue,
         rules,
       )
 
@@ -133,7 +133,7 @@ function configureOptions(prettierOptions, key, options, rules) {
 }
 
 function getTabWidth(value) {
-  // Fallback to prettier default if `value` is `tab`.
+  // As prettier does not support tabs use prettier default if `value` is `tab`.
   return value === 'tab' ? RULE_DISABLED : value
 }
 
