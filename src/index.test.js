@@ -34,6 +34,12 @@ const tests = [
     output: 'const { foo } = bar',
   },
   {
+    // this one's actually hard to test now. This test doesn't
+    // really do too much. Before, when prettier didn't support
+    // semi, it was easy to tell based on the presence of the
+    // semicolon. Now prettier removes the semicolon so I'm
+    // honestly not sure how to test that prettier fixed
+    // something that eslint fixed
     title: 'with prettierLast: true',
     input: {
       text: defaultInputText(),
@@ -309,7 +315,7 @@ function prettierLastOutput() {
   return `
     function foo() {
       // stuff
-      console.log('Hello world!', and, stuff);
+      console.log('Hello world!', and, stuff)
     }
   `
 }

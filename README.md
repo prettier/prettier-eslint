@@ -145,21 +145,23 @@ the inference is done for each option (what rule(s) are referenced, etc.) and
 
 **Defaults** if you have all of the relevant ESLint rules disabled (or have
 ESLint disabled entirely via `/* eslint-disable */` then prettier options will
-fall back to the defaults:
+fall back to the `prettier` defaults:
 
 ```javascript
 {
   printWidth: 80,
   tabWidth: 2,
+  singleQuote: false,
+  trailingComma: 'none',
+  bracketSpacing: true,
+  semi: true,
+  useTabs: false,
+  // prettier-eslint doesn't currently support
+  // inferring these two (Pull Requests welcome):
   parser: 'babylon',
-  singleQuote: true,
-  trailingComma: 'all',
-  bracketSpacing: false,
+  jsxBracketSameLine: false,
 }
 ```
-
-I set these defaults based on my own preferences. If you'd like to see these
-defaults changed, please [make a pull request][pr].
 
 ## Inspiration
 

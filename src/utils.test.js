@@ -151,13 +151,23 @@ const getPrettierOptionsFromESLintRulesTests = [
     },
     options: {trailingComma: 'none'},
   },
-  // prettier doesn't allow tabs,
-  // so we'll just go with the default and let eslint fix it
-  {rules: {indent: [2, 'tab']}, options: {}},
   {rules: {'max-len': ['error', {code: 120}]}, options: {printWidth: 120}},
   // If an ESLint rule is disabled fall back to prettier defaults.
   {rules: {'max-len': [0, {code: 120}]}, options: {}},
   {rules: {quotes: ['off', {code: 120}]}, options: {}},
+  {rules: {semi: 'off'}, options: {}},
+  {rules: {semi: ['off', 'never']}, options: {}},
+  {rules: {semi: ['warn', 'always']}, options: {}},
+  {rules: {semi: ['warn', 'always']}, options: {semi: true}},
+  {rules: {semi: ['error', 'never']}, options: {semi: false}},
+  {rules: {semi: [2, 'never']}, options: {semi: false}},
+  {rules: {semi: [2, 'never']}, options: {semi: false}},
+  {rules: {indent: 'off'}, options: {}},
+  {rules: {indent: ['off', 'tab']}, options: {}},
+  {rules: {indent: ['warn', 2]}, options: {useTabs: false, tabWidth: 2}},
+  {rules: {indent: ['warn', 4]}, options: {useTabs: false, tabWidth: 4}},
+  {rules: {indent: ['error', 'tab']}, options: {useTabs: true}},
+  {rules: {indent: [2, 'tab']}, options: {useTabs: true}},
 ]
 
 defaultEslintConfigTests.forEach(({config, defaults, result}, index) => {

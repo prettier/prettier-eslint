@@ -30,6 +30,14 @@ const OPTION_GETTERS = {
     ruleValue: rules => getRuleValue(rules, 'object-curly-spacing', 'never'),
     ruleValueToPrettierOption: value => getBraketSpacing(value),
   },
+  semi: {
+    ruleValue: rules => getRuleValue(rules, 'semi', 'always'),
+    ruleValueToPrettierOption: value => value === 'always',
+  },
+  useTabs: {
+    ruleValue: rules => getRuleValue(rules, 'indent', 2),
+    ruleValueToPrettierOption: value => value === 'tab',
+  },
 }
 
 /* eslint import/prefer-default-export:0 */
@@ -62,24 +70,23 @@ function getRelevantESLintConfig(eslintConfig) {
   ]
 
   logger.debug('reducing eslint rules down to relevant rules only')
-  const relevantRules = Object.keys(rules).reduce(
-    (rulesAccumulator, ruleName) => {
-      if (rulesThatWillNeverBeFixable.indexOf(ruleName) === -1) {
-        logger.trace(
-          `adding to relevant rules:`,
-          JSON.stringify({[ruleName]: rules[ruleName]}),
-        )
-        rulesAccumulator[ruleName] = rules[ruleName]
-      } else {
-        logger.trace(
-          `omitting from relevant rules:`,
-          JSON.stringify({[ruleName]: rules[ruleName]}),
-        )
-      }
-      return rulesAccumulator
-    },
-    {},
-  )
+  const relevantRules = Object.keys(
+    rules,
+  ).reduce((rulesAccumulator, ruleName) => {
+    if (rulesThatWillNeverBeFixable.indexOf(ruleName) === -1) {
+      logger.trace(
+        `adding to relevant rules:`,
+        JSON.stringify({[ruleName]: rules[ruleName]}),
+      )
+      rulesAccumulator[ruleName] = rules[ruleName]
+    } else {
+      logger.trace(
+        `omitting from relevant rules:`,
+        JSON.stringify({[ruleName]: rules[ruleName]}),
+      )
+    }
+    return rulesAccumulator
+  }, {})
 
   return {
     // defaults
@@ -133,7 +140,7 @@ function configureOptions(prettierOptions, key, options, rules) {
 }
 
 function getTabWidth(value) {
-  // As prettier does not support tabs use prettier default if `value` is `tab`.
+  // if it's set to tabs, then the tabWidth value doesn't matter
   return value === 'tab' ? RULE_DISABLED : value
 }
 
