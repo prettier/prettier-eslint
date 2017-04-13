@@ -53,7 +53,7 @@ module.exports = {
     },
     format: {
       description: 'Formats everything with prettier-eslint',
-      script: 'prettier-eslint src/*.js src/**/*.js --write',
+      script: 'prettier-eslint "src/**/*.js" --write',
     },
   },
   options: {
