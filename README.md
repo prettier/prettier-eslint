@@ -163,6 +163,28 @@ fall back to the `prettier` defaults:
 }
 ```
 
+## Troubleshooting
+
+#### eslint-disable-line
+
+While using `// eslint-disable-line`, sometimes you may get linting errors after the code has been processed by this module. That is because
+```js
+if (x) { // eslint-disable-line
+}
+```
+changes to
+```js
+if (x) {
+  // eslint-disable-line
+}
+```
+You can notice that `// eslint-disable-line` has moved to a new line. This can be fixed by using `//eslint-disable-next-line` instead of `// eslint-disable-line`
+```js
+// eslint-disable-next-line
+if (x) {
+}
+```
+
 ## Inspiration
 
 - [`prettier`][prettier]
