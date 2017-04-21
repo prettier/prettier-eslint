@@ -161,7 +161,7 @@ function getTrailingComma(value, rules) {
     }
   }
 
-  return value === 'never' ? 'none' : 'all'
+  return value === 'never' ? 'none' : 'es5'
 
   function getValFromObjectConfig(eslintValue) {
     const [, {arrays, objects, functions}] = eslintValue

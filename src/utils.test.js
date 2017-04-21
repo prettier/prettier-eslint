@@ -120,7 +120,22 @@ const getPrettierOptionsFromESLintRulesTests = [
   },
   {rules: {'max-len': 2}, options: {printWidth: 80}},
   {rules: {'comma-dangle': [2, 'never']}, options: {trailingComma: 'none'}},
-  {rules: {'comma-dangle': [2, 'always']}, options: {trailingComma: 'all'}},
+  {rules: {'comma-dangle': [2, 'always']}, options: {trailingComma: 'es5'}},
+  {
+    rules: {
+      'comma-dangle': [
+        2,
+        {
+          arrays: 'always-multiline',
+          objects: 'always-multiline',
+          imports: 'always-multiline',
+          exports: 'always-multiline',
+          functions: 'always-multiline',
+        },
+      ],
+    },
+    options: {trailingComma: 'all'},
+  },
   {
     rules: {
       'comma-dangle': [
