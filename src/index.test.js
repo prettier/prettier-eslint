@@ -78,6 +78,16 @@ const tests = [
     output: 'const {foo} = bar',
   },
   {
+    title: 'with an empty config and fallbacks',
+    input: {
+      text: 'const { foo } = bar;',
+      eslintConfig: {},
+      filePath: path.resolve('./mock/default-config'),
+      fallbackPrettierOptions: {bracketSpacing: false},
+    },
+    output: 'const {foo} = bar',
+  },
+  {
     title: 'without a filePath and no config',
     input: {text: defaultInputText()},
     output: noopOutput(),

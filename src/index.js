@@ -29,6 +29,9 @@ module.exports = format
  * @param {Object} options.prettierOptions - the options to pass for
  *  formatting with `prettier`. If not provided, prettier-eslint will attempt
  *  to create the options based on the eslintConfig
+ * @param {Object} options.fallbackPrettierOptions - the options to pass for
+ *  formatting with `prettier` if the given option is not inferrable from the
+ *  eslintConfig.
  * @param {String} options.logLevel - the level for the logs
  *  (error, warn, info, debug, trace)
  * @param {Boolean} options.prettierLast - Run Prettier Last
@@ -46,6 +49,7 @@ function format(options) {
     prettierPath = getModulePath(filePath, 'prettier'),
     prettierOptions,
     prettierLast,
+    fallbackPrettierOptions,
   } = options
 
   const eslintConfig = defaultEslintConfig(
@@ -56,6 +60,7 @@ function format(options) {
   const formattingOptions = getOptionsForFormatting(
     eslintConfig,
     prettierOptions,
+    fallbackPrettierOptions,
   )
 
   logger.debug(

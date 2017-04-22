@@ -167,9 +167,12 @@ const getPrettierOptionsFromESLintRulesTests = [
     options: {trailingComma: 'none'},
   },
   {rules: {'max-len': ['error', {code: 120}]}, options: {printWidth: 120}},
+  {rules: {quotes: [2, 'double']}, options: {singleQuote: false}},
+
   // If an ESLint rule is disabled fall back to prettier defaults.
   {rules: {'max-len': [0, {code: 120}]}, options: {}},
   {rules: {quotes: ['off', {code: 120}]}, options: {}},
+  {rules: {quotes: ['backtick', {code: 120}]}, options: {}},
   {rules: {semi: 'off'}, options: {}},
   {rules: {semi: ['off', 'never']}, options: {}},
   {rules: {semi: ['warn', 'always']}, options: {}},
@@ -192,9 +195,18 @@ defaultEslintConfigTests.forEach(({config, defaults, result}, index) => {
   })
 })
 
-getPrettierOptionsFromESLintRulesTests.forEach(({rules, options}, index) => {
+getPrettierOptionsFromESLintRulesTests.forEach(({
+  rules,
+  options,
+  prettierOptions,
+  fallbackPrettierOptions,
+}, index) => {
   test(`getPrettierOptionsFromESLintRulesTests ${index}`, () => {
-    const {prettier} = getOptionsForFormatting({rules})
+    const {prettier} = getOptionsForFormatting(
+      {rules},
+      prettierOptions,
+      fallbackPrettierOptions,
+    )
     expect(prettier).toMatchObject(options)
   })
 })
@@ -206,6 +218,13 @@ test('if prettierOptions are provided, those are preferred', () => {
       singleQuote: false,
     },
   )
+  expect(prettier).toMatchObject({singleQuote: false})
+})
+
+test('if fallbacks are provided, those are used if not found in eslint', () => {
+  const {prettier} = getOptionsForFormatting({rules: {}}, undefined, {
+    singleQuote: false,
+  })
   expect(prettier).toMatchObject({singleQuote: false})
 })
 
