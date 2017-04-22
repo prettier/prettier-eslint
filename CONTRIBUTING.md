@@ -8,11 +8,11 @@ Thanks for being willing to contribute!
 ## Project setup
 
 1. Fork and clone the repo
-2. `$ npm install` to install dependencies
-3. `$ npm start validate` to validate you've got it working
+2. `$ yarn install` to install dependencies
+3. `$ yarn start validate` to validate you've got it working
 4. Create a branch for your PR
 
-This project uses [`nps`][nps] and you can run `npm start` to see what scripts are available.
+This project uses [`nps`][nps] and you can run `yarn start` to see what scripts are available.
 
 ## Add yourself as a contributor
 
@@ -20,7 +20,7 @@ This project follows the [all contributors][all-contributors] specification. To 
 contributors on the README.md, please use the automated script as part of your PR:
 
 ```console
-npm start contributors.add
+yarn start contributors.add
 ```
 
 Follow the prompt. If you've already added yourself to the list and are making a new type of contribution, you can run
@@ -36,8 +36,8 @@ You can use `commitizen` to help you to follow [the convention][convention]
 
 Once you are ready to commit the changes, please use the below commands
 
-1. `git add <files to be comitted>`
-2. `$ npm start commit`
+1. `git add <files to be committed>`
+2. `$ yarn start commit`
 
 ... and follow the instruction of the interactive prompt.
 
