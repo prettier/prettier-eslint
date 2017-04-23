@@ -9,7 +9,7 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc]
@@ -65,6 +65,9 @@ const options = {
   prettierOptions: {
     bracketSpacing: true,
   },
+  fallbackPrettierOptions: {
+    singleQuote: false,
+  }
 }
 
 const formatted = format(options)
@@ -93,6 +96,16 @@ The config to use for formatting with ESLint. Can be overridden with `filePath`.
 The options to pass for formatting with `prettier`. If not provided, `prettier-eslint` will attempt to create the
 options based on the `eslintConfig` (whether that's provided or derived via `filePath`). You can also provide _some_ of
 the options and have the remaining options derived via your eslint config. This is useful for options like `parser`.
+
+**NOTE:** these options _override_ the eslint config. If you want fallback options to be used only in the case that the
+rule cannot be inferred from eslint, see "fallbackPrettierOptions" below.
+
+#### fallbackPrettierOptions (?Object)
+
+The options to pass for formatting with `prettier` if `prettier-eslint` is not able to create the options based on the
+the `eslintConfig` (whether that's provided or derived via `filePath`). These options will only be used in the case that
+the corresponding eslint rule cannot be found and the prettier option has not been manually defined in `prettierOptions`.
+If the fallback is not given, `prettier-eslint` will just use the default `prettier` value in this scenario.
 
 #### logLevel (?Enum: ['trace', 'debug', 'info', 'warn', 'error', 'silent'])
 
@@ -210,7 +223,7 @@ Thanks goes to these people ([emoji key][emojis]):
 | [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds) [📖](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds) 🚇 [⚠️](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds) | [<img src="https://avatars.githubusercontent.com/u/5554486?v=3" width="100px;"/><br /><sub>Gyandeep Singh</sub>](http://gyandeeps.com)<br />👀 | [<img src="https://avatars.githubusercontent.com/u/682584?v=3" width="100px;"/><br /><sub>Igor Pnev</sub>](https://github.com/exdeniz)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Aexdeniz) | [<img src="https://avatars.githubusercontent.com/u/813865?v=3" width="100px;"/><br /><sub>Benjamin Tan</sub>](https://demoneaux.github.io/)<br />💬 👀 | [<img src="https://avatars.githubusercontent.com/u/622118?v=3" width="100px;"/><br /><sub>Eric McCormick</sub>](https://ericmccormick.io)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=edm00se) [📖](https://github.com/prettier/prettier-eslint/commits?author=edm00se) [⚠️](https://github.com/prettier/prettier-eslint/commits?author=edm00se) | [<img src="https://avatars.githubusercontent.com/u/2142817?v=3" width="100px;"/><br /><sub>Simon Lydell</sub>](https://github.com/lydell)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=lydell) | [<img src="https://avatars0.githubusercontent.com/u/981957?v=3" width="100px;"/><br /><sub>Tom McKearney</sub>](https://github.com/tommck)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=tommck) 💡 |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | [<img src="https://avatars.githubusercontent.com/u/463105?v=3" width="100px;"/><br /><sub>Patrik Åkerstrand</sub>](https://github.com/PAkerstrand)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=PAkerstrand) | [<img src="https://avatars.githubusercontent.com/u/1560301?v=3" width="100px;"/><br /><sub>Lochlan Bunn</sub>](https://twitter.com/loklaan)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=loklaan) | [<img src="https://avatars.githubusercontent.com/u/25886902?v=3" width="100px;"/><br /><sub>Daniël Terwiel</sub>](https://github.com/danielterwiel)<br />🔌 🔧 | [<img src="https://avatars1.githubusercontent.com/u/1834413?v=3" width="100px;"/><br /><sub>Robin Malfait</sub>](https://robinmalfait.com)<br />🔧 | [<img src="https://avatars0.githubusercontent.com/u/8161781?v=3" width="100px;"/><br /><sub>Michael McDermott</sub>](http://mgmcdermott.com)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=mgmcdermott) | [<img src="https://avatars3.githubusercontent.com/u/292365?v=3" width="100px;"/><br /><sub>Adam Stankiewicz</sub>](http://sheerun.net)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=sheerun) | [<img src="https://avatars3.githubusercontent.com/u/487068?v=3" width="100px;"/><br /><sub>Stephen John Sorensen</sub>](http://www.stephenjohnsorensen.com/)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=spudly) |
-| [<img src="https://avatars2.githubusercontent.com/u/1597820?v=3" width="100px;"/><br /><sub>Brian Di Palma</sub>](https://github.com/briandipalma)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Abriandipalma) [💻](https://github.com/prettier/prettier-eslint/commits?author=briandipalma) |
+| [<img src="https://avatars2.githubusercontent.com/u/1597820?v=3" width="100px;"/><br /><sub>Brian Di Palma</sub>](https://github.com/briandipalma)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Abriandipalma) [💻](https://github.com/prettier/prettier-eslint/commits?author=briandipalma) | [<img src="https://avatars0.githubusercontent.com/u/6173488?v=3" width="100px;"/><br /><sub>Rob Wise</sub>](https://robwise.github.io)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=robwise) [💻](https://github.com/prettier/prettier-eslint/commits?author=robwise) |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification. Contributions of any kind welcome!
