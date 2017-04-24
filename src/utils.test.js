@@ -168,6 +168,18 @@ const getPrettierOptionsFromESLintRulesTests = [
   },
   {rules: {'max-len': ['error', {code: 120}]}, options: {printWidth: 120}},
   {rules: {quotes: [2, 'double']}, options: {singleQuote: false}},
+  {
+    rules: {
+      'comma-dangle': [
+        2,
+        {
+          imports: 'never',
+          exports: 'never',
+        },
+      ],
+    },
+    options: {trailingComma: 'none'},
+  },
 
   // If an ESLint rule is disabled fall back to prettier defaults.
   {rules: {'max-len': [0, {code: 120}]}, options: {}},

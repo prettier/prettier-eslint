@@ -214,7 +214,7 @@ function getTrailingComma(value, fallbacks, rules) {
 }
 
 function getValFromTrailingCommaConfig(objectConfig) {
-  const [, {arrays, objects, functions}] = objectConfig
+  const [, {arrays = '', objects = '', functions = ''}] = objectConfig
   const fns = isAlways(functions)
   const es5 = [arrays, objects].some(isAlways)
 

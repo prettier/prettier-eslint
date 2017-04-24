@@ -160,6 +160,17 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "Belir",
+      "name": "Patryk Peas",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/4818642?v=3",
+      "profile": "https://github.com/Belir",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ]
 }
