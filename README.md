@@ -182,6 +182,8 @@ fall back to the `prettier` defaults:
 
 There is a lot of logging available with `prettier-eslint`. When debugging, you can use one of the [`logLevel`](#loglevel-enum-trace-debug-info-warn-error-silent)s to get a better idea of what's going on. If you're using `prettier-eslint-cli` then you can use the `--log-level trace`, if you're using [the Atom plugin][atom-plugin], then you can [open the developer tools][atom-dev-tools] and enter: `process.env.LOG_LEVEL = 'trace'` in the console, then run the format. You'll see a bunch of logs that should help you determine whether the problem is `prettier`, `eslint --fix`, how `prettier-eslint` infers your `prettier` options, or any number of other things. You will be asked to do this before filing issues, so please do :smile:
 
+> NOTE: When you're doing this, it's recommended that you only run this on a single file because there are a LOT of logs :)
+
 ### eslint-disable-line
 
 While using `// eslint-disable-line`, sometimes you may get linting errors after the code has been processed by this module. That is because `prettier` changes this:
