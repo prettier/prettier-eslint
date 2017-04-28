@@ -178,20 +178,29 @@ fall back to the `prettier` defaults:
 
 ## Troubleshooting
 
-#### eslint-disable-line
+### debugging issues
 
-While using `// eslint-disable-line`, sometimes you may get linting errors after the code has been processed by this module. That is because
+There is a lot of logging available with `prettier-eslint`. When debugging, you can use one of the [`logLevel`](#loglevel-enum-trace-debug-info-warn-error-silent)s to get a better idea of what's going on. If you're using `prettier-eslint-cli` then you can use the `--log-level trace`, if you're using [the Atom plugin][atom-plugin], then you can [open the developer tools][atom-dev-tools] and enter: `process.env.LOG_LEVEL = 'trace'` in the console, then run the format. You'll see a bunch of logs that should help you determine whether the problem is `prettier`, `eslint --fix`, how `prettier-eslint` infers your `prettier` options, or any number of other things. You will be asked to do this before filing issues, so please do :smile:
+
+### eslint-disable-line
+
+While using `// eslint-disable-line`, sometimes you may get linting errors after the code has been processed by this module. That is because `prettier` changes this:
+
 ```js
 if (x) { // eslint-disable-line
 }
 ```
-changes to
+
+to this:
+
 ```js
 if (x) {
   // eslint-disable-line
 }
 ```
-You can notice that `// eslint-disable-line` has moved to a new line. This can be fixed by using `//eslint-disable-next-line` instead of `// eslint-disable-line`
+
+And the `eslint --fix` wont change it back. You can notice that `// eslint-disable-line` has moved to a new line. To work around this issue, you can use `//eslint-disable-next-line` instead of `// eslint-disable-line` like this:
+
 ```js
 // eslint-disable-next-line
 if (x) {
@@ -210,7 +219,7 @@ None that I'm aware of. Feel free to file a PR if you know of any other solution
 ## Related
 
 - [`prettier-eslint-cli`](https://github.com/prettier/prettier-eslint-cli) - Command Line Interface
-- [`prettier-eslint-atom`](https://github.com/kentcdodds/prettier-eslint-atom) - Atom plugin
+- [`prettier-atom`][atom-plugin] - Atom plugin (enable eslint intigration in settings)
 - [`prettier-eslint-vscode`](https://github.com/RobinMalfait/prettier-eslint-code) - Visual Studio Code plugin
 - [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) - ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and integrates it with the regular ESLint workflow.
 - [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) - Prettier ESlint Webpack Plugin
@@ -267,3 +276,5 @@ MIT
 [twitter-badge]: https://img.shields.io/twitter/url/https/github.com/prettier/prettier-eslint.svg?style=social
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
+[atom-plugin]: https://github.com/prettier/prettier-atom
+[atom-dev-tools]: https://discuss.atom.io/t/how-to-make-developer-tools-appear/16232
