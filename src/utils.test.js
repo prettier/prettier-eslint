@@ -168,6 +168,7 @@ const getPrettierOptionsFromESLintRulesTests = [
   },
   {rules: {'max-len': ['error', {code: 120}]}, options: {printWidth: 120}},
   {rules: {quotes: [2, 'double']}, options: {singleQuote: false}},
+  {rules: {quotes: [2, 'backtick']}, options: {singleQuote: false}},
   {
     rules: {
       'comma-dangle': [
