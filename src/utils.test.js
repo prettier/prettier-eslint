@@ -208,21 +208,18 @@ defaultEslintConfigTests.forEach(({config, defaults, result}, index) => {
   })
 })
 
-getPrettierOptionsFromESLintRulesTests.forEach(({
-  rules,
-  options,
-  prettierOptions,
-  fallbackPrettierOptions,
-}, index) => {
-  test(`getPrettierOptionsFromESLintRulesTests ${index}`, () => {
-    const {prettier} = getOptionsForFormatting(
-      {rules},
-      prettierOptions,
-      fallbackPrettierOptions,
-    )
-    expect(prettier).toMatchObject(options)
-  })
-})
+getPrettierOptionsFromESLintRulesTests.forEach(
+  ({rules, options, prettierOptions, fallbackPrettierOptions}, index) => {
+    test(`getPrettierOptionsFromESLintRulesTests ${index}`, () => {
+      const {prettier} = getOptionsForFormatting(
+        {rules},
+        prettierOptions,
+        fallbackPrettierOptions,
+      )
+      expect(prettier).toMatchObject(options)
+    })
+  },
+)
 
 test('if prettierOptions are provided, those are preferred', () => {
   const {prettier} = getOptionsForFormatting(
