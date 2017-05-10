@@ -100,6 +100,7 @@ const getPrettierOptionsFromESLintRulesTests = [
           functions: 'always-multiline',
         },
       ],
+      'object-curly-spacing': [2, 'never'],
     },
     options: {
       printWidth: 120,
