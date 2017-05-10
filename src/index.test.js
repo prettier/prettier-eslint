@@ -120,8 +120,10 @@ const tests = [
   // go ahead and add a test case here
   {
     title: 'with code that needs no fixing',
-    input: {text: 'var [foo, {bar}] = window.APP;', eslintConfig: {rules: {}}},
-    output: 'var [foo, {bar}] = window.APP;',
+    input: {
+      text: 'var [foo, { bar }] = window.APP;', eslintConfig: {rules: {}},
+    },
+    output: 'var [foo, { bar }] = window.APP;',
   },
 ]
 
@@ -307,7 +309,7 @@ function noopOutput() {
   return `
     function foo() {
       // stuff
-      console.log('Hello world!', and, stuff);
+      console.log("Hello world!", and, stuff);
     }
   `
 }
