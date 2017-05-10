@@ -195,7 +195,7 @@ function getSingleQuote(eslintValue, fallbacks) {
     prettierValue = eslintValue
   }
 
-  return makePrettierOption('singleQuote', prettierValue, fallbacks, true)
+  return makePrettierOption('singleQuote', prettierValue, fallbacks, false)
 }
 
 function getTrailingComma(value, fallbacks, rules) {
@@ -212,7 +212,7 @@ function getTrailingComma(value, fallbacks, rules) {
     prettierValue = RULE_NOT_CONFIGURED
   }
 
-  return makePrettierOption('trailingComma', prettierValue, fallbacks, 'es5')
+  return makePrettierOption('trailingComma', prettierValue, fallbacks, 'none')
 }
 
 function getValFromTrailingCommaConfig(objectConfig) {
@@ -240,7 +240,7 @@ function getBracketSpacing(eslintValue, fallbacks) {
     prettierValue = eslintValue
   }
 
-  return makePrettierOption('bracketSpacing', prettierValue, fallbacks, false)
+  return makePrettierOption('bracketSpacing', prettierValue, fallbacks, true)
 }
 
 function getSemi(eslintValue, fallbacks) {
