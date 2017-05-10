@@ -182,6 +182,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "enriquecaballero",
+      "name": "Enrique Caballero",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7918284?v=3",
+      "profile": "https://github.com/enriquecaballero",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
