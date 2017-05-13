@@ -242,7 +242,7 @@ test('if fallbacks are provided, those are used if not found in eslint', () => {
 test('eslint config has only necessary properties', () => {
   const {eslint} = getOptionsForFormatting({
     globals: {window: false},
-    rules: {'no-var': 'error', quotes: [2, 'single']},
+    rules: {'no-with': 'error', quotes: [2, 'single']},
   })
   expect(eslint).toMatchObject({
     fix: true,
