@@ -71,8 +71,6 @@ function getRelevantESLintConfig(eslintConfig) {
   // are definitely not fixable. Which is what we'll do for now...
   const rulesThatWillNeverBeFixable = [
     // TODO add more
-    'no-var',
-    'prefer-const',
     'valid-jsdoc',
     'global-require',
     'no-with',
