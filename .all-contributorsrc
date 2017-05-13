@@ -198,7 +198,10 @@
       "name": "Łukasz Moroz",
       "avatar_url": "https://avatars2.githubusercontent.com/u/1408542?v=3",
       "profile": "https://github.com/lukaszmoroz",
-      "contributions": []
+      "contributions": [
+        "bug",
+        "test"
+      ]
     }
   ]
 }
