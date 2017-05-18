@@ -116,6 +116,18 @@ const tests = [
     },
     output: 'var foo = { bar: { baz: qux }};\nvar fop = { bar: [1, 2, 3]};',
   },
+  {
+    title: 'with a filePath-aware config',
+    input: {
+      text: 'var x = 0;',
+      eslintConfig: {
+        rules: {'no-var': 'error'},
+        ignorePattern: 'should-be-ignored',
+      },
+      filePath: 'should-be-ignored',
+    },
+    output: 'var x = 0;',
+  },
   // if you have a bug report or something,
   // go ahead and add a test case here
   {

@@ -81,10 +81,10 @@ function format(options) {
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
 
   if (prettierLast) {
-    return prettify(eslintFix(text))
+    return prettify(eslintFix(text, filePath))
   }
 
-  return eslintFix(prettify(text))
+  return eslintFix(prettify(text), filePath)
 }
 
 function createPrettify(formatOptions, prettierPath) {
@@ -131,11 +131,11 @@ function createPrettify(formatOptions, prettierPath) {
 }
 
 function createEslintFix(eslintConfig, eslintPath) {
-  return function eslintFix(text) {
+  return function eslintFix(text, filePath) {
     const eslint = getESLintCLIEngine(eslintPath, eslintConfig)
     try {
       logger.trace(`calling eslint.executeOnText with the text`)
-      const report = eslint.executeOnText(text)
+      const report = eslint.executeOnText(text, filePath, true)
       logger.trace(
         `executeOnText returned the following report:`,
         prettyFormat(report),
