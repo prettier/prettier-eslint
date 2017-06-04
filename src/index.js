@@ -77,14 +77,14 @@ function format(options) {
     }),
   )
 
+  const isCss = /\.(css|less|scss)$/.test(filePath);
+  if (isCss) formattingOptions.prettier.parser = 'postcss';
   const prettify = createPrettify(formattingOptions.prettier, prettierPath)
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
 
-  if (prettierLast) {
-    return prettify(eslintFix(text, filePath))
-  }
-
-  return eslintFix(prettify(text), filePath)
+  return isCss ? prettify(text, filePath) :
+    prettierLast ? prettify(eslintFix(text, filePath)) :
+    eslintFix(prettify(text), filePath);
 }
 
 function createPrettify(formatOptions, prettierPath) {
