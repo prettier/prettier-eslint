@@ -85,7 +85,7 @@ function format(options) {
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
 
   if (isCss) {
-    return prettify(text, filePath)'
+    return prettify(text, filePath)
   }
   if (prettierLast) {
     return prettify(eslintFix(text, filePath))
