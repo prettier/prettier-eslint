@@ -143,7 +143,23 @@ const tests = [
       text: '.stop{color:red};',
       filePath: path.resolve('./test.css'),
     },
-    output: '.stop {\n  color: red;\n};',
+    output: '.stop {\n  color: red;\n}',
+  },
+  {
+    title: 'LESS example',
+    input: {
+      text: '.stop{color:red};',
+      filePath: path.resolve('./test.less'),
+    },
+    output: '.stop {\n  color: red;\n}',
+  },
+  {
+    title: 'SCSS example',
+    input: {
+      text: '.stop{color:red};',
+      filePath: path.resolve('./test.scss'),
+    },
+    output: '.stop {\n  color: red;\n}',
   },
 ]
 
