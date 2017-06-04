@@ -137,6 +137,14 @@ const tests = [
     },
     output: 'var [foo, { bar }] = window.APP;',
   },
+  {
+    title: 'CSS example',
+    input: {
+      text: '.stop{color:red};',
+      filePath: path.resolve('./test.css'),
+    },
+    output: '.stop {\n  color: red;\n};',
+  },
 ]
 
 beforeEach(() => {
