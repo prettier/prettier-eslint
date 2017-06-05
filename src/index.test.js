@@ -133,9 +133,34 @@ const tests = [
   {
     title: 'with code that needs no fixing',
     input: {
-      text: 'var [foo, { bar }] = window.APP;', eslintConfig: {rules: {}},
+      text: 'var [foo, { bar }] = window.APP;',
+      eslintConfig: {rules: {}},
     },
     output: 'var [foo, { bar }] = window.APP;',
+  },
+  {
+    title: 'CSS example',
+    input: {
+      text: '.stop{color:red};',
+      filePath: path.resolve('./test.css'),
+    },
+    output: '.stop {\n  color: red;\n}',
+  },
+  {
+    title: 'LESS example',
+    input: {
+      text: '.stop{color:red};',
+      filePath: path.resolve('./test.less'),
+    },
+    output: '.stop {\n  color: red;\n}',
+  },
+  {
+    title: 'SCSS example',
+    input: {
+      text: '.stop{color:red};',
+      filePath: path.resolve('./test.scss'),
+    },
+    output: '.stop {\n  color: red;\n}',
   },
 ]
 

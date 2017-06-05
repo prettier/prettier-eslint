@@ -2,6 +2,9 @@
 
 Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`][eslint]
 
+For files with an extension of `.css`, `.less`, or `.scss`,
+this only runs `prettier` since `eslint` cannot process those.
+
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
 [![Dependencies][dependencyci-badge]][dependencyci]

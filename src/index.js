@@ -77,13 +77,19 @@ function format(options) {
     }),
   )
 
+  const isCss = /\.(css|less|scss)$/.test(filePath)
+  if (isCss) {
+    formattingOptions.prettier.parser = 'postcss'
+  }
   const prettify = createPrettify(formattingOptions.prettier, prettierPath)
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
 
+  if (isCss) {
+    return prettify(text, filePath)
+  }
   if (prettierLast) {
     return prettify(eslintFix(text, filePath))
   }
-
   return eslintFix(prettify(text), filePath)
 }
 
