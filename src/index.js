@@ -1,4 +1,5 @@
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
+/* eslint complexity: [1, 6] */
 import fs from 'fs'
 import path from 'path'
 import requireRelative from 'require-relative'
