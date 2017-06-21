@@ -78,15 +78,22 @@ function format(options) {
   )
 
   const isCss = /\.(css|less|scss)$/.test(filePath)
-  if (isCss) {
-    formattingOptions.prettier.parser = 'postcss'
-  }
-  const prettify = createPrettify(formattingOptions.prettier, prettierPath)
-  const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
+  const isJson = /\.json$/.test(filePath)
 
   if (isCss) {
+    formattingOptions.prettier.parser = 'postcss'
+  } else if (isJson) {
+    formattingOptions.prettier.parser = 'json'
+  }
+
+  const prettify = createPrettify(formattingOptions.prettier, prettierPath)
+
+  if (isCss || isJson) {
     return prettify(text, filePath)
   }
+
+  const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
+
   if (prettierLast) {
     return prettify(eslintFix(text, filePath))
   }
