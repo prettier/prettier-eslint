@@ -162,6 +162,14 @@ const tests = [
     },
     output: '.stop {\n  color: red;\n}',
   },
+  {
+    title: 'JSON example',
+    input: {
+      text: '{  "foo": "bar"}',
+      filePath: path.resolve('./test.json'),
+    },
+    output: '{ "foo": "bar" }',
+  },
 ]
 
 beforeEach(() => {
