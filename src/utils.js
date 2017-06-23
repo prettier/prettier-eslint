@@ -148,16 +148,14 @@ function configureOptions(
     const {ruleValue, ruleValueToPrettierOption} = OPTION_GETTERS[key]
     const eslintRuleValue = ruleValue(rules)
 
-    if (eslintRuleValue !== RULE_DISABLED) {
-      const prettierOptionValue = ruleValueToPrettierOption(
-        eslintRuleValue,
-        fallbackPrettierOptions,
-        rules,
-      )
+    const prettierOptionValue = ruleValueToPrettierOption(
+      eslintRuleValue,
+      fallbackPrettierOptions,
+      rules,
+    )
 
-      if (prettierOptionValue !== RULE_DISABLED) {
-        options[key] = prettierOptionValue
-      }
+    if (prettierOptionValue !== RULE_DISABLED) {
+      options[key] = prettierOptionValue
     }
   }
 
@@ -335,7 +333,7 @@ function makePrettierOption(
 ) {
   if (
     prettierRuleValue !== RULE_NOT_CONFIGURED &&
-    typeof prettierRuleValue !== 'undefined'
+    (typeof prettierRuleValue !== 'undefined' && prettierRuleValue !== RULE_DISABLED)
   ) {
     return prettierRuleValue
   }
