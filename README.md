@@ -2,9 +2,6 @@
 
 Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`][eslint]
 
-For files with an extension of `.css`, `.less`, or `.scss`,
-this only runs `prettier` since `eslint` cannot process those.
-
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
 [![Dependencies][dependencyci-badge]][dependencyci]
@@ -35,6 +32,9 @@ prettier formats the code, I start getting linting errors.
 This formats your code via `prettier`, and then passes the result of that to `eslint --fix`. This way you can get the
 benefits of `prettier`'s superior formatting capabilities, but also benefit from the configuration capabilities of
 `eslint`.
+
+> For files with an extension of `.css`, `.less`, `.scss`, or `.json`
+> this only runs `prettier` since `eslint` cannot process those.
 
 ## Installation
 
