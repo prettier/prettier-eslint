@@ -333,8 +333,8 @@ function makePrettierOption(
 ) {
   if (
     prettierRuleValue !== RULE_NOT_CONFIGURED &&
-    (typeof prettierRuleValue !== 'undefined' &&
-      prettierRuleValue !== RULE_DISABLED)
+    prettierRuleValue !== RULE_DISABLED &&
+    typeof prettierRuleValue !== 'undefined'
   ) {
     return prettierRuleValue
   }
