@@ -85,6 +85,7 @@ function format(options) {
     formattingOptions.prettier.parser = 'postcss'
   } else if (isJson) {
     formattingOptions.prettier.parser = 'json'
+    formattingOptions.prettier.trailingComma = 'none'
   }
 
   const prettify = createPrettify(formattingOptions.prettier, prettierPath)

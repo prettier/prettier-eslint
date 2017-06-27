@@ -313,7 +313,9 @@ test('logs error if it cannot read the file from the filePath', () => {
   fsMock.readFileSync = jest.fn(() => {
     throw new Error('some error')
   })
-  expect(() => format({filePath: '/some-path.js'})).toThrowError(/some error/)
+  expect(() => format({filePath: '/some-path.js'})).toThrowError(
+    /some error/,
+  )
   expect(logger.error).toHaveBeenCalledTimes(1)
   fsMock.readFileSync = originalMock
 })
