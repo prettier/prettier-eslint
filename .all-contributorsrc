@@ -202,6 +202,13 @@
         "bug",
         "test"
       ]
+    },
+    {
+      "login": "zimme",
+      "name": "Simon Fridlund",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1215414?v=3",
+      "profile": "https://github.com/zimme",
+      "contributions": []
     }
   ]
 }
