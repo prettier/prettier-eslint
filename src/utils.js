@@ -154,9 +154,7 @@ function configureOptions(
       rules,
     )
 
-    if (prettierOptionValue !== RULE_DISABLED) {
-      options[key] = prettierOptionValue
-    }
+    options[key] = prettierOptionValue
   }
 
   return options
