@@ -148,13 +148,11 @@ function configureOptions(
     const {ruleValue, ruleValueToPrettierOption} = OPTION_GETTERS[key]
     const eslintRuleValue = ruleValue(rules)
 
-    const prettierOptionValue = ruleValueToPrettierOption(
+    options[key] = ruleValueToPrettierOption(
       eslintRuleValue,
       fallbackPrettierOptions,
       rules,
     )
-
-    options[key] = prettierOptionValue
   }
 
   return options
