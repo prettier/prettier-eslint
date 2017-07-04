@@ -209,6 +209,16 @@
       "avatar_url": "https://avatars0.githubusercontent.com/u/1215414?v=3",
       "profile": "https://github.com/zimme",
       "contributions": []
+    },
+    {
+      "login": "OliverJAsh",
+      "name": "Oliver Joseph Ash",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/921609?v=3",
+      "profile": "https://oliverjash.me/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
