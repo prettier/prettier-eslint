@@ -249,6 +249,22 @@ test('if prettierOptions are provided, those are preferred', () => {
   expect(prettier).toMatchObject({singleQuote: false})
 })
 
+// eslint-disable-next-line max-len
+test(`if fallbacks are provided, those are preferred over disabled eslint rules`, () => {
+  const {prettier} = getOptionsForFormatting(
+    {
+      rules: {
+        quotes: [0],
+      },
+    },
+    {},
+    {
+      singleQuote: true,
+    },
+  )
+  expect(prettier).toMatchObject({singleQuote: true})
+})
+
 test('if fallbacks are provided, those are used if not found in eslint', () => {
   const {prettier} = getOptionsForFormatting({rules: {}}, undefined, {
     singleQuote: false,
