@@ -224,8 +224,8 @@ None that I'm aware of. Feel free to file a PR if you know of any other solution
 ## Related
 
 - [`prettier-eslint-cli`](https://github.com/prettier/prettier-eslint-cli) - Command Line Interface
-- [`prettier-atom`][atom-plugin] - Atom plugin (enable eslint intigration in settings)
-- [`prettier-eslint-vscode`](https://github.com/RobinMalfait/prettier-eslint-code) - Visual Studio Code plugin
+- [`prettier-atom`][atom-plugin] - Atom plugin (check the "ESlint integration" checkbox in settings)
+- [`prettier-vscode`][vscode-plugin] - Visual Studio Code plugin (set `prettier.eslintIntegration: true` in settings)
 - [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) - ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and integrates it with the regular ESLint workflow.
 - [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) - Prettier ESlint Webpack Plugin
 
@@ -284,3 +284,4 @@ MIT
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [atom-plugin]: https://github.com/prettier/prettier-atom
 [atom-dev-tools]: https://discuss.atom.io/t/how-to-make-developer-tools-appear/16232
+[vscode-plugin]: https://github.com/esbenp/prettier-vscode
