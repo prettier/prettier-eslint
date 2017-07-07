@@ -219,6 +219,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "markpalfreeman",
+      "name": "Mark Palfreeman",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3812133?v=3",
+      "profile": "http://palf.co",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
