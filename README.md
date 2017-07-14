@@ -131,7 +131,7 @@ This is basically the same as `eslintPath` except for the `prettier` module.
 By default, `prettier-eslint` will run `prettier` first, then `eslint --fix`. This is great if you want to use `prettier`,
 but override some of the styles you don't like using `eslint --fix`.
 
-An alternative approach is to use different tools for different concerns. If you provide `pretterLast: true`, it will
+An alternative approach is to use different tools for different concerns. If you provide `prettierLast: true`, it will
 run `eslint --fix` first, then `prettier`. This allows you to use `eslint` to look for bugs and/or bad practices, and use
 `prettier` to enforce code style.
 
