@@ -45,11 +45,7 @@ function mockGetConfigForFile(filePath) {
         semi: [2, 'never'],
         'max-len': [2, 120, 2],
         indent: [2, 2, {SwitchCase: 1}],
-        quotes: [
-          2,
-          'single',
-          {avoidEscape: true, allowTemplateLiterals: true},
-        ],
+        quotes: [2, 'single', {avoidEscape: true, allowTemplateLiterals: true}],
         'comma-dangle': [
           2,
           {

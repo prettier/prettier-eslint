@@ -12,11 +12,7 @@ const defaultEslintConfigTests = [
       },
       rules: {
         indent: [2, 2, {SwitchCase: 1}],
-        quotes: [
-          2,
-          'single',
-          {avoidEscape: true, allowTemplateLiterals: true},
-        ],
+        quotes: [2, 'single', {avoidEscape: true, allowTemplateLiterals: true}],
       },
       options: {
         printWidth: 120,
@@ -57,11 +53,7 @@ const defaultEslintConfigTests = [
       rules: {
         'max-len': [2, 120, 2],
         indent: [2, 2, {SwitchCase: 1}],
-        quotes: [
-          2,
-          'single',
-          {avoidEscape: true, allowTemplateLiterals: true},
-        ],
+        quotes: [2, 'single', {avoidEscape: true, allowTemplateLiterals: true}],
       },
       options: {
         parser: 'babylon',
