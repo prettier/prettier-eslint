@@ -2,6 +2,7 @@
 /* eslint complexity: [1, 6] */
 import fs from 'fs'
 import path from 'path'
+import assert from 'assert'
 import requireRelative from 'require-relative'
 import prettyFormat from 'pretty-format'
 import {oneLine, stripIndent} from 'common-tags'
@@ -10,6 +11,8 @@ import getLogger from 'loglevel-colored-level-prefix'
 import {getOptionsForFormatting, defaultEslintConfig} from './utils'
 
 const logger = getLogger({prefix: 'prettier-eslint'})
+
+let prettier
 
 // CommonJS + ES6 modules... is it worth it? Probably not...
 module.exports = format
@@ -38,7 +41,7 @@ module.exports = format
  * @param {Boolean} options.prettierLast - Run Prettier Last
  * @return {String} - the formatted string
  */
-function format(options) {
+async function format(options) {
   const {logLevel = getDefaultLogLevel()} = options
   logger.setLevel(logLevel)
   logger.trace('called format with options:', prettyFormat(options))
@@ -48,10 +51,16 @@ function format(options) {
     text = getTextFromFilePath(filePath),
     eslintPath = getModulePath(filePath, 'eslint'),
     prettierPath = getModulePath(filePath, 'prettier'),
-    prettierOptions,
     prettierLast,
     fallbackPrettierOptions,
   } = options
+
+  prettier = getPrettier(prettierPath)
+
+  const prettierOptions = await resolvePrettierOptions(
+    filePath,
+    options.prettierOptions,
+  )
 
   const eslintConfig = defaultEslintConfig(
     getConfig(filePath, eslintPath),
@@ -88,7 +97,7 @@ function format(options) {
     formattingOptions.prettier.trailingComma = 'none'
   }
 
-  const prettify = createPrettify(formattingOptions.prettier, prettierPath)
+  const prettify = createPrettify(formattingOptions.prettier)
 
   if (isCss || isJson) {
     return prettify(text, filePath)
@@ -102,7 +111,8 @@ function format(options) {
   return eslintFix(prettify(text), filePath)
 }
 
-function createPrettify(formatOptions, prettierPath) {
+function createPrettify(formatOptions) {
+  assert(prettier, 'Should call getPrettier before')
   return function prettify(text) {
     logger.debug('calling prettier on text')
     logger.trace(
@@ -112,20 +122,6 @@ function createPrettify(formatOptions, prettierPath) {
       ${indentString(text, 2)}
     `,
     )
-    let prettier
-    try {
-      logger.trace(`requiring prettier module at "${prettierPath}"`)
-      prettier = require(prettierPath)
-    } catch (error) {
-      logger.error(
-        oneLine`
-        There was trouble getting prettier.
-        Is "prettierPath: ${prettierPath}"
-        a correct path to the prettier module?
-      `,
-      )
-      throw error
-    }
     try {
       logger.trace(`calling prettier.format with the text and prettierOptions`)
       const output = prettier.format(text, formatOptions)
@@ -225,6 +221,21 @@ function getConfig(filePath, eslintPath) {
   }
 }
 
+async function resolvePrettierOptions(
+  filePath,
+  prettierOptions = {},
+) {
+  /*
+   * The order of precedence (lowest to highest) is:
+   * - Options from a config file
+   * - prettierOptions
+   */
+
+  assert(prettier, 'Should call getPrettier before')
+  const optionsFromFile = await prettier.resolveConfig(filePath)
+  return Object.assign({}, optionsFromFile || {}, prettierOptions)
+}
+
 function getModulePath(filePath = __filename, moduleName) {
   try {
     return requireRelative.resolve(moduleName, filePath)
@@ -251,6 +262,22 @@ function getESLintCLIEngine(eslintPath, eslintOptions) {
       oneLine`
         There was trouble creating the ESLint CLIEngine.
         Is "eslintPath: ${eslintPath}" a correct path to the ESLint module?
+      `,
+    )
+    throw error
+  }
+}
+
+function getPrettier(prettierPath) {
+  try {
+    logger.trace(`requiring prettier module at "${prettierPath}"`)
+    return require(prettierPath)
+  } catch (error) {
+    logger.error(
+      oneLine`
+        There was trouble getting prettier.
+        Is "prettierPath: ${prettierPath}"
+        a correct path to the prettier module?
       `,
     )
     throw error

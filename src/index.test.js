@@ -186,107 +186,127 @@ tests.forEach(({title, modifier, input, output}) => {
   if (modifier) {
     fn = test[modifier]
   }
-  fn(title, () => {
+  fn(title, async () => {
     input.text = stripIndent(input.text).trim()
     const expected = stripIndent(output).trim()
-    const actual = format(input)
+    const actual = await format(input)
     // adding the newline in the expected because
     // prettier adds a newline to the end of the input
     expect(actual).toBe(`${expected}\n`)
   })
 })
 
-test('failure to fix with eslint throws and logs an error', () => {
+test('failure to fix with eslint throws and logs an error', async () => {
   const {executeOnText} = eslintMock.mock
   const error = 'Something happened'
   executeOnText.throwError = new Error(error)
-  expect(() => format({text: ''})).toThrowError(error)
-  expect(logger.error).toHaveBeenCalledTimes(1)
+  try {
+    await format({text: ''})
+  } catch (e) {
+    expect(logger.error).toHaveBeenCalledTimes(1)
+    expect(e.message).toMatch(error)
+  }
   executeOnText.throwError = null
 })
 
-test('logLevel is used to configure the logger', () => {
+test('logLevel is used to configure the logger', async () => {
   logger.setLevel = jest.fn()
-  format({text: '', logLevel: 'silent'})
+  await format({text: '', logLevel: 'silent'})
   expect(logger.setLevel).toHaveBeenCalledTimes(1)
   expect(logger.setLevel).toHaveBeenCalledWith('silent')
 })
 
-test(`when prettier throws, log to logger.error and throw the error`, () => {
-  const {format: prettierMockFormat} = prettierMock
-  const error = 'something bad happened'
-  prettierMockFormat.throwError = new Error(error)
+test(
+  'when prettier throws, log to logger.error and throw the error',
+  async () => {
+    const {format: prettierMockFormat} = prettierMock
+    const error = 'something bad happened'
+    prettierMockFormat.throwError = new Error(error)
 
-  expect(() => format({text: ''})).toThrowError(error)
-  expect(logger.error).toHaveBeenCalledTimes(1)
+    await expect(format({text: ''})).rejects.toMatchObject({
+      message: error,
+    })
+    expect(logger.error).toHaveBeenCalledTimes(1)
 
-  prettierMockFormat.throwError = null
-})
+    prettierMockFormat.throwError = null
+  },
+)
 
-test('can accept a path to an eslint module and uses that instead.', () => {
-  const eslintPath = path.join(__dirname, './__mocks__/eslint')
-  const {executeOnText} = eslintMock.mock
-  format({text: '', eslintPath})
-  expect(executeOnText).toHaveBeenCalledTimes(1)
-})
+test(
+  'can accept a path to an eslint module and uses that instead.',
+  async () => {
+    const eslintPath = path.join(__dirname, './__mocks__/eslint')
+    const {executeOnText} = eslintMock.mock
+    await format({text: '', eslintPath})
+    expect(executeOnText).toHaveBeenCalledTimes(1)
+  },
+)
 
-test('fails with an error if the eslint module cannot be resolved.', () => {
-  const eslintPath = path.join(
-    __dirname,
-    './__mocks__/non-existant-eslint-module',
-  )
+test(
+  'fails with an error if the eslint module cannot be resolved.',
+  async () => {
+    const eslintPath = path.join(
+      __dirname,
+      './__mocks__/non-existant-eslint-module',
+    )
 
-  expect(() => format({text: '', eslintPath})).toThrowError(
-    /non-existant-eslint-module/,
-  )
-  expect(logger.error).toHaveBeenCalledTimes(1)
+    await expect(format({text: '', eslintPath})).rejects.toBeDefined()
+    expect(logger.error).toHaveBeenCalledTimes(1)
 
-  const errorString = expect.stringMatching(
-    /ESLint.*?eslintPath.*non-existant-eslint-module/,
-  )
+    const errorString = expect.stringMatching(
+      /ESLint.*?eslintPath.*non-existant-eslint-module/,
+    )
 
-  expect(logger.error).toHaveBeenCalledWith(errorString)
-})
+    expect(logger.error).toHaveBeenCalledWith(errorString)
+  },
+)
 
-test('can accept a path to a prettier module and uses that instead.', () => {
-  const prettierPath = path.join(__dirname, './__mocks__/prettier')
-  const {format: prettierMockFormat} = prettierMock
-  format({text: '', prettierPath})
-  expect(prettierMockFormat).toHaveBeenCalledTimes(1)
-})
+test(
+  'can accept a path to a prettier module and uses that instead.',
+  async () => {
+    const prettierPath = path.join(__dirname, './__mocks__/prettier')
+    const {format: prettierMockFormat} = prettierMock
+    await format({text: '', prettierPath})
+    expect(prettierMockFormat).toHaveBeenCalledTimes(1)
+  },
+)
 
-test('fails with an error if the prettier module cannot be resolved.', () => {
-  const prettierPath = path.join(
-    __dirname,
-    './__mocks__/non-existant-prettier-module',
-  )
-  expect(() => format({text: '', prettierPath})).toThrowError(
-    /non-existant-prettier-module/,
-  )
-  expect(logger.error).toHaveBeenCalledTimes(1)
-  const errorString = expect.stringMatching(
-    /prettier.*?prettierPath.*non-existant-prettier-module/,
-  )
-  expect(logger.error).toHaveBeenCalledWith(errorString)
-})
+test(
+  'fails with an error if the prettier module cannot be resolved.',
+  async () => {
+    const prettierPath = path.join(
+      __dirname,
+      './__mocks__/non-existant-prettier-module',
+    )
+    await expect(format({text: '', prettierPath})).rejects.toBeDefined()
+    expect(logger.error).toHaveBeenCalledTimes(1)
+    const errorString = expect.stringMatching(
+      /prettier.*?prettierPath.*non-existant-prettier-module/,
+    )
+    expect(logger.error).toHaveBeenCalledWith(errorString)
+  },
+)
 
-test('resolves to the eslint module relative to the given filePath', () => {
-  const filePath = require.resolve('../tests/fixtures/paths/foo.js')
-  format({text: '', filePath})
-  const stateObj = {
-    eslintPath: require.resolve(
-      '../tests/fixtures/paths/node_modules/eslint/index.js',
-    ),
-    prettierPath: require.resolve(
-      '../tests/fixtures/paths/node_modules/prettier/index.js',
-    ),
-  }
-  expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj)
-})
+test(
+  'resolves to the eslint module relative to the given filePath',
+  async () => {
+    const filePath = require.resolve('../tests/fixtures/paths/foo.js')
+    await format({text: '', filePath})
+    const stateObj = {
+      eslintPath: require.resolve(
+        '../tests/fixtures/paths/node_modules/eslint/index.js',
+      ),
+      prettierPath: require.resolve(
+        '../tests/fixtures/paths/node_modules/prettier/index.js',
+      ),
+    }
+    expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj)
+  },
+)
 
-test('resolves to the local eslint module', () => {
+test('resolves to the local eslint module', async () => {
   const filePath = '/blah-blah/default-config'
-  format({text: '', filePath})
+  await format({text: '', filePath})
   expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
     // without Jest's mocking, these would actually resolve to the
     // project modules :) The fact that jest's mocking is being
@@ -296,10 +316,10 @@ test('resolves to the local eslint module', () => {
   })
 })
 
-test('reads text from fs if filePath is provided but not text', () => {
+test('reads text from fs if filePath is provided but not text', async () => {
   const filePath = '/blah-blah/some-file.js'
   try {
-    format({filePath})
+    await format({filePath})
   } catch (e) {
     // ignore
   }
@@ -308,16 +328,30 @@ test('reads text from fs if filePath is provided but not text', () => {
   expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, 'utf8')
 })
 
-test('logs error if it cannot read the file from the filePath', () => {
+test('logs error if it cannot read the file from the filePath', async () => {
   const originalMock = fsMock.readFileSync
   fsMock.readFileSync = jest.fn(() => {
     throw new Error('some error')
   })
-  expect(() => format({filePath: '/some-path.js'})).toThrowError(
-    /some error/,
-  )
+  await expect(format({filePath: '/some-path.js'})).rejects.toMatchObject({
+    message: 'some error',
+  })
   expect(logger.error).toHaveBeenCalledTimes(1)
   fsMock.readFileSync = originalMock
+})
+
+test('read prettier options from file', async () => {
+  const filePath = '/some-file.js'
+  try {
+    await format({filePath})
+  } catch (e) {
+    // ignore
+  }
+  expect(fsMock.readFile).toHaveBeenCalledWith(
+    '/.prettierrc',
+    'utf8',
+    jasmine.any(Function),
+  )
 })
 
 function getESLintConfigWithDefaultRules(overrides) {
