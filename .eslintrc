@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "kentcdodds",
+    "kentcdodds/prettier",
+    "kentcdodds/jest"
+  ],
+  "rules": {
+    "valid-jsdoc": "off",
+    "max-len": "off"
+  }
+}

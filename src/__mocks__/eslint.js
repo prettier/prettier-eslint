@@ -18,14 +18,11 @@ module.exports = Object.assign(eslint, {
 
 function MockCLIEngine(...args) {
   global.__PRETTIER_ESLINT_TEST_STATE__.eslintPath = __filename
-  CLIEngine.apply(this, args)
-  // not sure why, but in some cases, this.executeOnText is undefined...
-  // so we create a fakeCLIEngine to get a copy of that function
-  // and call it with apply :)
-  const fakeCLIEngine = new CLIEngine(...args)
-  this.getConfigForFile = mockGetConfigForFileSpy
-  this._originalExecuteOnText = fakeCLIEngine.executeOnText
-  this.executeOnText = mockExecuteOnTextSpy
+  const cliEngine = new CLIEngine(...args)
+  cliEngine.getConfigForFile = mockGetConfigForFileSpy
+  cliEngine._originalExecuteOnText = cliEngine.executeOnText
+  cliEngine.executeOnText = mockExecuteOnTextSpy
+  return cliEngine
 }
 
 MockCLIEngine.prototype = Object.create(CLIEngine.prototype)
