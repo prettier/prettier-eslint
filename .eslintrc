@@ -7,8 +7,6 @@
   "rules": {
     "valid-jsdoc": "off",
     "max-len": "off",
-    "semi": "off",
-    "quotes": "off",
     "space-before-function-paren": ["error", {
       "anonymous": "never",
       "named": "never",
