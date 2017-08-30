@@ -1,5 +1,5 @@
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
-/* eslint complexity: [1, 6] */
+/* eslint complexity: [1, 7] */
 import fs from 'fs'
 import path from 'path'
 import requireRelative from 'require-relative'
@@ -87,12 +87,18 @@ async function format(options) {
 
   const isCss = /\.(css|less|scss)$/.test(filePath)
   const isJson = /\.json$/.test(filePath)
+  const isTypeScript = /\.tsx?$/.test(filePath)
 
   if (isCss) {
     formattingOptions.prettier.parser = 'postcss'
   } else if (isJson) {
     formattingOptions.prettier.parser = 'json'
     formattingOptions.prettier.trailingComma = 'none'
+  } else if (isTypeScript) {
+    formattingOptions.prettier.parser = 'typescript'
+    // XXX: It seems babylon is getting a TypeScript plugin.
+    // Should that be used instead?
+    formattingOptions.eslint.parser = 'typescript-eslint-parser'
   }
 
   const prettify = createPrettify(formattingOptions.prettier, prettierPath)

@@ -170,6 +170,14 @@ const tests = [
     },
     output: '{ "foo": "bar" }',
   },
+  {
+    title: 'TypeScript example',
+    input: {
+      text: 'function Foo (this: void) { return this; }',
+      filePath: path.resolve('./test.ts'),
+    },
+    output: 'function Foo(this: void) {\n  return this;\n}',
+  },
 ]
 
 beforeEach(() => {
