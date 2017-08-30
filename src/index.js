@@ -7,7 +7,8 @@ import prettyFormat from 'pretty-format'
 import {oneLine, stripIndent} from 'common-tags'
 import indentString from 'indent-string'
 import getLogger from 'loglevel-colored-level-prefix'
-import {getOptionsForFormatting, defaultEslintConfig} from './utils'
+import merge from 'lodash.merge'
+import {getOptionsForFormatting} from './utils'
 
 const logger = getLogger({prefix: 'prettier-eslint'})
 
@@ -38,7 +39,7 @@ module.exports = format
  * @param {Boolean} options.prettierLast - Run Prettier Last
  * @return {String} - the formatted string
  */
-function format(options) {
+async function format(options) {
   const {logLevel = getDefaultLogLevel()} = options
   logger.setLevel(logLevel)
   logger.trace('called format with options:', prettyFormat(options))
@@ -48,14 +49,20 @@ function format(options) {
     text = getTextFromFilePath(filePath),
     eslintPath = getModulePath(filePath, 'eslint'),
     prettierPath = getModulePath(filePath, 'prettier'),
-    prettierOptions,
     prettierLast,
     fallbackPrettierOptions,
   } = options
 
-  const eslintConfig = defaultEslintConfig(
-    getConfig(filePath, eslintPath),
+  const eslintConfig = merge(
+    {},
     options.eslintConfig,
+    getConfig(filePath, eslintPath),
+  )
+
+  const prettierOptions = merge(
+    {},
+    options.prettierOptions,
+    await getPrettierConfig(filePath, prettierPath),
   )
 
   const formattingOptions = getOptionsForFormatting(
@@ -112,20 +119,7 @@ function createPrettify(formatOptions, prettierPath) {
       ${indentString(text, 2)}
     `,
     )
-    let prettier
-    try {
-      logger.trace(`requiring prettier module at "${prettierPath}"`)
-      prettier = require(prettierPath)
-    } catch (error) {
-      logger.error(
-        oneLine`
-        There was trouble getting prettier.
-        Is "prettierPath: ${prettierPath}"
-        a correct path to the prettier module?
-      `,
-      )
-      throw error
-    }
+    const prettier = requireModule(prettierPath, 'prettier')
     try {
       logger.trace(`calling prettier.format with the text and prettierOptions`)
       const output = prettier.format(text, formatOptions)
@@ -225,6 +219,26 @@ function getConfig(filePath, eslintPath) {
   }
 }
 
+function getPrettierConfig(filePath, prettierPath) {
+  const prettier = requireModule(prettierPath, 'prettier')
+  return prettier.resolveConfig(filePath)
+}
+
+function requireModule(modulePath, name) {
+  try {
+    logger.trace(`requiring "${name}" module at "${modulePath}"`)
+    return require(modulePath)
+  } catch (error) {
+    logger.error(
+      oneLine`
+      There was trouble getting "${name}".
+      Is "${modulePath}" a correct path to the "${name}" module?
+    `,
+    )
+    throw error
+  }
+}
+
 function getModulePath(filePath = __filename, moduleName) {
   try {
     return requireRelative.resolve(moduleName, filePath)
@@ -242,17 +256,11 @@ function getModulePath(filePath = __filename, moduleName) {
 }
 
 function getESLintCLIEngine(eslintPath, eslintOptions) {
+  const {CLIEngine} = requireModule(eslintPath, 'eslint')
   try {
-    logger.trace(`requiring eslint module at "${eslintPath}"`)
-    const {CLIEngine} = require(eslintPath)
     return new CLIEngine(eslintOptions)
   } catch (error) {
-    logger.error(
-      oneLine`
-        There was trouble creating the ESLint CLIEngine.
-        Is "eslintPath: ${eslintPath}" a correct path to the ESLint module?
-      `,
-    )
+    logger.error(`There was trouble creating the ESLint CLIEngine.`)
     throw error
   }
 }

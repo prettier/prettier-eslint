@@ -9,7 +9,7 @@ mockGetConfigForFileSpy.overrides = {}
 const mockExecuteOnTextSpy = jest.fn(mockExecuteOnText)
 
 module.exports = Object.assign(eslint, {
-  CLIEngine: MockCLIEngine,
+  CLIEngine: jest.fn(MockCLIEngine),
   mock: {
     getConfigForFile: mockGetConfigForFileSpy,
     executeOnText: mockExecuteOnTextSpy,
@@ -27,6 +27,7 @@ function MockCLIEngine(...args) {
 
 MockCLIEngine.prototype = Object.create(CLIEngine.prototype)
 
+// eslint-disable-next-line complexity
 function mockGetConfigForFile(filePath) {
   if (mockGetConfigForFileSpy.throwError) {
     throw mockGetConfigForFileSpy.throwError
@@ -42,11 +43,7 @@ function mockGetConfigForFile(filePath) {
         semi: [2, 'never'],
         'max-len': [2, 120, 2],
         indent: [2, 2, {SwitchCase: 1}],
-        quotes: [
-          2,
-          'single',
-          {avoidEscape: true, allowTemplateLiterals: true},
-        ],
+        quotes: [2, 'single', {avoidEscape: true, allowTemplateLiterals: true}],
         'comma-dangle': [
           2,
           {

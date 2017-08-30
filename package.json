@@ -1,16 +1,15 @@
 {
   "name": "prettier-eslint",
   "version": "0.0.0-development",
-  "description": "Formats your JavaScript using prettier followed by eslint --fix",
+  "description":
+    "Formats your JavaScript using prettier followed by eslint --fix",
   "main": "dist/index.js",
   "scripts": {
     "start": "nps",
     "test": "nps test",
     "precommit": "opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",

@@ -5,7 +5,10 @@ module.exports = prettier
 
 const mockFormatSpy = jest.fn(mockFormat)
 
-Object.assign(prettier, {format: mockFormatSpy})
+Object.assign(prettier, {
+  format: mockFormatSpy,
+  resolveConfig: jest.fn(prettier.resolveConfig),
+})
 
 function mockFormat(...args) {
   global.__PRETTIER_ESLINT_TEST_STATE__.prettierPath = __filename
