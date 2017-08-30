@@ -61,8 +61,8 @@ async function format(options) {
 
   const prettierOptions = merge(
     {},
-    options.prettierOptions,
     await getPrettierConfig(filePath, prettierPath),
+    options.prettierOptions,
   )
 
   const formattingOptions = getOptionsForFormatting(
