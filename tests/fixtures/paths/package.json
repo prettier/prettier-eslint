@@ -1,5 +1,9 @@
 {
   "eslintConfig": {
     "rules": {}
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

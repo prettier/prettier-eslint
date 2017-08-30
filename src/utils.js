@@ -1,7 +1,6 @@
 import {oneLine} from 'common-tags'
 import delve from 'dlv'
 import getLogger from 'loglevel-colored-level-prefix'
-import merge from 'lodash.merge'
 
 const logger = getLogger({prefix: 'prettier-eslint'})
 const RULE_DISABLED = {}
@@ -42,11 +41,7 @@ const OPTION_GETTERS = {
 }
 
 /* eslint import/prefer-default-export:0 */
-export {getOptionsForFormatting, defaultEslintConfig}
-
-function defaultEslintConfig(eslintConfig = {}, defaultConfig = {}) {
-  return merge({}, defaultConfig, eslintConfig)
-}
+export {getOptionsForFormatting}
 
 function getOptionsForFormatting(
   eslintConfig,

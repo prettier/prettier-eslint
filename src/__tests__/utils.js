@@ -1,96 +1,4 @@
-import {getOptionsForFormatting, defaultEslintConfig} from '../utils'
-
-const defaultEslintConfigTests = [
-  {
-    config: {
-      foo: 'bar',
-      parserOptions: {
-        ecmaVersion: 7,
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      rules: {
-        indent: [2, 2, {SwitchCase: 1}],
-        quotes: [
-          2,
-          'single',
-          {avoidEscape: true, allowTemplateLiterals: true},
-        ],
-      },
-      options: {
-        printWidth: 120,
-        tabWidth: 2,
-      },
-    },
-    defaults: {
-      foo: 'not',
-      fiz: 'fuz',
-      parserOptions: {
-        ecmaVersion: 6,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: false,
-          impliedStrict: true,
-        },
-      },
-      rules: {
-        'max-len': [2, 120, 2],
-        indent: [0, 0, {SwitchCase: 0}],
-      },
-      options: {
-        parser: 'babylon',
-        printWidth: 110,
-      },
-    },
-    result: {
-      foo: 'bar',
-      fiz: 'fuz',
-      parserOptions: {
-        ecmaVersion: 7,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-          impliedStrict: true,
-        },
-      },
-      rules: {
-        'max-len': [2, 120, 2],
-        indent: [2, 2, {SwitchCase: 1}],
-        quotes: [
-          2,
-          'single',
-          {avoidEscape: true, allowTemplateLiterals: true},
-        ],
-      },
-      options: {
-        parser: 'babylon',
-        printWidth: 120,
-        tabWidth: 2,
-      },
-    },
-  },
-  {
-    config: undefined,
-    defaults: undefined,
-    result: {},
-  },
-  {
-    config: {},
-    defaults: {},
-    result: {},
-  },
-  {
-    config: undefined,
-    defaults: {},
-    result: {},
-  },
-  {
-    config: {},
-    defaults: undefined,
-    result: {},
-  },
-]
+import {getOptionsForFormatting} from '../utils'
 
 const getPrettierOptionsFromESLintRulesTests = [
   {
@@ -218,13 +126,6 @@ const getPrettierOptionsFromESLintRulesTests = [
   {rules: {indent: ['error', 'tab']}, options: {useTabs: true}},
   {rules: {indent: [2, 'tab']}, options: {useTabs: true}},
 ]
-
-defaultEslintConfigTests.forEach(({config, defaults, result}, index) => {
-  test(`defaultEslintConfigTests ${index}`, () => {
-    const merged = defaultEslintConfig(config, defaults)
-    expect(merged).toEqual(result)
-  })
-})
 
 getPrettierOptionsFromESLintRulesTests.forEach(
   ({rules, options, prettierOptions, fallbackPrettierOptions}, index) => {
