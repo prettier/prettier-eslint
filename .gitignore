@@ -1,6 +1,12 @@
-/node_modules
-.nyc_output
+node_modules
 coverage
 dist
 .opt-in
 .opt-out
+.DS_Store
+.eslintcache
+
+# these cause more harm than good
+# when working with contributors
+package-lock.json
+yarn.lock

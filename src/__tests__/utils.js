@@ -1,4 +1,4 @@
-import {getOptionsForFormatting, defaultEslintConfig} from './utils'
+import {getOptionsForFormatting, defaultEslintConfig} from '../utils'
 
 const defaultEslintConfigTests = [
   {

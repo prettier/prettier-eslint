@@ -5,7 +5,7 @@ import stripIndent from 'strip-indent'
 import eslintMock from 'eslint'
 import prettierMock from 'prettier'
 import loglevelMock from 'loglevel-colored-level-prefix'
-import format from './'
+import format from '../'
 
 jest.mock('fs')
 
@@ -224,7 +224,7 @@ test(`when prettier throws, log to logger.error and throw the error`, () => {
 })
 
 test('can accept a path to an eslint module and uses that instead.', () => {
-  const eslintPath = path.join(__dirname, './__mocks__/eslint')
+  const eslintPath = path.join(__dirname, '../__mocks__/eslint')
   const {executeOnText} = eslintMock.mock
   format({text: '', eslintPath})
   expect(executeOnText).toHaveBeenCalledTimes(1)
@@ -233,7 +233,7 @@ test('can accept a path to an eslint module and uses that instead.', () => {
 test('fails with an error if the eslint module cannot be resolved.', () => {
   const eslintPath = path.join(
     __dirname,
-    './__mocks__/non-existant-eslint-module',
+    '../__mocks__/non-existant-eslint-module',
   )
 
   expect(() => format({text: '', eslintPath})).toThrowError(
@@ -249,7 +249,7 @@ test('fails with an error if the eslint module cannot be resolved.', () => {
 })
 
 test('can accept a path to a prettier module and uses that instead.', () => {
-  const prettierPath = path.join(__dirname, './__mocks__/prettier')
+  const prettierPath = path.join(__dirname, '../__mocks__/prettier')
   const {format: prettierMockFormat} = prettierMock
   format({text: '', prettierPath})
   expect(prettierMockFormat).toHaveBeenCalledTimes(1)
@@ -258,7 +258,7 @@ test('can accept a path to a prettier module and uses that instead.', () => {
 test('fails with an error if the prettier module cannot be resolved.', () => {
   const prettierPath = path.join(
     __dirname,
-    './__mocks__/non-existant-prettier-module',
+    '../__mocks__/non-existant-prettier-module',
   )
   expect(() => format({text: '', prettierPath})).toThrowError(
     /non-existant-prettier-module/,
@@ -271,14 +271,14 @@ test('fails with an error if the prettier module cannot be resolved.', () => {
 })
 
 test('resolves to the eslint module relative to the given filePath', () => {
-  const filePath = require.resolve('../tests/fixtures/paths/foo.js')
+  const filePath = require.resolve('../../tests/fixtures/paths/foo.js')
   format({text: '', filePath})
   const stateObj = {
     eslintPath: require.resolve(
-      '../tests/fixtures/paths/node_modules/eslint/index.js',
+      '../../tests/fixtures/paths/node_modules/eslint/index.js',
     ),
     prettierPath: require.resolve(
-      '../tests/fixtures/paths/node_modules/prettier/index.js',
+      '../../tests/fixtures/paths/node_modules/prettier/index.js',
     ),
   }
   expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj)
@@ -291,8 +291,8 @@ test('resolves to the local eslint module', () => {
     // without Jest's mocking, these would actually resolve to the
     // project modules :) The fact that jest's mocking is being
     // applied is good enough for this test.
-    eslintPath: require.resolve('./__mocks__/eslint'),
-    prettierPath: require.resolve('./__mocks__/prettier'),
+    eslintPath: require.resolve('../__mocks__/eslint'),
+    prettierPath: require.resolve('../__mocks__/prettier'),
   })
 })
 
@@ -303,8 +303,8 @@ test('reads text from fs if filePath is provided but not text', () => {
   } catch (e) {
     // ignore
   }
-  // Two hits to .eslintignore
-  expect(fsMock.readFileSync).toHaveBeenCalledTimes(3)
+  // one hit to get the file and one for the eslintignore
+  expect(fsMock.readFileSync).toHaveBeenCalledTimes(2)
   expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, 'utf8')
 })
 
@@ -313,9 +313,7 @@ test('logs error if it cannot read the file from the filePath', () => {
   fsMock.readFileSync = jest.fn(() => {
     throw new Error('some error')
   })
-  expect(() => format({filePath: '/some-path.js'})).toThrowError(
-    /some error/,
-  )
+  expect(() => format({filePath: '/some-path.js'})).toThrowError(/some error/)
   expect(logger.error).toHaveBeenCalledTimes(1)
   fsMock.readFileSync = originalMock
 })

@@ -6,13 +6,12 @@ cache:
 notifications:
   email: false
 node_js:
-  - '6'
+  - '8'
 script:
-  - yarn start validate
+  - npm start validate
 after_success:
-  - yarn start report-coverage
-  - yarn start release
+  - npx codecov
+  - npm i -g semantic-release@7 && semantic-release pre && npm publish && semantic-release post
 branches:
   only:
     - master
-    - /^greenkeeper/.*$/
