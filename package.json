@@ -1,15 +1,16 @@
 {
   "name": "prettier-eslint",
   "version": "0.0.0-development",
-  "description":
-    "Formats your JavaScript using prettier followed by eslint --fix",
+  "description": "Formats your JavaScript using prettier followed by eslint --fix",
   "main": "dist/index.js",
   "scripts": {
     "start": "nps",
     "test": "nps test",
     "precommit": "opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
@@ -22,7 +23,9 @@
     "loglevel-colored-level-prefix": "^1.0.0",
     "prettier": "^1.6.0",
     "pretty-format": "^20.0.3",
-    "require-relative": "^0.8.7"
+    "require-relative": "^0.8.7",
+    "typescript": "^2.4.2",
+    "typescript-eslint-parser": "^7.0.0"
   },
   "devDependencies": {
     "all-contributors-cli": "^4.4.0",
