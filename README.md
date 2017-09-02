@@ -20,6 +20,8 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
 
+<a href="https://app.codesponsor.io/link/PKGFLnhDiFvsUA5P4kAXfiPs/prettier/prettier-eslint" rel="nofollow"><img src="https://app.codesponsor.io/embed/PKGFLnhDiFvsUA5P4kAXfiPs/prettier/prettier-eslint.svg" style="width: 888px; height: 68px;" alt="Sponsor" /></a>
+
 ## The problem
 
 The [`fix`][fix] feature of [`eslint`][eslint] is pretty great and can auto-format/fix much of your code according to
