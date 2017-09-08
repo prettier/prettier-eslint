@@ -39,7 +39,7 @@ module.exports = format
  * @param {Boolean} options.prettierLast - Run Prettier Last
  * @return {String} - the formatted string
  */
-async function format(options) {
+function format(options) {
   const {logLevel = getDefaultLogLevel()} = options
   logger.setLevel(logLevel)
   logger.trace('called format with options:', prettyFormat(options))
@@ -61,7 +61,7 @@ async function format(options) {
 
   const prettierOptions = merge(
     {},
-    await getPrettierConfig(filePath, prettierPath),
+    getPrettierConfig(filePath, prettierPath),
     options.prettierOptions,
   )
 
@@ -227,7 +227,7 @@ function getConfig(filePath, eslintPath) {
 
 function getPrettierConfig(filePath, prettierPath) {
   const prettier = requireModule(prettierPath, 'prettier')
-  return prettier.resolveConfig(filePath)
+  return prettier.resolveConfig.sync(filePath)
 }
 
 function requireModule(modulePath, name) {

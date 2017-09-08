@@ -7,7 +7,9 @@ const mockFormatSpy = jest.fn(mockFormat)
 
 Object.assign(prettier, {
   format: mockFormatSpy,
-  resolveConfig: jest.fn(prettier.resolveConfig),
+  resolveConfig: {
+    sync: jest.fn(prettier.resolveConfig.sync),
+  },
 })
 
 function mockFormat(...args) {
