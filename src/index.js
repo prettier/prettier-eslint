@@ -227,7 +227,12 @@ function getConfig(filePath, eslintPath) {
 
 function getPrettierConfig(filePath, prettierPath) {
   const prettier = requireModule(prettierPath, 'prettier')
-  return prettier.resolveConfig.sync(filePath)
+
+  // NOTE: Backward-compatibility with old prettier versions (<1.7)
+  //       that don't have ``resolveConfig.sync` method.
+  return typeof prettier.resolveConfig.sync === 'undefined' ?
+    {} :
+    prettier.resolveConfig.sync(filePath)
 }
 
 function requireModule(modulePath, name) {

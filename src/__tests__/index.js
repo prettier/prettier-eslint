@@ -335,6 +335,24 @@ test('calls prettier.resolveConfig.sync with the file path', () => {
   expect(prettierMock.resolveConfig.sync).toHaveBeenCalledWith(filePath)
 })
 
+test('does not raise an error if prettier.resolveConfig.sync is not defined', () => {
+  const filePath = require.resolve('../../tests/fixtures/paths/foo.js')
+  const originalPrettierMockResolveConfigSync = prettierMock.resolveConfig.sync
+  prettierMock.resolveConfig.sync = undefined
+
+  function callingFormat() {
+    return format({
+      filePath,
+      text: defaultInputText(),
+      eslintConfig: getESLintConfigWithDefaultRules(),
+    })
+  }
+
+  expect(callingFormat).not.toThrowError()
+
+  prettierMock.resolveConfig.sync = originalPrettierMockResolveConfigSync
+})
+
 test('logs if there is a problem making the CLIEngine', () => {
   const error = new Error('fake error')
   eslintMock.CLIEngine.mockImplementation(() => {
