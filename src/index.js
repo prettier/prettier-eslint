@@ -86,24 +86,27 @@ function format(options) {
   )
 
   const isCss = /\.(css|less|scss)$/.test(filePath)
+  const isTypeScript = /\.(ts|tsx)$/.test(filePath)
+  const isGraphQL = /\.(graphql|gql)$/.test(filePath)
   const isJson = /\.json$/.test(filePath)
-  const isTypeScript = /\.tsx?$/.test(filePath)
 
   if (isCss) {
     formattingOptions.prettier.parser = 'postcss'
-  } else if (isJson) {
-    formattingOptions.prettier.parser = 'json'
-    formattingOptions.prettier.trailingComma = 'none'
   } else if (isTypeScript) {
     formattingOptions.prettier.parser = 'typescript'
     // XXX: It seems babylon is getting a TypeScript plugin.
     // Should that be used instead?
     formattingOptions.eslint.parser = 'typescript-eslint-parser'
+  } else if (isGraphQL) {
+    formattingOptions.prettier.parser = 'graphql'
+  } else if (isJson) {
+    formattingOptions.prettier.parser = 'json'
+    formattingOptions.prettier.trailingComma = 'none'
   }
 
   const prettify = createPrettify(formattingOptions.prettier, prettierPath)
 
-  if (isCss || isJson) {
+  if (isCss || isGraphQL || isJson) {
     return prettify(text, filePath)
   }
 

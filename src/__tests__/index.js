@@ -163,20 +163,28 @@ const tests = [
     output: '.stop {\n  color: red;\n}',
   },
   {
-    title: 'JSON example',
-    input: {
-      text: '{  "foo": "bar"}',
-      filePath: path.resolve('./test.json'),
-    },
-    output: '{ "foo": "bar" }',
-  },
-  {
     title: 'TypeScript example',
     input: {
       text: 'function Foo (this: void) { return this; }',
       filePath: path.resolve('./test.ts'),
     },
     output: 'function Foo(this: void) {\n  return this;\n}',
+  },
+  {
+    title: 'GraphQL example',
+    input: {
+      text: 'type Query{test: Test}',
+      filePath: path.resolve('./test.gql'),
+    },
+    output: 'type Query {\n  test: Test\n}',
+  },
+  {
+    title: 'JSON example',
+    input: {
+      text: '{  "foo": "bar"}',
+      filePath: path.resolve('./test.json'),
+    },
+    output: '{ "foo": "bar" }',
   },
 ]
 
