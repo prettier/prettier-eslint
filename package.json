@@ -24,8 +24,8 @@
     "prettier": "^1.7.0",
     "pretty-format": "^20.0.3",
     "require-relative": "^0.8.7",
-    "typescript": "^2.4.2",
-    "typescript-eslint-parser": "^7.0.0"
+    "typescript": "^2.5.1",
+    "typescript-eslint-parser": "^8.0.0"
   },
   "devDependencies": {
     "all-contributors-cli": "^4.4.0",
