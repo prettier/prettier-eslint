@@ -1,5 +1,5 @@
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
-/* eslint complexity: [1, 7] */
+/* eslint complexity: [1, 13] */
 import fs from 'fs'
 import path from 'path'
 import requireRelative from 'require-relative'
@@ -85,13 +85,19 @@ function format(options) {
     }),
   )
 
-  const isCss = /\.(css|less|scss)$/.test(filePath)
+  const isCss = /\.(css)$/.test(filePath)
+  const isLess = /\.(less)$/.test(filePath)
+  const isScss = /\.(scss)$/.test(filePath)
   const isTypeScript = /\.(ts|tsx)$/.test(filePath)
   const isGraphQL = /\.(graphql|gql)$/.test(filePath)
   const isJson = /\.json$/.test(filePath)
 
   if (isCss) {
-    formattingOptions.prettier.parser = 'postcss'
+    formattingOptions.prettier.parser = 'css'
+  } else if (isLess) {
+    formattingOptions.prettier.parser = 'less'
+  } else if (isScss) {
+    formattingOptions.prettier.parser = 'scss'
   } else if (isTypeScript) {
     formattingOptions.prettier.parser = 'typescript'
     // XXX: It seems babylon is getting a TypeScript plugin.
@@ -106,7 +112,7 @@ function format(options) {
 
   const prettify = createPrettify(formattingOptions.prettier, prettierPath)
 
-  if (isCss || isGraphQL || isJson) {
+  if (isCss || isLess || isScss || isGraphQL || isJson) {
     return prettify(text, filePath)
   }
 
