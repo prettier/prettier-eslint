@@ -158,10 +158,7 @@ function getPrintWidth(eslintValue, fallbacks) {
 }
 
 function getTabWidth(eslintValue, fallbacks) {
-  // if it's set to tabs, then the tabWidth value doesn't matter
-  const prettierValue = eslintValue === 'tab' ? RULE_DISABLED : eslintValue
-
-  return makePrettierOption('tabWidth', prettierValue, fallbacks, 2)
+  return makePrettierOption('tabWidth', eslintValue, fallbacks, 2)
 }
 
 function getParser(eslintValue, fallbacks) {
