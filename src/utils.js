@@ -11,7 +11,13 @@ const OPTION_GETTERS = {
     ruleValueToPrettierOption: getPrintWidth,
   },
   tabWidth: {
-    ruleValue: rules => getRuleValue(rules, 'indent'),
+    ruleValue: rules => {
+      let value = getRuleValue(rules, 'indent')
+      if (value === 'tab') {
+        value = getRuleValue(rules, 'max-len', 'tabWidth')
+      }
+      return value
+    },
     ruleValueToPrettierOption: getTabWidth,
   },
   parser: {
