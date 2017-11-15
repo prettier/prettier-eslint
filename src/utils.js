@@ -11,7 +11,13 @@ const OPTION_GETTERS = {
     ruleValueToPrettierOption: getPrintWidth,
   },
   tabWidth: {
-    ruleValue: rules => getRuleValue(rules, 'indent'),
+    ruleValue: rules => {
+      let value = getRuleValue(rules, 'indent')
+      if (value === 'tab') {
+        value = getRuleValue(rules, 'max-len', 'tabWidth')
+      }
+      return value
+    },
     ruleValueToPrettierOption: getTabWidth,
   },
   parser: {
@@ -158,10 +164,7 @@ function getPrintWidth(eslintValue, fallbacks) {
 }
 
 function getTabWidth(eslintValue, fallbacks) {
-  // if it's set to tabs, then the tabWidth value doesn't matter
-  const prettierValue = eslintValue === 'tab' ? RULE_DISABLED : eslintValue
-
-  return makePrettierOption('tabWidth', prettierValue, fallbacks, 2)
+  return makePrettierOption('tabWidth', eslintValue, fallbacks, 2)
 }
 
 function getParser(eslintValue, fallbacks) {
