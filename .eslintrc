@@ -1,7 +1,6 @@
 {
   "extends": [
     "kentcdodds",
-    "kentcdodds/prettier",
     "kentcdodds/jest"
   ],
   "rules": {
