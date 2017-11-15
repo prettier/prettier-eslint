@@ -1,19 +1,19 @@
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
 /* eslint complexity: [1, 13] */
-import fs from 'fs'
-import path from 'path'
-import requireRelative from 'require-relative'
-import prettyFormat from 'pretty-format'
-import {oneLine, stripIndent} from 'common-tags'
-import indentString from 'indent-string'
-import getLogger from 'loglevel-colored-level-prefix'
-import merge from 'lodash.merge'
-import {getOptionsForFormatting} from './utils'
+import fs from "fs";
+import path from "path";
+import requireRelative from "require-relative";
+import prettyFormat from "pretty-format";
+import { oneLine, stripIndent } from "common-tags";
+import indentString from "indent-string";
+import getLogger from "loglevel-colored-level-prefix";
+import merge from "lodash.merge";
+import { getOptionsForFormatting } from "./utils";
 
-const logger = getLogger({prefix: 'prettier-eslint'})
+const logger = getLogger({ prefix: "prettier-eslint" });
 
 // CommonJS + ES6 modules... is it worth it? Probably not...
-module.exports = format
+module.exports = format;
 
 /**
  * Formats the text with prettier and then eslint based on the given options
@@ -40,39 +40,39 @@ module.exports = format
  * @return {String} - the formatted string
  */
 function format(options) {
-  const {logLevel = getDefaultLogLevel()} = options
-  logger.setLevel(logLevel)
-  logger.trace('called format with options:', prettyFormat(options))
+  const { logLevel = getDefaultLogLevel() } = options;
+  logger.setLevel(logLevel);
+  logger.trace("called format with options:", prettyFormat(options));
 
   const {
     filePath,
     text = getTextFromFilePath(filePath),
-    eslintPath = getModulePath(filePath, 'eslint'),
-    prettierPath = getModulePath(filePath, 'prettier'),
+    eslintPath = getModulePath(filePath, "eslint"),
+    prettierPath = getModulePath(filePath, "prettier"),
     prettierLast,
-    fallbackPrettierOptions,
-  } = options
+    fallbackPrettierOptions
+  } = options;
 
   const eslintConfig = merge(
     {},
     options.eslintConfig,
-    getConfig(filePath, eslintPath),
-  )
+    getConfig(filePath, eslintPath)
+  );
 
   const prettierOptions = merge(
     {},
     getPrettierConfig(filePath, prettierPath),
-    options.prettierOptions,
-  )
+    options.prettierOptions
+  );
 
   const formattingOptions = getOptionsForFormatting(
     eslintConfig,
     prettierOptions,
-    fallbackPrettierOptions,
-  )
+    fallbackPrettierOptions
+  );
 
   logger.debug(
-    'inferred options:',
+    "inferred options:",
     prettyFormat({
       filePath,
       text,
@@ -81,93 +81,93 @@ function format(options) {
       eslintConfig: formattingOptions.eslint,
       prettierOptions: formattingOptions.prettier,
       logLevel,
-      prettierLast,
-    }),
-  )
+      prettierLast
+    })
+  );
 
-  const isCss = /\.(css)$/.test(filePath)
-  const isLess = /\.(less)$/.test(filePath)
-  const isScss = /\.(scss)$/.test(filePath)
-  const isTypeScript = /\.(ts|tsx)$/.test(filePath)
-  const isGraphQL = /\.(graphql|gql)$/.test(filePath)
-  const isJson = /\.json$/.test(filePath)
+  const isCss = /\.(css)$/.test(filePath);
+  const isLess = /\.(less)$/.test(filePath);
+  const isScss = /\.(scss)$/.test(filePath);
+  const isTypeScript = /\.(ts|tsx)$/.test(filePath);
+  const isGraphQL = /\.(graphql|gql)$/.test(filePath);
+  const isJson = /\.json$/.test(filePath);
 
   if (isCss) {
-    formattingOptions.prettier.parser = 'css'
+    formattingOptions.prettier.parser = "css";
   } else if (isLess) {
-    formattingOptions.prettier.parser = 'less'
+    formattingOptions.prettier.parser = "less";
   } else if (isScss) {
-    formattingOptions.prettier.parser = 'scss'
+    formattingOptions.prettier.parser = "scss";
   } else if (isTypeScript) {
-    formattingOptions.prettier.parser = 'typescript'
+    formattingOptions.prettier.parser = "typescript";
     // XXX: It seems babylon is getting a TypeScript plugin.
     // Should that be used instead?
-    formattingOptions.eslint.parser = 'typescript-eslint-parser'
+    formattingOptions.eslint.parser = "typescript-eslint-parser";
   } else if (isGraphQL) {
-    formattingOptions.prettier.parser = 'graphql'
+    formattingOptions.prettier.parser = "graphql";
   } else if (isJson) {
-    formattingOptions.prettier.parser = 'json'
-    formattingOptions.prettier.trailingComma = 'none'
+    formattingOptions.prettier.parser = "json";
+    formattingOptions.prettier.trailingComma = "none";
   }
 
-  const prettify = createPrettify(formattingOptions.prettier, prettierPath)
+  const prettify = createPrettify(formattingOptions.prettier, prettierPath);
 
   if (isCss || isLess || isScss || isGraphQL || isJson) {
-    return prettify(text, filePath)
+    return prettify(text, filePath);
   }
 
-  const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath)
+  const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);
 
   if (prettierLast) {
-    return prettify(eslintFix(text, filePath))
+    return prettify(eslintFix(text, filePath));
   }
-  return eslintFix(prettify(text), filePath)
+  return eslintFix(prettify(text), filePath);
 }
 
 function createPrettify(formatOptions, prettierPath) {
   return function prettify(text) {
-    logger.debug('calling prettier on text')
+    logger.debug("calling prettier on text");
     logger.trace(
       stripIndent`
       prettier input:
 
       ${indentString(text, 2)}
-    `,
-    )
-    const prettier = requireModule(prettierPath, 'prettier')
+    `
+    );
+    const prettier = requireModule(prettierPath, "prettier");
     try {
-      logger.trace(`calling prettier.format with the text and prettierOptions`)
-      const output = prettier.format(text, formatOptions)
-      logger.trace('prettier: output === input', output === text)
+      logger.trace(`calling prettier.format with the text and prettierOptions`);
+      const output = prettier.format(text, formatOptions);
+      logger.trace("prettier: output === input", output === text);
       logger.trace(
         stripIndent`
         prettier output:
 
         ${indentString(output, 2)}
-      `,
-      )
-      return output
+      `
+      );
+      return output;
     } catch (error) {
-      logger.error('prettier formatting failed due to a prettier error')
-      throw error
+      logger.error("prettier formatting failed due to a prettier error");
+      throw error;
     }
-  }
+  };
 }
 
 function createEslintFix(eslintConfig, eslintPath) {
   return function eslintFix(text, filePath) {
-    const eslint = getESLintCLIEngine(eslintPath, eslintConfig)
+    const eslint = getESLintCLIEngine(eslintPath, eslintConfig);
     try {
-      logger.trace(`calling eslint.executeOnText with the text`)
-      const report = eslint.executeOnText(text, filePath, true)
+      logger.trace(`calling eslint.executeOnText with the text`);
+      const report = eslint.executeOnText(text, filePath, true);
       logger.trace(
         `executeOnText returned the following report:`,
-        prettyFormat(report),
-      )
+        prettyFormat(report)
+      );
       // default the output to text because if there's nothing
       // to fix, eslint doesn't provide `output`
-      const [{output = text}] = report.results
-      logger.trace('eslint --fix: output === input', output === text)
+      const [{ output = text }] = report.results;
+      logger.trace("eslint --fix: output === input", output === text);
       // NOTE: We're ignoring linting errors/warnings here and
       // defaulting to the given text if there are any
       // because all we're trying to do is fix what we can.
@@ -177,14 +177,14 @@ function createEslintFix(eslintConfig, eslintPath) {
         eslint --fix output:
 
         ${indentString(output, 2)}
-      `,
-      )
-      return output
+      `
+      );
+      return output;
     } catch (error) {
-      logger.error('eslint fix failed due to an eslint error')
-      throw error
+      logger.error("eslint fix failed due to an eslint error");
+      throw error;
     }
-  }
+  };
 }
 
 function getTextFromFilePath(filePath) {
@@ -193,75 +193,75 @@ function getTextFromFilePath(filePath) {
       oneLine`
         attempting fs.readFileSync to get
         the text for file at "${filePath}"
-      `,
-    )
-    return fs.readFileSync(filePath, 'utf8')
+      `
+    );
+    return fs.readFileSync(filePath, "utf8");
   } catch (error) {
     logger.error(
       oneLine`
         failed to get the text to format
         from the given filePath: "${filePath}"
-      `,
-    )
-    throw error
+      `
+    );
+    throw error;
   }
 }
 
 function getConfig(filePath, eslintPath) {
-  const eslintOptions = {}
+  const eslintOptions = {};
   if (filePath) {
-    eslintOptions.cwd = path.dirname(filePath)
+    eslintOptions.cwd = path.dirname(filePath);
   }
   logger.trace(
     oneLine`
       creating ESLint CLI Engine to get the config for
       "${filePath || process.cwd()}"
-    `,
-  )
-  const configFinder = getESLintCLIEngine(eslintPath, eslintOptions)
+    `
+  );
+  const configFinder = getESLintCLIEngine(eslintPath, eslintOptions);
   try {
-    logger.debug(`getting eslint config for file at "${filePath}"`)
-    const config = configFinder.getConfigForFile(filePath)
+    logger.debug(`getting eslint config for file at "${filePath}"`);
+    const config = configFinder.getConfigForFile(filePath);
     logger.trace(
       `eslint config for "${filePath}" received`,
-      prettyFormat(config),
-    )
-    return config
+      prettyFormat(config)
+    );
+    return config;
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
-    logger.debug('Unable to find config')
-    return {rules: {}}
+    logger.debug("Unable to find config");
+    return { rules: {} };
   }
 }
 
 function getPrettierConfig(filePath, prettierPath) {
-  const prettier = requireModule(prettierPath, 'prettier')
+  const prettier = requireModule(prettierPath, "prettier");
 
   // NOTE: Backward-compatibility with old prettier versions (<1.7)
   //       that don't have ``resolveConfig.sync` method.
-  return typeof prettier.resolveConfig.sync === 'undefined' ?
-    {} :
-    prettier.resolveConfig.sync(filePath)
+  return typeof prettier.resolveConfig.sync === "undefined"
+    ? {}
+    : prettier.resolveConfig.sync(filePath);
 }
 
 function requireModule(modulePath, name) {
   try {
-    logger.trace(`requiring "${name}" module at "${modulePath}"`)
-    return require(modulePath)
+    logger.trace(`requiring "${name}" module at "${modulePath}"`);
+    return require(modulePath);
   } catch (error) {
     logger.error(
       oneLine`
       There was trouble getting "${name}".
       Is "${modulePath}" a correct path to the "${name}" module?
-    `,
-    )
-    throw error
+    `
+    );
+    throw error;
   }
 }
 
 function getModulePath(filePath = __filename, moduleName) {
   try {
-    return requireRelative.resolve(moduleName, filePath)
+    return requireRelative.resolve(moduleName, filePath);
   } catch (error) {
     logger.debug(
       oneLine`
@@ -269,22 +269,22 @@ function getModulePath(filePath = __filename, moduleName) {
         module. Using prettier-eslint's version.
       `,
       error.message,
-      error.stack,
-    )
-    return require.resolve(moduleName)
+      error.stack
+    );
+    return require.resolve(moduleName);
   }
 }
 
 function getESLintCLIEngine(eslintPath, eslintOptions) {
-  const {CLIEngine} = requireModule(eslintPath, 'eslint')
+  const { CLIEngine } = requireModule(eslintPath, "eslint");
   try {
-    return new CLIEngine(eslintOptions)
+    return new CLIEngine(eslintOptions);
   } catch (error) {
-    logger.error(`There was trouble creating the ESLint CLIEngine.`)
-    throw error
+    logger.error(`There was trouble creating the ESLint CLIEngine.`);
+    throw error;
   }
 }
 
 function getDefaultLogLevel() {
-  return process.env.LOG_LEVEL || 'warn'
+  return process.env.LOG_LEVEL || "warn";
 }
