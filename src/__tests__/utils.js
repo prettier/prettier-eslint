@@ -173,6 +173,26 @@ test('if fallbacks are provided, those are used if not found in eslint', () => {
   expect(prettier).toMatchObject({singleQuote: false})
 })
 
+test('eslint max-len.tabWidth value should be used for tabWidth when tabs are used', () => {
+  const {prettier} = getOptionsForFormatting({rules: {
+    indent: ['error', 'tab'],
+    'max-len': [2, {
+      tabWidth: 4,
+    }],
+  }})
+
+  expect(prettier).toMatchObject({
+    printWidth: 80,
+    tabWidth: 4,
+    parser: 'babylon',
+    singleQuote: false,
+    trailingComma: 'none',
+    bracketSpacing: true,
+    semi: true,
+    useTabs: true,
+  })
+})
+
 test('eslint config has only necessary properties', () => {
   const {eslint} = getOptionsForFormatting({
     globals: {window: false},
