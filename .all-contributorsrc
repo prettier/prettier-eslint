@@ -208,7 +208,21 @@
       "name": "Simon Fridlund",
       "avatar_url": "https://avatars0.githubusercontent.com/u/1215414?v=3",
       "profile": "https://github.com/zimme",
-      "contributions": []
+      "contributions": [
+        "question",
+        "bug",
+        "code",
+        "doc",
+        "example",
+        "ideas",
+        "infra",
+        "plugin",
+        "review",
+        "talk",
+        "test",
+        "tool",
+        "tutorial"
+      ]
     },
     {
       "login": "OliverJAsh",
