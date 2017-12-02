@@ -1,3 +1,4 @@
+import prettier from "prettier";
 import { oneLine } from "common-tags";
 import delve from "dlv";
 import getLogger from "loglevel-colored-level-prefix";
@@ -47,7 +48,25 @@ const OPTION_GETTERS = {
 };
 
 /* eslint import/prefer-default-export:0 */
-export { getOptionsForFormatting };
+export { matchFileType, getOptionsForFormatting };
+
+function matchFileType(languageName, filePath) {
+  if (typeof filePath !== 'string') {
+    logger.debug(`Cannot get a file type when "filePath" is not a string`);
+    return false;
+  }
+
+  const {languages} = prettier.getSupportInfo();
+
+  const lang = languages.find(language => language.name === languageName);
+
+  if (!lang) {
+    logger.debug(`prettier doesn't support "${languageName}"`);
+    return false;
+  }
+
+  return lang.extensions.findIndex(ext => filePath.endsWith(ext)) !== -1;
+}
 
 function getOptionsForFormatting(
   eslintConfig,
