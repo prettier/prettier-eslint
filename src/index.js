@@ -8,7 +8,7 @@ import { oneLine, stripIndent } from "common-tags";
 import indentString from "indent-string";
 import getLogger from "loglevel-colored-level-prefix";
 import merge from "lodash.merge";
-import { getOptionsForFormatting } from "./utils";
+import { matchFileType, getOptionsForFormatting } from "./utils";
 
 const logger = getLogger({ prefix: "prettier-eslint" });
 
@@ -85,12 +85,12 @@ function format(options) {
     })
   );
 
-  const isCss = /\.(css)$/.test(filePath);
-  const isLess = /\.(less)$/.test(filePath);
-  const isScss = /\.(scss)$/.test(filePath);
-  const isTypeScript = /\.(ts|tsx)$/.test(filePath);
-  const isGraphQL = /\.(graphql|gql)$/.test(filePath);
-  const isJson = /\.json$/.test(filePath);
+  const isCss = matchFileType('CSS', filePath);
+  const isLess = matchFileType('Less', filePath);
+  const isScss = matchFileType('SCSS', filePath);
+  const isTypeScript = matchFileType('TypeScript', filePath);
+  const isGraphQL = matchFileType('GraphQL', filePath);
+  const isJson = matchFileType('JSON', filePath);
 
   if (isCss) {
     formattingOptions.prettier.parser = "css";
