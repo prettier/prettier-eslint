@@ -43,7 +43,7 @@ const tests = [
     title: "with prettierLast: true",
     input: {
       text: defaultInputText(),
-      filePath: path.resolve("./mock/default-config"),
+      filePath: path.resolve("./mock/default-config.js"),
       prettierLast: true
     },
     output: prettierLastOutput()
@@ -52,7 +52,7 @@ const tests = [
     title: "with a filePath and no config",
     input: {
       text: defaultInputText(),
-      filePath: path.resolve("./mock/default-config")
+      filePath: path.resolve("./mock/default-config.js")
     },
     output: defaultOutput()
   },
@@ -73,7 +73,7 @@ const tests = [
           "object-curly-spacing": ["error", "never"]
         }
       },
-      filePath: path.resolve("./mock/default-config")
+      filePath: path.resolve("./mock/default-config.js")
     },
     output: "const {foo} = bar"
   },
@@ -82,7 +82,7 @@ const tests = [
     input: {
       text: "const { foo } = bar;",
       eslintConfig: {},
-      filePath: path.resolve("./mock/default-config"),
+      filePath: path.resolve("./mock/default-config.js"),
       fallbackPrettierOptions: { bracketSpacing: false }
     },
     output: "const {foo} = bar"
@@ -300,7 +300,7 @@ test("resolves to the eslint module relative to the given filePath", () => {
 });
 
 test("resolves to the local eslint module", () => {
-  const filePath = "/blah-blah/default-config";
+  const filePath = "/blah-blah/default-config.js";
   format({ text: "", filePath });
   expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
     // without Jest's mocking, these would actually resolve to the
