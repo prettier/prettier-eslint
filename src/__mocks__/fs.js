@@ -1,8 +1,12 @@
 const fs = require.requireActual("fs");
 module.exports = Object.assign({}, fs, {
   readFileSync: jest.fn(filename => {
-    return /package\.json$/.test(filename)
-      ? '{"name": "fake", "version": "0.0.0"}'
-      : "var fake = true";
+    if (/package\.json$/.test(filename)) {
+      return '{"name": "fake", "version": "0.0.0"}';
+    } else if (/\.(j|t)s$/.test(filename)) {
+      return "var fake = true";
+    }
+
+    return "";
   })
 });
