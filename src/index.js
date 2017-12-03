@@ -61,6 +61,7 @@ function format(options) {
 
   const prettierOptions = merge(
     {},
+    filePath && { filepath: filePath },
     getPrettierConfig(filePath, prettierPath),
     options.prettierOptions
   );
@@ -85,35 +86,28 @@ function format(options) {
     })
   );
 
-  const isCss = /\.(css)$/.test(filePath);
-  const isLess = /\.(less)$/.test(filePath);
-  const isScss = /\.(scss)$/.test(filePath);
-  const isTypeScript = /\.(ts|tsx)$/.test(filePath);
-  const isGraphQL = /\.(graphql|gql)$/.test(filePath);
-  const isJson = /\.json$/.test(filePath);
+  const eslintExtensions = eslintConfig.extensions || [
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx"
+  ];
+  const eslintExtensionsRegex = new RegExp(eslintExtensions.join("|"), "gi");
 
-  if (isCss) {
-    formattingOptions.prettier.parser = "css";
-  } else if (isLess) {
-    formattingOptions.prettier.parser = "less";
-  } else if (isScss) {
-    formattingOptions.prettier.parser = "scss";
-  } else if (isTypeScript) {
-    formattingOptions.prettier.parser = "typescript";
+  // If we don't get filePath run eslint on text, otherwise only run eslint
+  // if it's a configured extension or fall back to a "supported" file type.
+  const onlyPrettier = filePath ? !eslintExtensionsRegex.test(filePath) : false;
+
+  if (/\.tsx?$/.test(filePath)) {
     // XXX: It seems babylon is getting a TypeScript plugin.
     // Should that be used instead?
     formattingOptions.eslint.parser = "typescript-eslint-parser";
-  } else if (isGraphQL) {
-    formattingOptions.prettier.parser = "graphql";
-  } else if (isJson) {
-    formattingOptions.prettier.parser = "json";
-    formattingOptions.prettier.trailingComma = "none";
   }
 
   const prettify = createPrettify(formattingOptions.prettier, prettierPath);
 
-  if (isCss || isLess || isScss || isGraphQL || isJson) {
-    return prettify(text, filePath);
+  if (onlyPrettier) {
+    return prettify(text);
   }
 
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);
