@@ -165,16 +165,16 @@ function configureOptions(
 }
 
 function getPrintWidth(eslintValue, fallbacks) {
-  return makePrettierOption("printWidth", eslintValue, fallbacks, 80);
+  return makePrettierOption("printWidth", eslintValue, fallbacks);
 }
 
 function getTabWidth(eslintValue, fallbacks) {
-  return makePrettierOption("tabWidth", eslintValue, fallbacks, 2);
+  return makePrettierOption("tabWidth", eslintValue, fallbacks);
 }
 
 function getParser(eslintValue, fallbacks) {
   // TODO: handle flow parser config
-  return makePrettierOption("parser", eslintValue, fallbacks, "babylon");
+  return makePrettierOption("parser", eslintValue, fallbacks);
 }
 
 function getSingleQuote(eslintValue, fallbacks) {
@@ -190,7 +190,7 @@ function getSingleQuote(eslintValue, fallbacks) {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("singleQuote", prettierValue, fallbacks, false);
+  return makePrettierOption("singleQuote", prettierValue, fallbacks);
 }
 
 function getTrailingComma(value, fallbacks, rules) {
@@ -207,7 +207,7 @@ function getTrailingComma(value, fallbacks, rules) {
     prettierValue = RULE_NOT_CONFIGURED;
   }
 
-  return makePrettierOption("trailingComma", prettierValue, fallbacks, "none");
+  return makePrettierOption("trailingComma", prettierValue, fallbacks);
 }
 
 function getValFromTrailingCommaConfig(objectConfig) {
@@ -235,7 +235,7 @@ function getBracketSpacing(eslintValue, fallbacks) {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("bracketSpacing", prettierValue, fallbacks, true);
+  return makePrettierOption("bracketSpacing", prettierValue, fallbacks);
 }
 
 function getSemi(eslintValue, fallbacks) {
@@ -249,7 +249,7 @@ function getSemi(eslintValue, fallbacks) {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("semi", prettierValue, fallbacks, true);
+  return makePrettierOption("semi", prettierValue, fallbacks);
 }
 
 function getUseTabs(eslintValue, fallbacks) {
@@ -261,7 +261,7 @@ function getUseTabs(eslintValue, fallbacks) {
     prettierValue = RULE_NOT_CONFIGURED;
   }
 
-  return makePrettierOption("useTabs", prettierValue, fallbacks, false);
+  return makePrettierOption("useTabs", prettierValue, fallbacks);
 }
 
 function extractRuleValue(objPath, name, value) {
@@ -324,12 +324,7 @@ function isAlways(val) {
   return val.indexOf("always") === 0;
 }
 
-function makePrettierOption(
-  prettierRuleName,
-  prettierRuleValue,
-  fallbacks,
-  defaultValue
-) {
+function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
   if (
     prettierRuleValue !== RULE_NOT_CONFIGURED &&
     prettierRuleValue !== RULE_DISABLED &&
@@ -352,8 +347,8 @@ function makePrettierOption(
   logger.debug(
     oneLine`
       The ${prettierRuleName} rule is not configured,
-      using default of ${defaultValue}
+      let prettier decide
     `
   );
-  return defaultValue;
+  return undefined;
 }

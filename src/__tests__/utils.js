@@ -21,7 +21,6 @@ const getPrettierOptionsFromESLintRulesTests = [
     options: {
       printWidth: 120,
       tabWidth: 2,
-      parser: "babylon",
       singleQuote: true,
       trailingComma: "all",
       bracketSpacing: false
@@ -35,7 +34,7 @@ const getPrettierOptionsFromESLintRulesTests = [
     rules: { "object-curly-spacing": [2, "never"] },
     options: { bracketSpacing: false }
   },
-  { rules: { "max-len": 2 }, options: { printWidth: 80 } },
+  { rules: { "max-len": 2 }, options: {} },
   {
     rules: { "comma-dangle": [2, "never"] },
     options: { trailingComma: "none" }
@@ -121,8 +120,8 @@ const getPrettierOptionsFromESLintRulesTests = [
   { rules: { semi: [2, "never"] }, options: { semi: false } },
   { rules: { indent: "off" }, options: {} },
   { rules: { indent: ["off", "tab"] }, options: {} },
-  { rules: { indent: ["warn", 2] }, options: { useTabs: false, tabWidth: 2 } },
-  { rules: { indent: ["warn", 4] }, options: { useTabs: false, tabWidth: 4 } },
+  { rules: { indent: ["warn", 2] }, options: { tabWidth: 2 } },
+  { rules: { indent: ["warn", 4] }, options: { tabWidth: 4 } },
   { rules: { indent: ["error", "tab"] }, options: { useTabs: true } },
   { rules: { indent: [2, "tab"] }, options: { useTabs: true } }
 ];
@@ -187,13 +186,7 @@ test("eslint max-len.tabWidth value should be used for tabWidth when tabs are us
   });
 
   expect(prettier).toMatchObject({
-    printWidth: 80,
     tabWidth: 4,
-    parser: "babylon",
-    singleQuote: false,
-    trailingComma: "none",
-    bracketSpacing: true,
-    semi: true,
     useTabs: true
   });
 });
