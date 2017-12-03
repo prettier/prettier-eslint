@@ -128,7 +128,7 @@ function getPrettierOptionsFromESLintRules(
         options,
         rules
       ),
-    {}
+    prettierOptions
   );
 }
 
