@@ -150,11 +150,15 @@ function configureOptions(
     const { ruleValue, ruleValueToPrettierOption } = OPTION_GETTERS[key];
     const eslintRuleValue = ruleValue(rules);
 
-    options[key] = ruleValueToPrettierOption(
+    const option = ruleValueToPrettierOption(
       eslintRuleValue,
       fallbackPrettierOptions,
       rules
     );
+
+    if (option !== undefined) {
+      options[key] = option;
+    }
   }
 
   return options;
