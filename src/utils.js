@@ -199,7 +199,7 @@ function getTrailingComma(value, fallbacks, rules) {
 
   if (value === "never") {
     prettierValue = "none";
-  } else if (value && value.indexOf("always") === 0) {
+  } else if (typeof value === "string" && value.indexOf("always") === 0) {
     prettierValue = "es5";
   } else if (typeof actualValue === "object") {
     prettierValue = getValFromTrailingCommaConfig(actualValue);
