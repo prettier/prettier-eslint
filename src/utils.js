@@ -43,6 +43,10 @@ const OPTION_GETTERS = {
   useTabs: {
     ruleValue: rules => getRuleValue(rules, "indent"),
     ruleValueToPrettierOption: getUseTabs
+  },
+  jsxBracketSameLine: {
+    ruleValue: () => RULE_NOT_CONFIGURED,
+    ruleValueToPrettierOption: getJsxBracketSameLine
   }
 };
 
@@ -262,6 +266,11 @@ function getUseTabs(eslintValue, fallbacks) {
   }
 
   return makePrettierOption("useTabs", prettierValue, fallbacks);
+}
+
+function getJsxBracketSameLine(eslintValue, fallbacks) {
+  // TODO: add support for setting jsxBracketSameLine based on eslint config
+  return makePrettierOption("jsxBracketSameLine", eslintValue, fallbacks);
 }
 
 function extractRuleValue(objPath, name, value) {

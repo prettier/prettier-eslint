@@ -110,6 +110,11 @@ const getPrettierOptionsFromESLintRulesTests = [
     rules: { "comma-dangle": [2, "always-multiline"] },
     options: { trailingComma: "es5" }
   },
+  {
+    rules: {},
+    options: { jsxBracketSameLine: true },
+    fallbackPrettierOptions: { jsxBracketSameLine: true }
+  },
 
   // If an ESLint rule is disabled fall back to prettier defaults.
   { rules: { "max-len": [0, { code: 120 }] }, options: {} },
