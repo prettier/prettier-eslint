@@ -115,6 +115,22 @@ const getPrettierOptionsFromESLintRulesTests = [
     options: { jsxBracketSameLine: true },
     fallbackPrettierOptions: { jsxBracketSameLine: true }
   },
+  {
+    rules: { "react/jsx-closing-bracket-location": [2, "after-props"] },
+    options: { jsxBracketSameLine: true }
+  },
+  {
+    rules: { "react/jsx-closing-bracket-location": [2, "tag-aligned"] },
+    options: { jsxBracketSameLine: false }
+  },
+  {
+    rules: {
+      "react/jsx-closing-bracket-location": [2, {
+        nonEmpty: "after-props"
+      }]
+    },
+    options: { jsxBracketSameLine: true }
+  },
 
   // If an ESLint rule is disabled fall back to prettier defaults.
   { rules: { "max-len": [0, { code: 120 }] }, options: {} },
@@ -132,7 +148,8 @@ const getPrettierOptionsFromESLintRulesTests = [
   { rules: { indent: ["warn", 2] }, options: { tabWidth: 2 } },
   { rules: { indent: ["warn", 4] }, options: { tabWidth: 4 } },
   { rules: { indent: ["error", "tab"] }, options: { useTabs: true } },
-  { rules: { indent: [2, "tab"] }, options: { useTabs: true } }
+  { rules: { indent: [2, "tab"] }, options: { useTabs: true } },
+  { rules: { "react/jsx-closing-bracket-location": [0] }, options: {} }
 ];
 
 getPrettierOptionsFromESLintRulesTests.forEach(
