@@ -48,6 +48,10 @@ const OPTION_GETTERS = {
     ruleValue: rules =>
       getRuleValue(rules, "react/jsx-closing-bracket-location", "nonEmpty"),
     ruleValueToPrettierOption: getJsxBracketSameLine
+  },
+  arrowParens: {
+    ruleValue: rules => getRuleValue(rules, "arrow-parens"),
+    ruleValueToPrettierOption: getArrowParens
   }
 };
 
@@ -285,7 +289,20 @@ function getJsxBracketSameLine(eslintValue, fallbacks) {
   } else {
     prettierValue = eslintValue;
   }
+
   return makePrettierOption("jsxBracketSameLine", prettierValue, fallbacks);
+}
+
+function getArrowParens(eslintValue, fallbacks) {
+  let prettierValue;
+
+  if (eslintValue === "as-needed") {
+    prettierValue = "avoid";
+  } else {
+    prettierValue = eslintValue;
+  }
+
+  return makePrettierOption("arrowParens", prettierValue, fallbacks);
 }
 
 function extractRuleValue(objPath, name, value) {

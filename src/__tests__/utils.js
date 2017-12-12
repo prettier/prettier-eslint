@@ -134,6 +134,18 @@ const getPrettierOptionsFromESLintRulesTests = [
     },
     options: { jsxBracketSameLine: true }
   },
+  {
+    rules: {
+      "arrow-parens": [2, "always"]
+    },
+    options: { arrowParens: "always" }
+  },
+  {
+    rules: {
+      "arrow-parens": [2, "as-needed"]
+    },
+    options: { arrowParens: "avoid" }
+  },
 
   // If an ESLint rule is disabled fall back to prettier defaults.
   { rules: { "max-len": [0, { code: 120 }] }, options: {} },
@@ -152,7 +164,8 @@ const getPrettierOptionsFromESLintRulesTests = [
   { rules: { indent: ["warn", 4] }, options: { tabWidth: 4 } },
   { rules: { indent: ["error", "tab"] }, options: { useTabs: true } },
   { rules: { indent: [2, "tab"] }, options: { useTabs: true } },
-  { rules: { "react/jsx-closing-bracket-location": [0] }, options: {} }
+  { rules: { "react/jsx-closing-bracket-location": [0] }, options: {} },
+  { rules: { "arrow-parens": [0] }, options: {} }
 ];
 
 getPrettierOptionsFromESLintRulesTests.forEach(
