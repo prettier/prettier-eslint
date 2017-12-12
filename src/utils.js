@@ -29,7 +29,7 @@ const OPTION_GETTERS = {
     ruleValueToPrettierOption: getSingleQuote
   },
   trailingComma: {
-    ruleValue: rules => getRuleValue(rules, "comma-dangle"),
+    ruleValue: rules => getRuleValue(rules, "comma-dangle", []),
     ruleValueToPrettierOption: getTrailingComma
   },
   bracketSpacing: {
@@ -197,16 +197,18 @@ function getSingleQuote(eslintValue, fallbacks) {
   return makePrettierOption("singleQuote", prettierValue, fallbacks);
 }
 
-function getTrailingComma(value, fallbacks, rules) {
+function getTrailingComma(eslintValue, fallbacks) {
   let prettierValue;
-  const actualValue = rules["comma-dangle"];
 
-  if (value === "never") {
+  if (eslintValue === "never") {
     prettierValue = "none";
-  } else if (typeof value === "string" && value.indexOf("always") === 0) {
+  } else if (
+    typeof eslintValue === "string" &&
+    eslintValue.indexOf("always") === 0
+  ) {
     prettierValue = "es5";
-  } else if (typeof actualValue === "object") {
-    prettierValue = getValFromTrailingCommaConfig(actualValue);
+  } else if (typeof eslintValue === "object") {
+    prettierValue = getValFromTrailingCommaConfig(eslintValue);
   } else {
     prettierValue = RULE_NOT_CONFIGURED;
   }
@@ -215,7 +217,7 @@ function getTrailingComma(value, fallbacks, rules) {
 }
 
 function getValFromTrailingCommaConfig(objectConfig) {
-  const [, { arrays = "", objects = "", functions = "" }] = objectConfig;
+  const { arrays = "", objects = "", functions = "" } = objectConfig;
   const fns = isAlways(functions);
   const es5 = [arrays, objects].some(isAlways);
 
