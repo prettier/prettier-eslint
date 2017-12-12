@@ -125,9 +125,12 @@ const getPrettierOptionsFromESLintRulesTests = [
   },
   {
     rules: {
-      "react/jsx-closing-bracket-location": [2, {
-        nonEmpty: "after-props"
-      }]
+      "react/jsx-closing-bracket-location": [
+        2,
+        {
+          nonEmpty: "after-props"
+        }
+      ]
     },
     options: { jsxBracketSameLine: true }
   },
