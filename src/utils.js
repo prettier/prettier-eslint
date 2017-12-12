@@ -45,7 +45,8 @@ const OPTION_GETTERS = {
     ruleValueToPrettierOption: getUseTabs
   },
   jsxBracketSameLine: {
-    ruleValue: () => RULE_NOT_CONFIGURED,
+    ruleValue: rules =>
+      getRuleValue(rules, "react/jsx-closing-bracket-location", "nonEmpty"),
     ruleValueToPrettierOption: getJsxBracketSameLine
   }
 };
@@ -269,8 +270,20 @@ function getUseTabs(eslintValue, fallbacks) {
 }
 
 function getJsxBracketSameLine(eslintValue, fallbacks) {
-  // TODO: add support for setting jsxBracketSameLine based on eslint config
-  return makePrettierOption("jsxBracketSameLine", eslintValue, fallbacks);
+  let prettierValue;
+
+  if (eslintValue === "after-props") {
+    prettierValue = true;
+  } else if (
+    eslintValue === "tag-aligned" ||
+    eslintValue === "line-aligned" ||
+    eslintValue === "props-aligned"
+  ) {
+    prettierValue = false;
+  } else {
+    prettierValue = eslintValue;
+  }
+  return makePrettierOption("jsxBracketSameLine", prettierValue, fallbacks);
 }
 
 function extractRuleValue(objPath, name, value) {
