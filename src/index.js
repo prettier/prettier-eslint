@@ -100,16 +100,16 @@ function format(options) {
     ? !eslintExtensions.includes(fileExtension)
     : false;
 
-  if ([".ts", ".tsx"].includes(fileExtension)) {
-    // XXX: It seems babylon is getting a TypeScript plugin.
-    // Should that be used instead?
-    formattingOptions.eslint.parser = "typescript-eslint-parser";
-  }
-
   const prettify = createPrettify(formattingOptions.prettier, prettierPath);
 
   if (onlyPrettier) {
     return prettify(text);
+  }
+
+  if ([".ts", ".tsx"].includes(fileExtension)) {
+    // XXX: It seems babylon is getting a TypeScript plugin.
+    // Should that be used instead?
+    formattingOptions.eslint.parser = "typescript-eslint-parser";
   }
 
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);
