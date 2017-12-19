@@ -92,13 +92,15 @@ function format(options) {
     ".ts",
     ".tsx"
   ];
-  const eslintExtensionsRegex = new RegExp(eslintExtensions.join("|"), "gi");
+  const fileExtension = path.extname(filePath || "");
 
   // If we don't get filePath run eslint on text, otherwise only run eslint
   // if it's a configured extension or fall back to a "supported" file type.
-  const onlyPrettier = filePath ? !eslintExtensionsRegex.test(filePath) : false;
+  const onlyPrettier = filePath
+    ? !eslintExtensions.includes(fileExtension)
+    : false;
 
-  if (/\.tsx?$/.test(filePath)) {
+  if ([".ts", ".tsx"].includes(fileExtension)) {
     // XXX: It seems babylon is getting a TypeScript plugin.
     // Should that be used instead?
     formattingOptions.eslint.parser = "typescript-eslint-parser";
