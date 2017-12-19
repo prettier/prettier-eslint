@@ -6,4 +6,3 @@ that should have been released which will trigger a release. Then you can
 update the changelog if necessary.
 
 **Manual Release Count: 1**
-

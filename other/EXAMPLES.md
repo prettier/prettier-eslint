@@ -18,7 +18,9 @@ gulp.task("js:format", function() {
 ```
 
 ### Plugin (prettier-eslint.js)
+
 (using [through2][through2] to help deal with streams)
+
 ```js
 var through = require("through2");
 var prettierEslint = require("prettier-eslint");
@@ -46,10 +48,9 @@ module.exports = function() {
     }
 
     if (file.isStream()) {
-      return callback(new utils.PluginError(
-        "prettier-eslint",
-        "doesn't support Streams"
-      ));
+      return callback(
+        new utils.PluginError("prettier-eslint", "doesn't support Streams")
+      );
     }
 
     const sourceCode = file.contents.toString();
@@ -63,6 +64,6 @@ module.exports = function() {
     return callback(null, file);
   }
 };
-
 ```
+
 [through2]: https://github.com/rvagg/through2

@@ -1,7 +1,6 @@
 # prettier-eslint
 
-Formats your JavaScript using [`prettier`][prettier] followed by [`eslint
---fix`][eslint]
+Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`][eslint]
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
@@ -60,18 +59,18 @@ const options = {
   text: sourceCode,
   eslintConfig: {
     parserOptions: {
-      ecmaVersion: 7,
+      ecmaVersion: 7
     },
     rules: {
-      semi: ["error", "never"],
-    },
+      semi: ["error", "never"]
+    }
   },
   prettierOptions: {
-    bracketSpacing: true,
+    bracketSpacing: true
   },
   fallbackPrettierOptions: {
-    singleQuote: false,
-  },
+    singleQuote: false
+  }
 };
 
 const formatted = format(options);
@@ -119,8 +118,7 @@ not been manually defined in `prettierOptions`. If the fallback is not given,
 #### logLevel (?Enum: ['trace', 'debug', 'info', 'warn', 'error', 'silent'])
 
 `prettier-eslint` does quite a bit of logging if you want it to. Pass this to
-set the amount of logs you want to see. Default is `process.env.LOG_LEVEL ||
-'warn'`.
+set the amount of logs you want to see. Default is `process.env.LOG_LEVEL || 'warn'`.
 
 #### eslintPath (?String)
 
@@ -216,7 +214,8 @@ the code has been processed by this module. That is because `prettier` changes
 this:
 
 ```js
-if (x) { // eslint-disable-line
+if (x) {
+  // eslint-disable-line
 }
 ```
 
@@ -228,8 +227,7 @@ if (x) {
 }
 ```
 
-And the `eslint --fix` wont change it back. You can notice that `//
-eslint-disable-line` has moved to a new line. To work around this issue, you can
+And the `eslint --fix` wont change it back. You can notice that `// eslint-disable-line` has moved to a new line. To work around this issue, you can
 use `//eslint-disable-next-line` instead of `// eslint-disable-line` like this:
 
 ```js
@@ -268,12 +266,14 @@ solutions.
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore -->
 | [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub><b>Kent C. Dodds</b></sub>](https://kentcdodds.com)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds "Code") [📖](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/prettier/prettier-eslint/commits?author=kentcdodds "Tests") | [<img src="https://avatars.githubusercontent.com/u/5554486?v=3" width="100px;"/><br /><sub><b>Gyandeep Singh</b></sub>](http://gyandeeps.com)<br />[👀](#review-gyandeeps "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/682584?v=3" width="100px;"/><br /><sub><b>Igor Pnev</b></sub>](https://github.com/exdeniz)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Aexdeniz "Bug reports") | [<img src="https://avatars.githubusercontent.com/u/813865?v=3" width="100px;"/><br /><sub><b>Benjamin Tan</b></sub>](https://demoneaux.github.io/)<br />[💬](#question-demoneaux "Answering Questions") [👀](#review-demoneaux "Reviewed Pull Requests") | [<img src="https://avatars.githubusercontent.com/u/622118?v=3" width="100px;"/><br /><sub><b>Eric McCormick</b></sub>](https://ericmccormick.io)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=edm00se "Code") [📖](https://github.com/prettier/prettier-eslint/commits?author=edm00se "Documentation") [⚠️](https://github.com/prettier/prettier-eslint/commits?author=edm00se "Tests") | [<img src="https://avatars.githubusercontent.com/u/2142817?v=3" width="100px;"/><br /><sub><b>Simon Lydell</b></sub>](https://github.com/lydell)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=lydell "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/981957?v=3" width="100px;"/><br /><sub><b>Tom McKearney</b></sub>](https://github.com/tommck)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=tommck "Documentation") [💡](#example-tommck "Examples") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | [<img src="https://avatars.githubusercontent.com/u/463105?v=3" width="100px;"/><br /><sub><b>Patrik Åkerstrand</b></sub>](https://github.com/PAkerstrand)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=PAkerstrand "Code") | [<img src="https://avatars.githubusercontent.com/u/1560301?v=3" width="100px;"/><br /><sub><b>Lochlan Bunn</b></sub>](https://twitter.com/loklaan)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=loklaan "Code") | [<img src="https://avatars.githubusercontent.com/u/25886902?v=3" width="100px;"/><br /><sub><b>Daniël Terwiel</b></sub>](https://github.com/danielterwiel)<br />[🔌](#plugin-danielterwiel "Plugin/utility libraries") [🔧](#tool-danielterwiel "Tools") | [<img src="https://avatars1.githubusercontent.com/u/1834413?v=3" width="100px;"/><br /><sub><b>Robin Malfait</b></sub>](https://robinmalfait.com)<br />[🔧](#tool-RobinMalfait "Tools") | [<img src="https://avatars0.githubusercontent.com/u/8161781?v=3" width="100px;"/><br /><sub><b>Michael McDermott</b></sub>](http://mgmcdermott.com)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=mgmcdermott "Code") | [<img src="https://avatars3.githubusercontent.com/u/292365?v=3" width="100px;"/><br /><sub><b>Adam Stankiewicz</b></sub>](http://sheerun.net)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=sheerun "Code") | [<img src="https://avatars3.githubusercontent.com/u/487068?v=3" width="100px;"/><br /><sub><b>Stephen John Sorensen</b></sub>](http://www.stephenjohnsorensen.com/)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=spudly "Code") |
 | [<img src="https://avatars2.githubusercontent.com/u/1597820?v=3" width="100px;"/><br /><sub><b>Brian Di Palma</b></sub>](https://github.com/briandipalma)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Abriandipalma "Bug reports") [💻](https://github.com/prettier/prettier-eslint/commits?author=briandipalma "Code") | [<img src="https://avatars0.githubusercontent.com/u/6173488?v=3" width="100px;"/><br /><sub><b>Rob Wise</b></sub>](https://robwise.github.io)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=robwise "Documentation") [💻](https://github.com/prettier/prettier-eslint/commits?author=robwise "Code") | [<img src="https://avatars0.githubusercontent.com/u/4818642?v=3" width="100px;"/><br /><sub><b>Patryk Peas</b></sub>](https://github.com/Belir)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3ABelir "Bug reports") [💻](https://github.com/prettier/prettier-eslint/commits?author=Belir "Code") [⚠️](https://github.com/prettier/prettier-eslint/commits?author=Belir "Tests") | [<img src="https://avatars2.githubusercontent.com/u/1193520?v=3" width="100px;"/><br /><sub><b>Thijs Koerselman</b></sub>](http://vauxlab.com)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3A0x80 "Bug reports") [💻](https://github.com/prettier/prettier-eslint/commits?author=0x80 "Code") [⚠️](https://github.com/prettier/prettier-eslint/commits?author=0x80 "Tests") | [<img src="https://avatars3.githubusercontent.com/u/7918284?v=3" width="100px;"/><br /><sub><b>Enrique Caballero</b></sub>](https://github.com/enriquecaballero)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Aenriquecaballero "Bug reports") [💻](https://github.com/prettier/prettier-eslint/commits?author=enriquecaballero "Code") | [<img src="https://avatars2.githubusercontent.com/u/1408542?v=3" width="100px;"/><br /><sub><b>Łukasz Moroz</b></sub>](https://github.com/lukaszmoroz)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Alukaszmoroz "Bug reports") [⚠️](https://github.com/prettier/prettier-eslint/commits?author=lukaszmoroz "Tests") | [<img src="https://avatars0.githubusercontent.com/u/1215414?v=3" width="100px;"/><br /><sub><b>Simon Fridlund</b></sub>](https://github.com/zimme)<br />[💬](#question-zimme "Answering Questions") [🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3Azimme "Bug reports") [💻](https://github.com/prettier/prettier-eslint/commits?author=zimme "Code") [📖](https://github.com/prettier/prettier-eslint/commits?author=zimme "Documentation") [💡](#example-zimme "Examples") [🤔](#ideas-zimme "Ideas, Planning, & Feedback") [🚇](#infra-zimme "Infrastructure (Hosting, Build-Tools, etc)") [🔌](#plugin-zimme "Plugin/utility libraries") [👀](#review-zimme "Reviewed Pull Requests") [📢](#talk-zimme "Talks") [⚠️](https://github.com/prettier/prettier-eslint/commits?author=zimme "Tests") [🔧](#tool-zimme "Tools") [✅](#tutorial-zimme "Tutorials") |
 | [<img src="https://avatars1.githubusercontent.com/u/921609?v=3" width="100px;"/><br /><sub><b>Oliver Joseph Ash</b></sub>](https://oliverjash.me/)<br />[🐛](https://github.com/prettier/prettier-eslint/issues?q=author%3AOliverJAsh "Bug reports") [💻](https://github.com/prettier/prettier-eslint/commits?author=OliverJAsh "Code") | [<img src="https://avatars1.githubusercontent.com/u/3812133?v=3" width="100px;"/><br /><sub><b>Mark Palfreeman</b></sub>](http://palf.co)<br />[📖](https://github.com/prettier/prettier-eslint/commits?author=markpalfreeman "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/3639670?v=4" width="100px;"/><br /><sub><b>Alex Taylor</b></sub>](https://github.com/alexmckenley)<br />[💻](https://github.com/prettier/prettier-eslint/commits?author=alexmckenley "Code") [⚠️](https://github.com/prettier/prettier-eslint/commits?author=alexmckenley "Tests") |
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
