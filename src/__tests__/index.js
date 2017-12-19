@@ -185,6 +185,14 @@ const tests = [
       filePath: path.resolve("./test.json")
     },
     output: '{ "foo": "bar" }'
+  },
+  {
+    title: "Markdown example",
+    input: {
+      text: "#   Foo\n _bar_",
+      filePath: path.resolve("./test.md")
+    },
+    output: "# Foo\n\n_bar_"
   }
 ];
 
