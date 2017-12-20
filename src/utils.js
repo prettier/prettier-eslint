@@ -1,5 +1,6 @@
 import { oneLine } from "common-tags";
 import delve from "dlv";
+import { Linter } from "eslint";
 import getLogger from "loglevel-colored-level-prefix";
 
 const logger = getLogger({ prefix: "prettier-eslint" });
@@ -65,7 +66,7 @@ function getOptionsForFormatting(
 ) {
   const eslint = getRelevantESLintConfig(eslintConfig);
   const prettier = getPrettierOptionsFromESLintRules(
-    eslint,
+    eslintConfig,
     prettierOptions,
     fallbackPrettierOptions
   );
@@ -74,31 +75,21 @@ function getOptionsForFormatting(
 
 function getRelevantESLintConfig(eslintConfig) {
   const { rules } = eslintConfig;
-  // TODO: remove rules that are not fixable for perf
-  // this will require we load the config for every rule...
-  // not sure that'll be worth the effort
-  // but we may be able to maintain a manual list of rules that
-  // are definitely not fixable. Which is what we'll do for now...
-  const rulesThatWillNeverBeFixable = [
-    // TODO add more
-    "valid-jsdoc",
-    "global-require",
-    "no-with"
-  ];
+  const fixableRules = getFixableRules(eslintConfig);
 
   logger.debug("reducing eslint rules down to relevant rules only");
-  const relevantRules = Object.keys(rules).reduce(
-    (rulesAccumulator, ruleName) => {
-      if (rulesThatWillNeverBeFixable.indexOf(ruleName) === -1) {
+  const relevantRules = Object.entries(rules).reduce(
+    (rulesAccumulator, [name, rule]) => {
+      if (fixableRules.includes(name)) {
         logger.trace(
           `adding to relevant rules:`,
-          JSON.stringify({ [ruleName]: rules[ruleName] })
+          JSON.stringify({ [name]: rule })
         );
-        rulesAccumulator[ruleName] = rules[ruleName];
+        rulesAccumulator[name] = rule;
       } else {
         logger.trace(
           `omitting from relevant rules:`,
-          JSON.stringify({ [ruleName]: rules[ruleName] })
+          JSON.stringify({ [name]: rule })
         );
       }
       return rulesAccumulator;
@@ -115,6 +106,22 @@ function getRelevantESLintConfig(eslintConfig) {
     fix: true,
     globals: [] // must be an array for some reason :-/
   };
+}
+
+function getFixableRules(eslintConfig) {
+  const linter = new Linter(eslintConfig);
+  const rules = linter.getRules();
+  const fixableRules = [];
+  for (const [name, rule] of rules) {
+    if (isRuleFixable(rule)) {
+      fixableRules.push(name);
+    }
+  }
+  return fixableRules;
+}
+
+function isRuleFixable({ meta }) {
+  return meta && meta.fixable;
 }
 
 /**
