@@ -361,6 +361,16 @@ test("logs if there is a problem making the CLIEngine", () => {
   expect(logger.error).toHaveBeenCalledTimes(1);
 });
 
+test("logs if there is a problem making the Linter", () => {
+  const error = new Error("fake error");
+  eslintMock.Linter.mockImplementation(() => {
+    throw error;
+  });
+  expect(() => format({ text: "" })).toThrowError(error);
+  eslintMock.Linter.mockReset();
+  expect(logger.error).toHaveBeenCalledTimes(1);
+});
+
 function getESLintConfigWithDefaultRules(overrides) {
   return {
     parserOptions: { ecmaVersion: 7 },

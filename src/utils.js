@@ -1,7 +1,6 @@
 /* eslint import/no-dynamic-require:0 */
 import { oneLine } from "common-tags";
 import delve from "dlv";
-import { Linter } from "eslint";
 import getLogger from "loglevel-colored-level-prefix";
 
 const logger = getLogger({ prefix: "prettier-eslint" });
@@ -110,7 +109,7 @@ function getRelevantESLintConfig(eslintConfig) {
 }
 
 function getFixableRules(eslintConfig) {
-  const linter = new Linter(eslintConfig);
+  const linter = getESLintLinter("eslint", eslintConfig);
   const rules = linter.getRules();
   const fixableRules = [];
   for (const [name, rule] of rules) {
@@ -413,6 +412,16 @@ function requireModule(modulePath, name) {
       Is "${modulePath}" a correct path to the "${name}" module?
     `
     );
+    throw error;
+  }
+}
+
+function getESLintLinter(eslintPath, eslintOptions) {
+  const { Linter } = requireModule(eslintPath, "eslint");
+  try {
+    return new Linter(eslintOptions);
+  } catch (error) {
+    logger.error(`There was trouble creating the ESLint Linter.`);
     throw error;
   }
 }

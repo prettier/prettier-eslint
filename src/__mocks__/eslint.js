@@ -2,7 +2,7 @@
 // search around the file system for stuff
 
 const eslint = require.requireActual("eslint");
-const { CLIEngine } = eslint;
+const { CLIEngine, Linter } = eslint;
 
 const mockGetConfigForFileSpy = jest.fn(mockGetConfigForFile);
 mockGetConfigForFileSpy.overrides = {};
@@ -10,6 +10,7 @@ const mockExecuteOnTextSpy = jest.fn(mockExecuteOnText);
 
 module.exports = Object.assign(eslint, {
   CLIEngine: jest.fn(MockCLIEngine),
+  Linter: jest.fn(MockLinter),
   mock: {
     getConfigForFile: mockGetConfigForFileSpy,
     executeOnText: mockExecuteOnTextSpy
@@ -78,3 +79,10 @@ function mockExecuteOnText(...args) {
   }
   return this._originalExecuteOnText(...args);
 }
+
+function MockLinter(...args) {
+  const linter = new Linter(...args);
+  return linter;
+}
+
+MockLinter.prototype = Object.create(Linter.prototype);
