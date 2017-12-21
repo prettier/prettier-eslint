@@ -25,7 +25,7 @@ module.exports = format;
  * @param {String} options.eslintPath - the path to the eslint module to use.
  *   Will default to require.resolve('eslint')
  * @param {String} options.prettierPath - the path to the prettier module.
- *   Will default to require.resovlve('prettierPath')
+ *   Will default to require.resovlve('prettier')
  * @param {Object} options.eslintConfig - the config to use for formatting
  *  with ESLint.
  * @param {Object} options.prettierOptions - the options to pass for
