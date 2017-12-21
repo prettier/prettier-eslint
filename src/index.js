@@ -56,13 +56,13 @@ function format(options) {
   const eslintConfig = merge(
     {},
     options.eslintConfig,
-    getConfig(filePath, eslintPath)
+    getESLintConfig(filePath)
   );
 
   const prettierOptions = merge(
     {},
     filePath && { filepath: filePath },
-    getPrettierConfig(filePath, prettierPath),
+    getPrettierConfig(filePath),
     options.prettierOptions
   );
 
@@ -203,7 +203,7 @@ function getTextFromFilePath(filePath) {
   }
 }
 
-function getConfig(filePath, eslintPath) {
+function getESLintConfig(filePath) {
   const eslintOptions = {};
   if (filePath) {
     eslintOptions.cwd = path.dirname(filePath);
@@ -214,10 +214,10 @@ function getConfig(filePath, eslintPath) {
       "${filePath || process.cwd()}"
     `
   );
-  const configFinder = getESLintCLIEngine(eslintPath, eslintOptions);
+  const cliEngine = getESLintCLIEngine("eslint", eslintOptions);
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
-    const config = configFinder.getConfigForFile(filePath);
+    const config = cliEngine.getConfigForFile(filePath);
     logger.trace(
       `eslint config for "${filePath}" received`,
       prettyFormat(config)
@@ -230,14 +230,9 @@ function getConfig(filePath, eslintPath) {
   }
 }
 
-function getPrettierConfig(filePath, prettierPath) {
-  const prettier = requireModule(prettierPath, "prettier");
-
-  // NOTE: Backward-compatibility with old prettier versions (<1.7)
-  //       that don't have ``resolveConfig.sync` method.
-  return typeof prettier.resolveConfig.sync === "undefined"
-    ? {}
-    : prettier.resolveConfig.sync(filePath);
+function getPrettierConfig(filePath) {
+  const prettier = requireModule("prettier", "prettier");
+  return prettier.resolveConfig.sync(filePath);
 }
 
 function requireModule(modulePath, name) {
