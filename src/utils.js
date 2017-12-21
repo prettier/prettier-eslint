@@ -1,3 +1,4 @@
+/* eslint import/no-dynamic-require:0 */
 import { oneLine } from "common-tags";
 import delve from "dlv";
 import { Linter } from "eslint";
@@ -57,7 +58,7 @@ const OPTION_GETTERS = {
 };
 
 /* eslint import/prefer-default-export:0 */
-export { getOptionsForFormatting };
+export { getOptionsForFormatting, requireModule };
 
 function getOptionsForFormatting(
   eslintConfig,
@@ -399,4 +400,19 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
     `
   );
   return undefined;
+}
+
+function requireModule(modulePath, name) {
+  try {
+    logger.trace(`requiring "${name}" module at "${modulePath}"`);
+    return require(modulePath);
+  } catch (error) {
+    logger.error(
+      oneLine`
+      There was trouble getting "${name}".
+      Is "${modulePath}" a correct path to the "${name}" module?
+    `
+    );
+    throw error;
+  }
 }

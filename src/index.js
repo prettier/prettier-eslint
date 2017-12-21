@@ -8,7 +8,7 @@ import { oneLine, stripIndent } from "common-tags";
 import indentString from "indent-string";
 import getLogger from "loglevel-colored-level-prefix";
 import merge from "lodash.merge";
-import { getOptionsForFormatting } from "./utils";
+import { getOptionsForFormatting, requireModule } from "./utils";
 
 const logger = getLogger({ prefix: "prettier-eslint" });
 
@@ -233,21 +233,6 @@ function getESLintConfig(filePath) {
 function getPrettierConfig(filePath) {
   const prettier = requireModule("prettier", "prettier");
   return prettier.resolveConfig.sync(filePath);
-}
-
-function requireModule(modulePath, name) {
-  try {
-    logger.trace(`requiring "${name}" module at "${modulePath}"`);
-    return require(modulePath);
-  } catch (error) {
-    logger.error(
-      oneLine`
-      There was trouble getting "${name}".
-      Is "${modulePath}" a correct path to the "${name}" module?
-    `
-    );
-    throw error;
-  }
 }
 
 function getModulePath(filePath = __filename, moduleName) {
