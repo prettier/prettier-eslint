@@ -146,6 +146,15 @@ const getPrettierOptionsFromESLintRulesTests = [
     },
     options: { arrowParens: "avoid" }
   },
+  {
+    rules: {
+      "prettier/prettier": [2, { singleQuote: false }],
+      quotes: [2, "single"]
+    },
+    options: {
+      singleQuote: false
+    }
+  },
 
   // If an ESLint rule is disabled fall back to prettier defaults.
   { rules: { "max-len": [0, { code: 120 }] }, options: {} },

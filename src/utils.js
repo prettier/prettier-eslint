@@ -6,6 +6,10 @@ import getLogger from "loglevel-colored-level-prefix";
 const logger = getLogger({ prefix: "prettier-eslint" });
 const RULE_DISABLED = {};
 const RULE_NOT_CONFIGURED = "RULE_NOT_CONFIGURED";
+const ruleValueExists = prettierRuleValue =>
+  prettierRuleValue !== RULE_NOT_CONFIGURED &&
+  prettierRuleValue !== RULE_DISABLED &&
+  typeof prettierRuleValue !== "undefined";
 const OPTION_GETTERS = {
   printWidth: {
     ruleValue: rules => getRuleValue(rules, "max-len", "code"),
@@ -130,6 +134,12 @@ function getPrettierOptionsFromESLintRules(
   fallbackPrettierOptions
 ) {
   const { rules } = eslintConfig;
+
+  const prettierPluginOptions = getRuleValue(rules, "prettier/prettier", []);
+
+  if (ruleValueExists(prettierPluginOptions)) {
+    prettierOptions = { ...prettierPluginOptions, ...prettierOptions };
+  }
 
   return Object.keys(OPTION_GETTERS).reduce(
     (options, key) =>
@@ -364,11 +374,7 @@ function isAlways(val) {
 }
 
 function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
-  if (
-    prettierRuleValue !== RULE_NOT_CONFIGURED &&
-    prettierRuleValue !== RULE_DISABLED &&
-    typeof prettierRuleValue !== "undefined"
-  ) {
+  if (ruleValueExists(prettierRuleValue)) {
     return prettierRuleValue;
   }
 
