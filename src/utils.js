@@ -21,10 +21,6 @@ const OPTION_GETTERS = {
     },
     ruleValueToPrettierOption: getTabWidth
   },
-  parser: {
-    ruleValue: () => RULE_NOT_CONFIGURED,
-    ruleValueToPrettierOption: getParser
-  },
   singleQuote: {
     ruleValue: rules => getRuleValue(rules, "quotes"),
     ruleValueToPrettierOption: getSingleQuote
@@ -186,11 +182,6 @@ function getPrintWidth(eslintValue, fallbacks) {
 
 function getTabWidth(eslintValue, fallbacks) {
   return makePrettierOption("tabWidth", eslintValue, fallbacks);
-}
-
-function getParser(eslintValue, fallbacks) {
-  // TODO: handle flow parser config
-  return makePrettierOption("parser", eslintValue, fallbacks);
 }
 
 function getSingleQuote(eslintValue, fallbacks) {
