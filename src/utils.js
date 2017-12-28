@@ -113,7 +113,7 @@ function getFixableRules(eslintConfig) {
   const rules = linter.getRules();
   const fixableRules = [];
   for (const [name, rule] of rules) {
-    if (isRuleFixable(rule)) {
+    if (name !== "prettier/prettier" && isRuleFixable(rule)) {
       fixableRules.push(name);
     }
   }
