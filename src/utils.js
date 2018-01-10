@@ -57,7 +57,7 @@ const OPTION_GETTERS = {
 };
 
 /* eslint import/prefer-default-export:0 */
-export { getOptionsForFormatting, requireModule };
+export { getESLintCLIEngine, getOptionsForFormatting, requireModule };
 
 function getOptionsForFormatting(
   eslintConfig,
@@ -104,13 +104,13 @@ function getRelevantESLintConfig(eslintConfig) {
     // overrides
     rules: relevantRules,
     fix: true,
-    globals: [] // must be an array for some reason :-/
+    globals: []
   };
 }
 
 function getFixableRules(eslintConfig) {
-  const linter = getESLintLinter("eslint", eslintConfig);
-  const rules = linter.getRules();
+  const cli = getESLintCLIEngine("eslint", eslintConfig);
+  const rules = cli.getRules();
   const fixableRules = [];
   for (const [name, rule] of rules) {
     if (isRuleFixable(rule)) {
@@ -314,6 +314,12 @@ function getArrowParens(eslintValue, fallbacks) {
 }
 
 function extractRuleValue(objPath, name, value) {
+  // XXX: Ignore code coverage for the following else case
+  // There are currently no eslint rules which we can infer prettier
+  // options from, that have an object option which we don't know how
+  // to infer from.
+
+  // istanbul ignore else
   if (objPath) {
     logger.trace(
       oneLine`
@@ -325,6 +331,7 @@ function extractRuleValue(objPath, name, value) {
     return delve(value, objPath, RULE_NOT_CONFIGURED);
   }
 
+  // istanbul ignore next
   logger.debug(
     oneLine`
       The ${name} rule is using an object configuration
@@ -335,6 +342,7 @@ function extractRuleValue(objPath, name, value) {
     `
   );
 
+  // istanbul ignore next
   return undefined;
 }
 
@@ -413,12 +421,12 @@ function requireModule(modulePath, name) {
   }
 }
 
-function getESLintLinter(eslintPath, eslintOptions) {
-  const { Linter } = requireModule(eslintPath, "eslint");
+function getESLintCLIEngine(eslintPath, eslintOptions) {
+  const { CLIEngine } = requireModule(eslintPath, "eslint");
   try {
-    return new Linter(eslintOptions);
+    return new CLIEngine(eslintOptions);
   } catch (error) {
-    logger.error(`There was trouble creating the ESLint Linter.`);
+    logger.error(`There was trouble creating the ESLint CLIEngine.`);
     throw error;
   }
 }

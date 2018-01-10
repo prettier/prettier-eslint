@@ -324,7 +324,7 @@ test("reads text from fs if filePath is provided but not text", () => {
   format({ filePath });
   // format({filePath}).catch(() => {})
   // one hit to get the file and one for the eslintignore
-  expect(fsMock.readFileSync).toHaveBeenCalledTimes(2);
+  expect(fsMock.readFileSync).toHaveBeenCalledTimes(3);
   expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, "utf8");
 });
 
@@ -358,16 +358,6 @@ test("logs if there is a problem making the CLIEngine", () => {
   });
   expect(() => format({ text: "" })).toThrowError(error);
   eslintMock.CLIEngine.mockReset();
-  expect(logger.error).toHaveBeenCalledTimes(1);
-});
-
-test("logs if there is a problem making the Linter", () => {
-  const error = new Error("fake error");
-  eslintMock.Linter.mockImplementation(() => {
-    throw error;
-  });
-  expect(() => format({ text: "" })).toThrowError(error);
-  eslintMock.Linter.mockReset();
   expect(logger.error).toHaveBeenCalledTimes(1);
 });
 

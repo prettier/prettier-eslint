@@ -67,7 +67,7 @@ const getPrettierOptionsFromESLintRulesTests = [
           objects: "always-multiline",
           imports: "always-multiline",
           exports: "always-multiline",
-          functions: "never-multiline"
+          functions: "never"
         }
       ]
     },
@@ -158,8 +158,8 @@ const getPrettierOptionsFromESLintRulesTests = [
 
   // If an ESLint rule is disabled fall back to prettier defaults.
   { rules: { "max-len": [0, { code: 120 }] }, options: {} },
-  { rules: { quotes: ["off", { code: 120 }] }, options: {} },
-  { rules: { quotes: ["backtick", { code: 120 }] }, options: {} },
+  { rules: { quotes: ["off", "single"] }, options: {} },
+  { rules: { quotes: ["off", "backtick"] }, options: {} },
   { rules: { semi: "off" }, options: {} },
   { rules: { semi: ["off", "never"] }, options: {} },
   { rules: { semi: ["warn", "always"] }, options: {} },
@@ -176,6 +176,10 @@ const getPrettierOptionsFromESLintRulesTests = [
   { rules: { "react/jsx-closing-bracket-location": [0] }, options: {} },
   { rules: { "arrow-parens": [0] }, options: {} }
 ];
+
+beforeEach(() => {
+  global.__PRETTIER_ESLINT_TEST_STATE__ = {};
+});
 
 getPrettierOptionsFromESLintRulesTests.forEach(
   ({ rules, options, prettierOptions, fallbackPrettierOptions }, index) => {
@@ -244,7 +248,7 @@ test("eslint max-len.tabWidth value should be used for tabWidth when tabs are us
 
 test("eslint config has only necessary properties", () => {
   const { eslint } = getOptionsForFormatting({
-    globals: { window: false },
+    globals: ["window:false"],
     rules: { "no-with": "error", quotes: [2, "single"] }
   });
   expect(eslint).toMatchObject({
