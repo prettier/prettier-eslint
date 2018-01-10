@@ -193,6 +193,18 @@ const tests = [
       filePath: path.resolve("./test.md")
     },
     output: "# Foo\n\n_bar_"
+  },
+  {
+    title: "Test eslintConfig.globals as an object",
+    input: {
+      text: 'var foo = {  "bar": "baz"}',
+      eslintConfig: {
+        globals: {
+          someGlobal: true
+        }
+      }
+    },
+    output: 'var foo = { bar: "baz" };'
   }
 ];
 

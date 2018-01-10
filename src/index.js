@@ -63,6 +63,12 @@ function format(options) {
     getESLintConfig(filePath)
   );
 
+  if (typeof eslintConfig.globals === "object") {
+    eslintConfig.globals = Object.entries(eslintConfig.globals).map(
+      ([key, value]) => `${key}:${value}`
+    );
+  }
+
   const prettierOptions = merge(
     {},
     filePath && { filepath: filePath },
