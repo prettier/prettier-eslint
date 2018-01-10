@@ -214,8 +214,7 @@ the code has been processed by this module. That is because `prettier` changes
 this:
 
 ```js
-if (x) {
-  // eslint-disable-line
+if (x) { // eslint-disable-line
 }
 ```
 
