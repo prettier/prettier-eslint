@@ -75,22 +75,32 @@ function getOptionsForFormatting(
 
 function getRelevantESLintConfig(eslintConfig) {
   const { rules } = eslintConfig;
-  const fixableRules = getFixableRules(eslintConfig);
+  // TODO: remove rules that are not fixable for perf
+  // this will require we load the config for every rule...
+  // not sure that'll be worth the effort
+  // but we may be able to maintain a manual list of rules that
+  // are definitely not fixable. Which is what we'll do for now...
+  const rulesThatWillNeverBeFixable = [
+    // TODO add more
+    "valid-jsdoc",
+    "global-require",
+    "no-with"
+  ];
 
   logger.debug("reducing eslint rules down to relevant rules only");
   const relevantRules = Object.entries(rules).reduce(
     (rulesAccumulator, [name, rule]) => {
-      if (fixableRules.includes(name)) {
+      if (rulesThatWillNeverBeFixable.includes(name)) {
+        logger.trace(
+          `omitting from relevant rules:`,
+          JSON.stringify({ [name]: rule })
+        );
+      } else {
         logger.trace(
           `adding to relevant rules:`,
           JSON.stringify({ [name]: rule })
         );
         rulesAccumulator[name] = rule;
-      } else {
-        logger.trace(
-          `omitting from relevant rules:`,
-          JSON.stringify({ [name]: rule })
-        );
       }
       return rulesAccumulator;
     },
@@ -106,22 +116,6 @@ function getRelevantESLintConfig(eslintConfig) {
     fix: true,
     globals: []
   };
-}
-
-function getFixableRules(eslintConfig) {
-  const cli = getESLintCLIEngine("eslint", eslintConfig);
-  const rules = cli.getRules();
-  const fixableRules = [];
-  for (const [name, rule] of rules) {
-    if (isRuleFixable(rule)) {
-      fixableRules.push(name);
-    }
-  }
-  return fixableRules;
-}
-
-function isRuleFixable({ meta }) {
-  return meta && meta.fixable;
 }
 
 /**
