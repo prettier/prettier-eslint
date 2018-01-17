@@ -64,12 +64,22 @@ function getOptionsForFormatting(
   prettierOptions = {},
   fallbackPrettierOptions = {}
 ) {
-  const eslint = getRelevantESLintConfig(eslintConfig);
+  let eslint = getRelevantESLintConfig(eslintConfig);
   const prettier = getPrettierOptionsFromESLintRules(
     eslintConfig,
     prettierOptions,
     fallbackPrettierOptions
   );
+
+  // Disable "prettier/prettier", we don't need to run prettier twice
+  eslint = {
+    ...eslint,
+    rules: {
+      ...eslint.rules,
+      "prettier/prettier": ["off"]
+    }
+  };
+
   return { eslint, prettier };
 }
 
