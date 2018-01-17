@@ -224,7 +224,10 @@ function getESLintConfig(filePath) {
       "${filePath || process.cwd()}"
     `
   );
-  const cliEngine = getESLintCLIEngine("eslint", eslintOptions);
+  const cliEngine = getESLintCLIEngine(
+    require.resolve("eslint"),
+    eslintOptions
+  );
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
     const config = cliEngine.getConfigForFile(filePath);
@@ -241,7 +244,7 @@ function getESLintConfig(filePath) {
 }
 
 function getPrettierConfig(filePath) {
-  const prettier = requireModule("prettier", "prettier");
+  const prettier = requireModule(require.resolve("prettier"), "prettier");
   return prettier.resolveConfig.sync(filePath);
 }
 
