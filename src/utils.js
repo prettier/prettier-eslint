@@ -57,7 +57,7 @@ const OPTION_GETTERS = {
 };
 
 /* eslint import/prefer-default-export:0 */
-export { getESLintCLIEngine, getOptionsForFormatting, requireModule };
+export { getOptionsForFormatting };
 
 function getOptionsForFormatting(
   eslintConfig,
@@ -398,29 +398,4 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
     `
   );
   return undefined;
-}
-
-function requireModule(modulePath, name) {
-  try {
-    logger.trace(`requiring "${name}" module at "${modulePath}"`);
-    return require(modulePath);
-  } catch (error) {
-    logger.error(
-      oneLine`
-      There was trouble getting "${name}".
-      Is "${modulePath}" a correct path to the "${name}" module?
-    `
-    );
-    throw error;
-  }
-}
-
-function getESLintCLIEngine(eslintPath, eslintOptions) {
-  const { CLIEngine } = requireModule(eslintPath, "eslint");
-  try {
-    return new CLIEngine(eslintOptions);
-  } catch (error) {
-    logger.error(`There was trouble creating the ESLint CLIEngine.`);
-    throw error;
-  }
 }

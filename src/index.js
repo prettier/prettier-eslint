@@ -8,11 +8,7 @@ import { oneLine, stripIndent } from "common-tags";
 import indentString from "indent-string";
 import getLogger from "loglevel-colored-level-prefix";
 import merge from "lodash.merge";
-import {
-  getESLintCLIEngine,
-  getOptionsForFormatting,
-  requireModule
-} from "./utils";
+import { getOptionsForFormatting } from "./utils";
 
 const logger = getLogger({ prefix: "prettier-eslint" });
 
@@ -60,7 +56,7 @@ function format(options) {
   const eslintConfig = merge(
     {},
     options.eslintConfig,
-    getESLintConfig(filePath)
+    getESLintConfig(filePath, eslintPath)
   );
 
   if (typeof eslintConfig.globals === "object") {
@@ -72,7 +68,7 @@ function format(options) {
   const prettierOptions = merge(
     {},
     filePath && { filepath: filePath },
-    getPrettierConfig(filePath),
+    getPrettierConfig(filePath, prettierPath),
     options.prettierOptions
   );
 
@@ -162,10 +158,10 @@ function createPrettify(formatOptions, prettierPath) {
 
 function createEslintFix(eslintConfig, eslintPath) {
   return function eslintFix(text, filePath) {
-    const eslint = getESLintCLIEngine(eslintPath, eslintConfig);
+    const cliEngine = getESLintCLIEngine(eslintPath, eslintConfig);
     try {
-      logger.trace(`calling eslint.executeOnText with the text`);
-      const report = eslint.executeOnText(text, filePath, true);
+      logger.trace(`calling cliEngine.executeOnText with the text`);
+      const report = cliEngine.executeOnText(text, filePath, true);
       logger.trace(
         `executeOnText returned the following report:`,
         prettyFormat(report)
@@ -213,7 +209,7 @@ function getTextFromFilePath(filePath) {
   }
 }
 
-function getESLintConfig(filePath) {
+function getESLintConfig(filePath, eslintPath) {
   const eslintOptions = {};
   if (filePath) {
     eslintOptions.cwd = path.dirname(filePath);
@@ -224,10 +220,7 @@ function getESLintConfig(filePath) {
       "${filePath || process.cwd()}"
     `
   );
-  const cliEngine = getESLintCLIEngine(
-    require.resolve("eslint"),
-    eslintOptions
-  );
+  const cliEngine = getESLintCLIEngine(eslintPath, eslintOptions);
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
     const config = cliEngine.getConfigForFile(filePath);
@@ -243,9 +236,14 @@ function getESLintConfig(filePath) {
   }
 }
 
-function getPrettierConfig(filePath) {
-  const prettier = requireModule(require.resolve("prettier"), "prettier");
-  return prettier.resolveConfig.sync(filePath);
+function getPrettierConfig(filePath, prettierPath) {
+  const prettier = requireModule(prettierPath, "prettier");
+  return (
+    (prettier.resolveConfig &&
+      prettier.resolveConfig.sync &&
+      prettier.resolveConfig.sync(filePath)) ||
+    {}
+  );
 }
 
 function getModulePath(filePath = __filename, moduleName) {
@@ -266,4 +264,29 @@ function getModulePath(filePath = __filename, moduleName) {
 
 function getDefaultLogLevel() {
   return process.env.LOG_LEVEL || "warn";
+}
+
+function requireModule(modulePath, name) {
+  try {
+    logger.trace(`requiring "${name}" module at "${modulePath}"`);
+    return require(modulePath);
+  } catch (error) {
+    logger.error(
+      oneLine`
+      There was trouble getting "${name}".
+      Is "${modulePath}" a correct path to the "${name}" module?
+    `
+    );
+    throw error;
+  }
+}
+
+function getESLintCLIEngine(eslintPath, eslintOptions) {
+  const { CLIEngine } = requireModule(eslintPath, "eslint");
+  try {
+    return new CLIEngine(eslintOptions);
+  } catch (error) {
+    logger.error(`There was trouble creating the ESLint CLIEngine.`);
+    throw error;
+  }
 }
