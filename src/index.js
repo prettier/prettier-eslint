@@ -60,7 +60,7 @@ function format(options) {
   const eslintConfig = merge(
     {},
     options.eslintConfig,
-    getESLintConfig(filePath)
+    getESLintConfig(filePath, eslintPath)
   );
 
   if (typeof eslintConfig.globals === "object") {
@@ -213,7 +213,7 @@ function getTextFromFilePath(filePath) {
   }
 }
 
-function getESLintConfig(filePath) {
+function getESLintConfig(filePath, eslintPath) {
   const eslintOptions = {};
   if (filePath) {
     eslintOptions.cwd = path.dirname(filePath);
@@ -224,10 +224,7 @@ function getESLintConfig(filePath) {
       "${filePath || process.cwd()}"
     `
   );
-  const cliEngine = getESLintCLIEngine(
-    require.resolve("eslint"),
-    eslintOptions
-  );
+  const cliEngine = getESLintCLIEngine(eslintPath, eslintOptions);
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
     const config = cliEngine.getConfigForFile(filePath);
