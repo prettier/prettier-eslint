@@ -1,3 +1,4 @@
+import path from "path";
 import { getOptionsForFormatting } from "../utils";
 
 const getPrettierOptionsFromESLintRulesTests = [
@@ -177,6 +178,8 @@ const getPrettierOptionsFromESLintRulesTests = [
   { rules: { "arrow-parens": [0] }, options: {} }
 ];
 
+const eslintPath = path.join(__dirname, "../__mocks__/eslint");
+
 beforeEach(() => {
   global.__PRETTIER_ESLINT_TEST_STATE__ = {};
 });
@@ -187,7 +190,8 @@ getPrettierOptionsFromESLintRulesTests.forEach(
       const { prettier } = getOptionsForFormatting(
         { rules },
         prettierOptions,
-        fallbackPrettierOptions
+        fallbackPrettierOptions,
+        eslintPath
       );
       expect(prettier).toMatchObject(options);
     });
@@ -199,7 +203,9 @@ test("if prettierOptions are provided, those are preferred", () => {
     { rules: { quotes: [2, "single"] } },
     {
       singleQuote: false
-    }
+    },
+    undefined,
+    eslintPath
   );
   expect(prettier).toMatchObject({ singleQuote: false });
 });
@@ -215,30 +221,41 @@ test(`if fallbacks are provided, those are preferred over disabled eslint rules`
     {},
     {
       singleQuote: true
-    }
+    },
+    eslintPath
   );
   expect(prettier).toMatchObject({ singleQuote: true });
 });
 
 test("if fallbacks are provided, those are used if not found in eslint", () => {
-  const { prettier } = getOptionsForFormatting({ rules: {} }, undefined, {
-    singleQuote: false
-  });
+  const { prettier } = getOptionsForFormatting(
+    { rules: {} },
+    undefined,
+    {
+      singleQuote: false
+    },
+    eslintPath
+  );
   expect(prettier).toMatchObject({ singleQuote: false });
 });
 
 test("eslint max-len.tabWidth value should be used for tabWidth when tabs are used", () => {
-  const { prettier } = getOptionsForFormatting({
-    rules: {
-      indent: ["error", "tab"],
-      "max-len": [
-        2,
-        {
-          tabWidth: 4
-        }
-      ]
-    }
-  });
+  const { prettier } = getOptionsForFormatting(
+    {
+      rules: {
+        indent: ["error", "tab"],
+        "max-len": [
+          2,
+          {
+            tabWidth: 4
+          }
+        ]
+      }
+    },
+    undefined,
+    undefined,
+    eslintPath
+  );
 
   expect(prettier).toMatchObject({
     tabWidth: 4,
@@ -247,16 +264,21 @@ test("eslint max-len.tabWidth value should be used for tabWidth when tabs are us
 });
 
 test("Turn off prettier/prettier rule if found, but still infer options from it", () => {
-  const { eslint, prettier } = getOptionsForFormatting({
-    rules: {
-      "prettier/prettier": [
-        2,
-        {
-          trailingComma: "all"
-        }
-      ]
-    }
-  });
+  const { eslint, prettier } = getOptionsForFormatting(
+    {
+      rules: {
+        "prettier/prettier": [
+          2,
+          {
+            trailingComma: "all"
+          }
+        ]
+      }
+    },
+    undefined,
+    undefined,
+    eslintPath
+  );
 
   expect(eslint).toMatchObject({
     rules: {
@@ -270,10 +292,15 @@ test("Turn off prettier/prettier rule if found, but still infer options from it"
 });
 
 test("eslint config has only necessary properties", () => {
-  const { eslint } = getOptionsForFormatting({
-    globals: ["window:false"],
-    rules: { "no-with": "error", quotes: [2, "single"] }
-  });
+  const { eslint } = getOptionsForFormatting(
+    {
+      globals: ["window:false"],
+      rules: { "no-with": "error", quotes: [2, "single"] }
+    },
+    undefined,
+    undefined,
+    eslintPath
+  );
   expect(eslint).toMatchObject({
     fix: true,
     useEslintrc: false,
@@ -282,6 +309,36 @@ test("eslint config has only necessary properties", () => {
 });
 
 test("useEslintrc is set to the given config value", () => {
-  const { eslint } = getOptionsForFormatting({ useEslintrc: true, rules: {} });
+  const { eslint } = getOptionsForFormatting(
+    { useEslintrc: true, rules: {} },
+    undefined,
+    undefined,
+    eslintPath
+  );
   expect(eslint).toMatchObject({ fix: true, useEslintrc: true });
+});
+
+test("Turn off unfixable rules", () => {
+  const { eslint } = getOptionsForFormatting(
+    {
+      rules: {
+        "prettier/prettier": ["error"],
+        "valid-jsdoc": ["error"],
+        quotes: ["error", "double"]
+      }
+    },
+    undefined,
+    undefined,
+    eslintPath
+  );
+
+  expect(eslint).toMatchObject({
+    rules: {
+      "prettier/prettier": ["off"],
+      "valid-jsdoc": ["off"],
+      quotes: ["error", "double"]
+    },
+    fix: true,
+    useEslintrc: false
+  });
 });

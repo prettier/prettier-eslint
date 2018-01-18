@@ -57,14 +57,15 @@ const OPTION_GETTERS = {
 };
 
 /* eslint import/prefer-default-export:0 */
-export { getOptionsForFormatting };
+export { getESLintCLIEngine, getOptionsForFormatting, requireModule };
 
 function getOptionsForFormatting(
   eslintConfig,
   prettierOptions = {},
-  fallbackPrettierOptions = {}
+  fallbackPrettierOptions = {},
+  eslintPath
 ) {
-  let eslint = getRelevantESLintConfig(eslintConfig);
+  let eslint = getRelevantESLintConfig(eslintConfig, eslintPath);
   const prettier = getPrettierOptionsFromESLintRules(
     eslintConfig,
     prettierOptions,
@@ -83,35 +84,34 @@ function getOptionsForFormatting(
   return { eslint, prettier };
 }
 
-function getRelevantESLintConfig(eslintConfig) {
-  const { rules } = eslintConfig;
-  // TODO: remove rules that are not fixable for perf
-  // this will require we load the config for every rule...
-  // not sure that'll be worth the effort
-  // but we may be able to maintain a manual list of rules that
-  // are definitely not fixable. Which is what we'll do for now...
-  const rulesThatWillNeverBeFixable = [
-    // TODO add more
-    "valid-jsdoc",
-    "global-require",
-    "no-with"
-  ];
+function getRelevantESLintConfig(eslintConfig, eslintPath) {
+  const cliEngine = getESLintCLIEngine(eslintPath);
+  // TODO: Actually test this branch
+  // istanbul ignore next
+  const loadedRules =
+    (cliEngine.getRules && cliEngine.getRules()) ||
+    new Map([
+      ["valid-jsdoc", { meta: {} }],
+      ["global-require", { meta: {} }],
+      ["no-with", { meta: {} }]
+    ]);
 
-  logger.debug("reducing eslint rules down to relevant rules only");
+  const { rules } = eslintConfig;
+
+  logger.debug("turning off unfixable rules");
+
   const relevantRules = Object.entries(rules).reduce(
     (rulesAccumulator, [name, rule]) => {
-      if (rulesThatWillNeverBeFixable.includes(name)) {
-        logger.trace(
-          `omitting from relevant rules:`,
-          JSON.stringify({ [name]: rule })
-        );
-      } else {
-        logger.trace(
-          `adding to relevant rules:`,
-          JSON.stringify({ [name]: rule })
-        );
-        rulesAccumulator[name] = rule;
+      if (loadedRules.has(name)) {
+        const { meta: { fixable } } = loadedRules.get(name);
+
+        if (!fixable) {
+          logger.trace("turing off rule:", JSON.stringify({ [name]: rule }));
+          rule = ["off"];
+        }
       }
+
+      rulesAccumulator[name] = rule;
       return rulesAccumulator;
     },
     {}
@@ -408,4 +408,29 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
     `
   );
   return undefined;
+}
+
+function requireModule(modulePath, name) {
+  try {
+    logger.trace(`requiring "${name}" module at "${modulePath}"`);
+    return require(modulePath);
+  } catch (error) {
+    logger.error(
+      oneLine`
+      There was trouble getting "${name}".
+      Is "${modulePath}" a correct path to the "${name}" module?
+    `
+    );
+    throw error;
+  }
+}
+
+function getESLintCLIEngine(eslintPath, eslintOptions) {
+  const { CLIEngine } = requireModule(eslintPath, "eslint");
+  try {
+    return new CLIEngine(eslintOptions);
+  } catch (error) {
+    logger.error(`There was trouble creating the ESLint CLIEngine.`);
+    throw error;
+  }
 }

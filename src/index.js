@@ -8,7 +8,11 @@ import { oneLine, stripIndent } from "common-tags";
 import indentString from "indent-string";
 import getLogger from "loglevel-colored-level-prefix";
 import merge from "lodash.merge";
-import { getOptionsForFormatting } from "./utils";
+import {
+  getESLintCLIEngine,
+  getOptionsForFormatting,
+  requireModule
+} from "./utils";
 
 const logger = getLogger({ prefix: "prettier-eslint" });
 
@@ -75,7 +79,8 @@ function format(options) {
   const formattingOptions = getOptionsForFormatting(
     eslintConfig,
     prettierOptions,
-    fallbackPrettierOptions
+    fallbackPrettierOptions,
+    eslintPath
   );
 
   logger.debug(
@@ -264,29 +269,4 @@ function getModulePath(filePath = __filename, moduleName) {
 
 function getDefaultLogLevel() {
   return process.env.LOG_LEVEL || "warn";
-}
-
-function requireModule(modulePath, name) {
-  try {
-    logger.trace(`requiring "${name}" module at "${modulePath}"`);
-    return require(modulePath);
-  } catch (error) {
-    logger.error(
-      oneLine`
-      There was trouble getting "${name}".
-      Is "${modulePath}" a correct path to the "${name}" module?
-    `
-    );
-    throw error;
-  }
-}
-
-function getESLintCLIEngine(eslintPath, eslintOptions) {
-  const { CLIEngine } = requireModule(eslintPath, "eslint");
-  try {
-    return new CLIEngine(eslintOptions);
-  } catch (error) {
-    logger.error(`There was trouble creating the ESLint CLIEngine.`);
-    throw error;
-  }
 }
