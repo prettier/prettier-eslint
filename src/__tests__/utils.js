@@ -323,7 +323,6 @@ test("Turn off unfixable rules", () => {
     {
       rules: {
         "prettier/prettier": ["error"],
-        "valid-jsdoc": ["error"],
         quotes: ["error", "double"]
       }
     },
@@ -335,10 +334,10 @@ test("Turn off unfixable rules", () => {
   expect(eslint).toMatchObject({
     rules: {
       "prettier/prettier": ["off"],
-      "valid-jsdoc": ["off"],
       quotes: ["error", "double"]
     },
     fix: true,
+    globals: [],
     useEslintrc: false
   });
 });
