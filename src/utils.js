@@ -90,11 +90,8 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
   // istanbul ignore next
   const loadedRules =
     (cliEngine.getRules && cliEngine.getRules()) ||
-    new Map([
-      ["valid-jsdoc", { meta: {} }],
-      ["global-require", { meta: {} }],
-      ["no-with", { meta: {} }]
-    ]);
+    // XXX: Fallback list of unfixable rules, when using and old version of eslint
+    new Map([["global-require", { meta: {} }], ["no-with", { meta: {} }]]);
 
   const { rules } = eslintConfig;
 
