@@ -263,34 +263,6 @@ test("eslint max-len.tabWidth value should be used for tabWidth when tabs are us
   });
 });
 
-test("Turn off prettier/prettier rule if found, but still infer options from it", () => {
-  const { eslint, prettier } = getOptionsForFormatting(
-    {
-      rules: {
-        "prettier/prettier": [
-          2,
-          {
-            trailingComma: "all"
-          }
-        ]
-      }
-    },
-    undefined,
-    undefined,
-    eslintPath
-  );
-
-  expect(eslint).toMatchObject({
-    rules: {
-      "prettier/prettier": ["off"]
-    }
-  });
-
-  expect(prettier).toMatchObject({
-    trailingComma: "all"
-  });
-});
-
 test("eslint config has only necessary properties", () => {
   const { eslint } = getOptionsForFormatting(
     {
