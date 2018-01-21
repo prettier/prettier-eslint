@@ -322,7 +322,7 @@ test("Turn off unfixable rules", () => {
   const { eslint } = getOptionsForFormatting(
     {
       rules: {
-        "prettier/prettier": ["error"],
+        "global-require": "error",
         quotes: ["error", "double"]
       }
     },
@@ -333,7 +333,7 @@ test("Turn off unfixable rules", () => {
 
   expect(eslint).toMatchObject({
     rules: {
-      "prettier/prettier": ["off"],
+      "global-require": ["off"],
       quotes: ["error", "double"]
     },
     fix: true,
