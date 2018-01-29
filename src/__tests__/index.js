@@ -173,6 +173,21 @@ const tests = [
     output: "function Foo(this: void) {\n  return this;\n}"
   },
   {
+    title: "Vue.js example",
+    input: {
+      eslintConfig: {
+        rules: {
+          "space-before-function-paren": [2, "always"]
+        }
+      },
+      text:
+        '<template>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
+      filePath: path.resolve("./test.vue")
+    },
+    output:
+      '<template>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style>\n</style>'
+  },
+  {
     title: "GraphQL example",
     input: {
       text: "type Query{test: Test}",

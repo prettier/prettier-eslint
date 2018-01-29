@@ -29,7 +29,8 @@
     "pretty-format": "^23.0.1",
     "require-relative": "^0.8.7",
     "typescript": "^2.5.1",
-    "typescript-eslint-parser": "^16.0.0"
+    "typescript-eslint-parser": "^16.0.0",
+    "vue-eslint-parser": "^2.0.2"
   },
   "devDependencies": {
     "all-contributors-cli": "^5.2.0",
