@@ -171,6 +171,14 @@ const tests = [
     output: "function Foo(this: void) {\n  return this;\n}"
   },
   {
+    title: "Vue.js example",
+    input: {
+      text: '<template>\n</template>\n<script>\nvar foo = {  "bar": "baz"}\n</script>\n<style>\n</style>',
+      filePath: path.resolve("./test.vue")
+    },
+    output: '<template>\n</template>\n<script>\nvar foo = { "bar": "baz" };\n</script>\n<style>\n</style>'
+  },
+  {
     title: "GraphQL example",
     input: {
       text: "type Query{test: Test}",
