@@ -26,7 +26,7 @@
     "pretty-format": "^22.0.3",
     "require-relative": "^0.8.7",
     "typescript": "^2.5.1",
-    "typescript-eslint-parser": "^11.0.0"
+    "typescript-eslint-parser": "^14.0.0"
   },
   "devDependencies": {
     "all-contributors-cli": "^4.4.0",
