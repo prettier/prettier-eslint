@@ -101,7 +101,8 @@ function format(options) {
     ".js",
     ".jsx",
     ".ts",
-    ".tsx"
+    ".tsx",
+    ".mjs"
   ];
   const fileExtension = path.extname(filePath || "");
 
