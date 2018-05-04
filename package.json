@@ -22,7 +22,7 @@
     "indent-string": "^3.2.0",
     "lodash.merge": "^4.6.0",
     "loglevel-colored-level-prefix": "^1.0.0",
-    "prettier": "^1.7.0",
+    "prettier": "^1.12.1",
     "pretty-format": "^22.0.3",
     "require-relative": "^0.8.7",
     "typescript": "^2.5.1",
