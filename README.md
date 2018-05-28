@@ -145,9 +145,10 @@ This allows you to use `eslint` to look for bugs and/or bad practices, and use
 
 ### throws
 
-`prettier-eslint` will propagate errors when either `prettier` or `eslint` fails
-for one reason or another. In addition to propagating the errors, it will also
-log a specific message indicating what it was doing at the time of the failure.
+`prettier-eslint` will **only** propagate _parsing_ errors when either `prettier` or `eslint` fails. In addition to propagating the errors, it will also log a specific message indicating what it was doing at the time of the failure.
+
+**Note:** `prettier-eslint` will not show any message regarding broken rules in either `prettier` or `eslint`.
+
 
 ## Technical details
 
