@@ -9,7 +9,9 @@ import format from "../";
 
 jest.mock("fs");
 
-const { mock: { logger } } = loglevelMock;
+const {
+  mock: { logger }
+} = loglevelMock;
 // loglevelMock.mock.logThings = ['debug']
 
 const tests = [

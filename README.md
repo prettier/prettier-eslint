@@ -238,8 +238,8 @@ if (x) {
 
 ## Inspiration
 
-* [`prettier`][prettier]
-* [`eslint`][eslint]
+- [`prettier`][prettier]
+- [`eslint`][eslint]
 
 ## Other Solutions
 
@@ -248,17 +248,17 @@ solutions.
 
 ## Related
 
-* [`prettier-eslint-cli`](https://github.com/prettier/prettier-eslint-cli) -
+- [`prettier-eslint-cli`](https://github.com/prettier/prettier-eslint-cli) -
   Command Line Interface
-* [`prettier-atom`][atom-plugin] - Atom plugin (check the "ESlint integration"
+- [`prettier-atom`][atom-plugin] - Atom plugin (check the "ESlint integration"
   checkbox in settings)
-* [`prettier-vscode`][vscode-plugin] - Visual Studio Code plugin (set
+- [`prettier-vscode`][vscode-plugin] - Visual Studio Code plugin (set
   `prettier.eslintIntegration: true` in settings)
-* [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) -
+- [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) -
   ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output
   of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and
   integrates it with the regular ESLint workflow.
-* [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) -
+- [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) -
   Prettier ESlint Webpack Plugin
 
 ## Contributors

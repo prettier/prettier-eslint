@@ -90,7 +90,9 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
   const relevantRules = Object.entries(rules).reduce(
     (rulesAccumulator, [name, rule]) => {
       if (loadedRules.has(name)) {
-        const { meta: { fixable } } = loadedRules.get(name);
+        const {
+          meta: { fixable }
+        } = loadedRules.get(name);
 
         if (!fixable) {
           logger.trace("turing off rule:", JSON.stringify({ [name]: rule }));

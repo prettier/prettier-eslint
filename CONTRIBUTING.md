@@ -7,10 +7,10 @@ Thanks for being willing to contribute!
 
 ## Project setup
 
-1. Fork and clone the repo
-2. `$ npm install` to install dependencies
-3. `$ npm start validate` to validate you've got it working
-4. Create a branch for your PR
+1.  Fork and clone the repo
+2.  `$ npm install` to install dependencies
+3.  `$ npm start validate` to validate you've got it working
+4.  Create a branch for your PR
 
 This project uses [`nps`][nps] and you can run `npm start help` to see what
 scripts are available.
