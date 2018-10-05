@@ -109,6 +109,9 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
   return {
     // defaults
     useEslintrc: false,
+    baseConfig: {
+      settings: eslintConfig.settings || {}
+    },
     ...eslintConfig,
     // overrides
     rules: relevantRules,
