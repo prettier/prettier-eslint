@@ -252,6 +252,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "jondkinney",
+      "name": "Jon Kinney",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/4521?v=4",
+      "profile": "http://jonkinney.com",
+      "contributions": [
+        "code"
+      ]
     }
-  ]
+  ],
+  "repoType": "github"
 }
