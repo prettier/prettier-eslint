@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
+    "prepare": "nps build",
     "precommit": "opt --in pre-commit --exec \"npm start validate\""
   },
   "files": [
