@@ -185,7 +185,7 @@ const tests = [
       filePath: path.resolve("./test.vue")
     },
     output:
-      '<template>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style>\n</style>'
+      '<template> </template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>'
   },
   {
     title: "GraphQL example",
