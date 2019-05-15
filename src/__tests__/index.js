@@ -1,4 +1,8 @@
 /* eslint no-console:0, import/default:0 */
+
+// eslint-disable-next-line import/no-unassigned-import
+import "../jestMock";
+
 import path from "path";
 import fsMock from "fs";
 import stripIndent from "strip-indent";
@@ -6,8 +10,6 @@ import eslintMock from "eslint";
 import prettierMock from "prettier";
 import loglevelMock from "loglevel-colored-level-prefix";
 import format from "../";
-
-jest.mock("fs");
 
 const {
   mock: { logger }
