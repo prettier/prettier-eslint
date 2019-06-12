@@ -126,7 +126,8 @@ function format(options) {
   }
 
   if ([".vue"].includes(fileExtension)) {
-    formattingOptions.eslint.parser = require.resolve("vue-eslint-parser");
+    formattingOptions.eslint.parser =
+      formattingOptions.eslint.parser || require.resolve("vue-eslint-parser");
   }
 
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);
