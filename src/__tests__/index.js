@@ -181,11 +181,11 @@ const tests = [
         }
       },
       text:
-        '<template>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
+        '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
       filePath: path.resolve("./test.vue")
     },
     output:
-      '<template>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style>\n</style>'
+      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>'
   },
   {
     title: "GraphQL example",
