@@ -120,11 +120,9 @@ function format(options) {
   }
 
   if ([".ts", ".tsx"].includes(fileExtension)) {
-    // XXX: It seems babylon is getting a TypeScript plugin.
-    // Should that be used instead?
-    formattingOptions.eslint.parser = formattingOptions.eslint.parser || require.resolve(
-      "typescript-eslint-parser"
-    );
+    formattingOptions.eslint.parser =
+      formattingOptions.eslint.parser ||
+      require.resolve("@typescript-eslint/parser");
   }
 
   if ([".vue"].includes(fileExtension)) {
