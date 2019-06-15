@@ -252,6 +252,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "chinesedfan",
+      "name": "Xianming Zhong",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1736154?v=4",
+      "profile": "https://github.com/chinesedfan",
+      "contributions": [
+        "test"
+      ]
     }
-  ]
+  ],
+  "repoType": "github"
 }
