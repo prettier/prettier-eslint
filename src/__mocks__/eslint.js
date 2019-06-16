@@ -1,7 +1,7 @@
 // this mock file is so eslint doesn't attempt to actually
 // search around the file system for stuff
 
-const eslint = require.requireActual("eslint");
+const eslint = require.requireActual('eslint');
 const { CLIEngine } = eslint;
 
 const mockGetConfigForFileSpy = jest.fn(mockGetConfigForFile);
@@ -37,36 +37,36 @@ function mockGetConfigForFile(filePath) {
       rules: {}
     };
   }
-  if (filePath.includes("default-config")) {
+  if (filePath.includes('default-config')) {
     return {
       rules: {
-        semi: [2, "never"],
-        "max-len": [2, 120, 2],
+        semi: [2, 'never'],
+        'max-len': [2, 120, 2],
         indent: [2, 2, { SwitchCase: 1 }],
         quotes: [
           2,
-          "single",
+          'single',
           { avoidEscape: true, allowTemplateLiterals: true }
         ],
-        "comma-dangle": [
+        'comma-dangle': [
           2,
           {
-            arrays: "always-multiline",
-            objects: "always-multiline",
-            imports: "always-multiline",
-            exports: "always-multiline",
-            functions: "always-multiline"
+            arrays: 'always-multiline',
+            objects: 'always-multiline',
+            imports: 'always-multiline',
+            exports: 'always-multiline',
+            functions: 'always-multiline'
           }
         ],
-        "arrow-parens": [2, "as-needed"]
+        'arrow-parens': [2, 'as-needed']
       }
     };
-  } else if (filePath.includes("fixtures/paths")) {
+  } else if (filePath.includes('fixtures/paths')) {
     return { rules: {} };
   } else {
     throw new Error(
       `Your mock filePath (${filePath})` +
-        " does not have a handler for finding the config"
+        ' does not have a handler for finding the config'
     );
   }
 }

@@ -1,57 +1,57 @@
 /* eslint import/no-dynamic-require:0 */
-import { oneLine } from "common-tags";
-import delve from "dlv";
-import getLogger from "loglevel-colored-level-prefix";
+import { oneLine } from 'common-tags';
+import delve from 'dlv';
+import getLogger from 'loglevel-colored-level-prefix';
 
-const logger = getLogger({ prefix: "prettier-eslint" });
+const logger = getLogger({ prefix: 'prettier-eslint' });
 const RULE_DISABLED = {};
-const RULE_NOT_CONFIGURED = "RULE_NOT_CONFIGURED";
+const RULE_NOT_CONFIGURED = 'RULE_NOT_CONFIGURED';
 const ruleValueExists = prettierRuleValue =>
   prettierRuleValue !== RULE_NOT_CONFIGURED &&
   prettierRuleValue !== RULE_DISABLED &&
-  typeof prettierRuleValue !== "undefined";
+  typeof prettierRuleValue !== 'undefined';
 const OPTION_GETTERS = {
   printWidth: {
-    ruleValue: rules => getRuleValue(rules, "max-len", "code"),
+    ruleValue: rules => getRuleValue(rules, 'max-len', 'code'),
     ruleValueToPrettierOption: getPrintWidth
   },
   tabWidth: {
     ruleValue: rules => {
-      let value = getRuleValue(rules, "indent");
-      if (value === "tab") {
-        value = getRuleValue(rules, "max-len", "tabWidth");
+      let value = getRuleValue(rules, 'indent');
+      if (value === 'tab') {
+        value = getRuleValue(rules, 'max-len', 'tabWidth');
       }
       return value;
     },
     ruleValueToPrettierOption: getTabWidth
   },
   singleQuote: {
-    ruleValue: rules => getRuleValue(rules, "quotes"),
+    ruleValue: rules => getRuleValue(rules, 'quotes'),
     ruleValueToPrettierOption: getSingleQuote
   },
   trailingComma: {
-    ruleValue: rules => getRuleValue(rules, "comma-dangle", []),
+    ruleValue: rules => getRuleValue(rules, 'comma-dangle', []),
     ruleValueToPrettierOption: getTrailingComma
   },
   bracketSpacing: {
-    ruleValue: rules => getRuleValue(rules, "object-curly-spacing"),
+    ruleValue: rules => getRuleValue(rules, 'object-curly-spacing'),
     ruleValueToPrettierOption: getBracketSpacing
   },
   semi: {
-    ruleValue: rules => getRuleValue(rules, "semi"),
+    ruleValue: rules => getRuleValue(rules, 'semi'),
     ruleValueToPrettierOption: getSemi
   },
   useTabs: {
-    ruleValue: rules => getRuleValue(rules, "indent"),
+    ruleValue: rules => getRuleValue(rules, 'indent'),
     ruleValueToPrettierOption: getUseTabs
   },
   jsxBracketSameLine: {
     ruleValue: rules =>
-      getRuleValue(rules, "react/jsx-closing-bracket-location", "nonEmpty"),
+      getRuleValue(rules, 'react/jsx-closing-bracket-location', 'nonEmpty'),
     ruleValueToPrettierOption: getJsxBracketSameLine
   },
   arrowParens: {
-    ruleValue: rules => getRuleValue(rules, "arrow-parens"),
+    ruleValue: rules => getRuleValue(rules, 'arrow-parens'),
     ruleValueToPrettierOption: getArrowParens
   }
 };
@@ -81,11 +81,11 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
   const loadedRules =
     (cliEngine.getRules && cliEngine.getRules()) ||
     // XXX: Fallback list of unfixable rules, when using and old version of eslint
-    new Map([["global-require", { meta: {} }], ["no-with", { meta: {} }]]);
+    new Map([['global-require', { meta: {} }], ['no-with', { meta: {} }]]);
 
   const { rules } = eslintConfig;
 
-  logger.debug("turning off unfixable rules");
+  logger.debug('turning off unfixable rules');
 
   const relevantRules = Object.entries(rules).reduce(
     (rulesAccumulator, [name, rule]) => {
@@ -95,8 +95,8 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
         } = loadedRules.get(name);
 
         if (!fixable) {
-          logger.trace("turing off rule:", JSON.stringify({ [name]: rule }));
-          rule = ["off"];
+          logger.trace('turing off rule:', JSON.stringify({ [name]: rule }));
+          rule = ['off'];
         }
       }
 
@@ -131,7 +131,7 @@ function getPrettierOptionsFromESLintRules(
 ) {
   const { rules } = eslintConfig;
 
-  const prettierPluginOptions = getRuleValue(rules, "prettier/prettier", []);
+  const prettierPluginOptions = getRuleValue(rules, 'prettier/prettier', []);
 
   if (ruleValueExists(prettierPluginOptions)) {
     prettierOptions = { ...prettierPluginOptions, ...prettierOptions };
@@ -183,130 +183,130 @@ function configureOptions(
 }
 
 function getPrintWidth(eslintValue, fallbacks) {
-  return makePrettierOption("printWidth", eslintValue, fallbacks);
+  return makePrettierOption('printWidth', eslintValue, fallbacks);
 }
 
 function getTabWidth(eslintValue, fallbacks) {
-  return makePrettierOption("tabWidth", eslintValue, fallbacks);
+  return makePrettierOption('tabWidth', eslintValue, fallbacks);
 }
 
 function getSingleQuote(eslintValue, fallbacks) {
   let prettierValue;
 
-  if (eslintValue === "single") {
+  if (eslintValue === 'single') {
     prettierValue = true;
-  } else if (eslintValue === "double") {
+  } else if (eslintValue === 'double') {
     prettierValue = false;
-  } else if (eslintValue === "backtick") {
+  } else if (eslintValue === 'backtick') {
     prettierValue = false;
   } else {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("singleQuote", prettierValue, fallbacks);
+  return makePrettierOption('singleQuote', prettierValue, fallbacks);
 }
 
 function getTrailingComma(eslintValue, fallbacks) {
   let prettierValue;
 
-  if (eslintValue === "never") {
-    prettierValue = "none";
+  if (eslintValue === 'never') {
+    prettierValue = 'none';
   } else if (
-    typeof eslintValue === "string" &&
-    eslintValue.indexOf("always") === 0
+    typeof eslintValue === 'string' &&
+    eslintValue.indexOf('always') === 0
   ) {
-    prettierValue = "es5";
-  } else if (typeof eslintValue === "object") {
+    prettierValue = 'es5';
+  } else if (typeof eslintValue === 'object') {
     prettierValue = getValFromTrailingCommaConfig(eslintValue);
   } else {
     prettierValue = RULE_NOT_CONFIGURED;
   }
 
-  return makePrettierOption("trailingComma", prettierValue, fallbacks);
+  return makePrettierOption('trailingComma', prettierValue, fallbacks);
 }
 
 function getValFromTrailingCommaConfig(objectConfig) {
-  const { arrays = "", objects = "", functions = "" } = objectConfig;
+  const { arrays = '', objects = '', functions = '' } = objectConfig;
   const fns = isAlways(functions);
   const es5 = [arrays, objects].some(isAlways);
 
   if (fns) {
-    return "all";
+    return 'all';
   } else if (es5) {
-    return "es5";
+    return 'es5';
   } else {
-    return "none";
+    return 'none';
   }
 }
 
 function getBracketSpacing(eslintValue, fallbacks) {
   let prettierValue;
 
-  if (eslintValue === "never") {
+  if (eslintValue === 'never') {
     prettierValue = false;
-  } else if (eslintValue === "always") {
+  } else if (eslintValue === 'always') {
     prettierValue = true;
   } else {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("bracketSpacing", prettierValue, fallbacks);
+  return makePrettierOption('bracketSpacing', prettierValue, fallbacks);
 }
 
 function getSemi(eslintValue, fallbacks) {
   let prettierValue;
 
-  if (eslintValue === "never") {
+  if (eslintValue === 'never') {
     prettierValue = false;
-  } else if (eslintValue === "always") {
+  } else if (eslintValue === 'always') {
     prettierValue = true;
   } else {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("semi", prettierValue, fallbacks);
+  return makePrettierOption('semi', prettierValue, fallbacks);
 }
 
 function getUseTabs(eslintValue, fallbacks) {
   let prettierValue;
 
-  if (eslintValue === "tab") {
+  if (eslintValue === 'tab') {
     prettierValue = true;
   } else {
     prettierValue = RULE_NOT_CONFIGURED;
   }
 
-  return makePrettierOption("useTabs", prettierValue, fallbacks);
+  return makePrettierOption('useTabs', prettierValue, fallbacks);
 }
 
 function getJsxBracketSameLine(eslintValue, fallbacks) {
   let prettierValue;
 
-  if (eslintValue === "after-props") {
+  if (eslintValue === 'after-props') {
     prettierValue = true;
   } else if (
-    eslintValue === "tag-aligned" ||
-    eslintValue === "line-aligned" ||
-    eslintValue === "props-aligned"
+    eslintValue === 'tag-aligned' ||
+    eslintValue === 'line-aligned' ||
+    eslintValue === 'props-aligned'
   ) {
     prettierValue = false;
   } else {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("jsxBracketSameLine", prettierValue, fallbacks);
+  return makePrettierOption('jsxBracketSameLine', prettierValue, fallbacks);
 }
 
 function getArrowParens(eslintValue, fallbacks) {
   let prettierValue;
 
-  if (eslintValue === "as-needed") {
-    prettierValue = "avoid";
+  if (eslintValue === 'as-needed') {
+    prettierValue = 'avoid';
   } else {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption("arrowParens", prettierValue, fallbacks);
+  return makePrettierOption('arrowParens', prettierValue, fallbacks);
 }
 
 function extractRuleValue(objPath, name, value) {
@@ -353,11 +353,11 @@ function getRuleValue(rules, name, objPath) {
     // overriden by config-prettier. The airbnb values are provided even though
     // config-prettier disables the rule. Instead use fallback or prettier
     // default.
-    if (ruleSetting === 0 || ruleSetting === "off") {
+    if (ruleSetting === 0 || ruleSetting === 'off') {
       return RULE_DISABLED;
     }
 
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       return extractRuleValue(objPath, name, value);
     } else {
       logger.trace(
@@ -374,7 +374,7 @@ function getRuleValue(rules, name, objPath) {
 }
 
 function isAlways(val) {
-  return val.indexOf("always") === 0;
+  return val.indexOf('always') === 0;
 }
 
 function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
@@ -383,7 +383,7 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
   }
 
   const fallback = fallbacks[prettierRuleName];
-  if (typeof fallback !== "undefined") {
+  if (typeof fallback !== 'undefined') {
     logger.debug(
       oneLine`
         The ${prettierRuleName} rule is not configured,
@@ -418,7 +418,7 @@ function requireModule(modulePath, name) {
 }
 
 function getESLintCLIEngine(eslintPath, eslintOptions) {
-  const { CLIEngine } = requireModule(eslintPath, "eslint");
+  const { CLIEngine } = requireModule(eslintPath, 'eslint');
   try {
     return new CLIEngine(eslintOptions);
   } catch (error) {

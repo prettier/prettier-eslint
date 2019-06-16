@@ -1,4 +1,4 @@
-const prettier = require.requireActual("prettier");
+const prettier = require.requireActual('prettier');
 const { format } = prettier;
 
 module.exports = prettier;
