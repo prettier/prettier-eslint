@@ -55,7 +55,7 @@ module.exports = {
     },
     format: {
       description: "Formats everything with prettier-eslint",
-      script: 'prettier-eslint "**/*.{js,json,md}" --write',
+      script: 'prettier-eslint "**/*.{js,json,md,yml}" ".eslintrc.js" --write',
     },
   },
   options: {
