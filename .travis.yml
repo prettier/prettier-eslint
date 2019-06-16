@@ -11,12 +11,13 @@ node_js:
   - '12'
 script:
   - npm start validate
+  - npx codecov
 jobs:
   include:
     - stage: release
       node_js: "12"
       script:
-      - npx codecov
+      - npm start build
       - npx semantic-release@15
 branches:
   only:
