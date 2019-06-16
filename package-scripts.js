@@ -27,7 +27,7 @@ module.exports = {
       description: 'delete the dist directory and run babel to build the files',
       script: series(
         rimraf('dist'),
-        'babel --copy-files --out-dir dist --ignore __tests__,__mocks__ src'
+        'babel --out-dir dist --ignore "src/__tests__/**/*","src/__mocks__/**/*" src'
       ),
     },
     lint: {
