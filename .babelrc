@@ -1,23 +1,13 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/env",
       {
         "targets": {
-          "node": "4.5"
-        }
-      }
-    ]
-  ],
-  "plugins": [
-    "array-includes",
-    "transform-class-properties",
-    "transform-object-rest-spread",
-    [
-      "transform-runtime",
-      {
-        "polyfill": true,
-        "regenerator": true
+          "node": "8"
+        },
+        "useBuiltIns": "usage",
+        "corejs": 3
       }
     ]
   ]
