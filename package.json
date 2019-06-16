@@ -23,7 +23,7 @@
     "core-js": "^3.1.4",
     "dlv": "^1.1.0",
     "eslint": "^5.0.0",
-    "indent-string": "^3.2.0",
+    "indent-string": "^4.0.0",
     "lodash.merge": "^4.6.0",
     "loglevel-colored-level-prefix": "^1.0.0",
     "prettier": "^1.7.0",
@@ -36,12 +36,13 @@
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "acorn": "^6.1.1",
     "ajv": "^5.5.2",
-    "all-contributors-cli": "^5.2.0",
+    "all-contributors-cli": "^6.7.0",
     "babel-jest": "^24.8.0",
     "chalk": "^2.1.0",
-    "husky": "^0.14.3",
     "eslint-config-kentcdodds": "^14.3.3",
+    "husky": "^2.4.1",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.0",
     "nps": "^5.7.1",
@@ -49,7 +50,7 @@
     "opt-cli": "^1.5.2",
     "prettier-eslint-cli": "^4.2.1",
     "rimraf": "^2.5.4",
-    "strip-indent": "^2.0.0"
+    "strip-indent": "^3.0.0"
   },
   "engines": {
     "node": ">=8.0.0"
