@@ -15,10 +15,14 @@ script:
 jobs:
   include:
     - stage: release
-      node_js: "12"
+      node_js: "lts/*"
       script:
-      - npm start build
-      - npx semantic-release@15
+        - npm start build
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npx semantic-release@15
 branches:
   only:
     - master
