@@ -42,7 +42,7 @@
     "babel-jest": "^24.8.0",
     "chalk": "^2.1.0",
     "eslint-config-kentcdodds": "^14.3.3",
-    "husky": "^2.4.1",
+    "husky": "^3.0.0",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.0",
     "nps": "^5.7.1",
