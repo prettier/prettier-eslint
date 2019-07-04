@@ -29,7 +29,6 @@
     "prettier": "^1.7.0",
     "pretty-format": "^23.0.1",
     "require-relative": "^0.8.7",
-    "typescript": "^3.2.1",
     "vue-eslint-parser": "^2.0.2"
   },
   "devDependencies": {
@@ -51,7 +50,8 @@
     "prettier-eslint-cli": "^4.2.1",
     "rimraf": "^2.5.4",
     "semantic-release": "^15.13.16",
-    "strip-indent": "^3.0.0"
+    "strip-indent": "^3.0.0",
+    "typescript": "^3.2.1"
   },
   "engines": {
     "node": ">=8.0.0"
