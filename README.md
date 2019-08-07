@@ -253,7 +253,7 @@ solutions.
 - [`prettier-atom`][atom-plugin] - Atom plugin (check the "ESlint integration"
   checkbox in settings)
 - [`prettier-vscode`][vscode-plugin] - Visual Studio Code plugin (set
-  `prettier.eslintIntegration: true` in settings)
+  `"prettier.eslintIntegration": true` in settings)
 - [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) -
   ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output
   of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and
