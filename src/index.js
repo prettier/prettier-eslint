@@ -170,6 +170,9 @@ function createPrettify(formatOptions, prettierPath) {
 
 function createEslintFix(eslintConfig, eslintPath) {
   return function eslintFix(text, filePath) {
+    if (filePath) {
+      eslintConfig.resolvePluginsRelativeTo = path.dirname(filePath);
+    }
     const cliEngine = getESLintCLIEngine(eslintPath, eslintConfig);
     try {
       logger.trace(`calling cliEngine.executeOnText with the text`);
