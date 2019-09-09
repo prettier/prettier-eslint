@@ -261,7 +261,17 @@
       "contributions": [
         "test"
       ]
+    },
+    {
+      "login": "lewisl9029",
+      "name": "Lewis Liu",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/6934200?v=4",
+      "profile": "https://github.com/lewisl9029",
+      "contributions": [
+        "code"
+      ]
     }
   ],
-  "repoType": "github"
+  "repoType": "github",
+  "commitConvention": "none"
 }
