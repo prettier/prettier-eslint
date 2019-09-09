@@ -170,7 +170,10 @@ function createPrettify(formatOptions, prettierPath) {
 
 function createEslintFix(eslintConfig, eslintPath) {
   return function eslintFix(text, filePath) {
-    const cliEngine = getESLintCLIEngine(eslintPath, eslintConfig);
+    const cliEngine = getESLintCLIEngine(eslintPath, {
+      ...eslintConfig,
+      ...(filePath ? { cwd: path.dirname(filePath) } : {})
+    });
     try {
       logger.trace(`calling cliEngine.executeOnText with the text`);
       const report = cliEngine.executeOnText(text, filePath, true);
