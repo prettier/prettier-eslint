@@ -18,7 +18,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@typescript-eslint/parser": "^1.10.2",
+    "@typescript-eslint/parser": "^2.3.0",
     "common-tags": "^1.4.0",
     "core-js": "^3.1.4",
     "dlv": "^1.1.0",
