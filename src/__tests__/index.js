@@ -349,13 +349,15 @@ test('resolves to the local eslint module', () => {
 });
 
 test('reads text from fs if filePath is provided but not text', () => {
+  const readFileSyncMockSpy = jest.spyOn(fsMock, 'readFileSync');
+
   const filePath = '/blah-blah/some-file.js';
   format({ filePath });
 
-  expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, 'utf8');
+  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 
-  // TODO: Make sense of need to call 5 times (4 for ESLint)
-  expect(fsMock.readFileSync).toHaveBeenCalledTimes(5);
+  // one hit to get the file and one for the eslintignore
+  expect(readFileSyncMockSpy).toHaveBeenCalledTimes(2);
 });
 
 test('logs error if it cannot read the file from the filePath', () => {
