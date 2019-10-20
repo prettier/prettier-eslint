@@ -353,8 +353,10 @@ test('reads text from fs if filePath is provided but not text', () => {
   format({ filePath });
   // format({filePath}).catch(() => {})
   // one hit to get the file and one for the eslintignore
-  expect(fsMock.readFileSync).toHaveBeenCalledTimes(2);
+  expect(fsMock.readFileSync).toHaveBeenCalledTimes(3);
   expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, 'utf8');
+  const eslintIgnoreCall  = fsMock.readFileSync.mock.calls[1][0];
+  expect(eslintIgnoreCall.includes('.eslintignore')).toBeTruthy();
 });
 
 test('logs error if it cannot read the file from the filePath', () => {

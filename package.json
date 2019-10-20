@@ -22,7 +22,7 @@
     "common-tags": "^1.4.0",
     "core-js": "^3.1.4",
     "dlv": "^1.1.0",
-    "eslint": "^5.0.0",
+    "eslint": "^6.5.1",
     "indent-string": "^4.0.0",
     "lodash.merge": "^4.6.0",
     "loglevel-colored-level-prefix": "^1.0.0",
