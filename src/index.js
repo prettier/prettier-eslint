@@ -243,7 +243,10 @@ function getESLintConfig(filePath, eslintPath) {
       `eslint config for "${filePath}" received`,
       prettyFormat(config)
     );
-    return config;
+    return {
+      ...eslintOptions,
+      ...config
+    };
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
     logger.debug('Unable to find config');

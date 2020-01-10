@@ -302,6 +302,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/alexmckenley"><img src="https://avatars1.githubusercontent.com/u/3639670?v=4" width="100px;" alt="Alex Taylor"/><br /><sub><b>Alex Taylor</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=alexmckenley" title="Code">💻</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=alexmckenley" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/chinesedfan"><img src="https://avatars3.githubusercontent.com/u/1736154?v=4" width="100px;" alt="Xianming Zhong"/><br /><sub><b>Xianming Zhong</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=chinesedfan" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/silenaker"><img src="https://avatars0.githubusercontent.com/u/11684852?v=4" width="100px;" alt="shij"/><br /><sub><b>shij</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=silenaker" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/lewisl9029"><img src="https://avatars0.githubusercontent.com/u/6934200?v=4" width="100px;" alt="Lewis Liu"/><br /><sub><b>Lewis Liu</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=lewisl9029" title="Code">💻</a></td>
   </tr>
 </table>
 
