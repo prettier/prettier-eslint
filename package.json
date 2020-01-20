@@ -37,7 +37,7 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "acorn": "^6.1.1",
-    "ajv": "^5.5.2",
+    "ajv": "^6.11.0",
     "all-contributors-cli": "^6.7.0",
     "babel-jest": "^24.8.0",
     "chalk": "^2.1.0",
