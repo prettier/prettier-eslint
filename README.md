@@ -52,7 +52,7 @@ npm install --save-dev prettier-eslint
 ```javascript
 const format = require("prettier-eslint");
 
-// notice, no semicolon in the original text
+// notice, semicolon in the original text
 const sourceCode = "const {foo} = bar";
 
 const options = {
