@@ -1,5 +1,6 @@
 import path from 'path';
-import { getOptionsForFormatting } from '../utils';
+import fs from 'fs'
+import { getOptionsForFormatting, getModulePath, getTextFromFilePath } from '../utils';
 
 const getPrettierOptionsFromESLintRulesTests = [
   {
@@ -313,3 +314,17 @@ test('Turn off unfixable rules', () => {
     useEslintrc: false
   });
 });
+
+test('Testing getModulePath function : "."', () => {
+    const modulePath = getModulePath('.', 'prettier')
+    expect(modulePath.split('/').slice(2)).toEqual(expect.arrayContaining(
+        ['prettier-eslint', 'node_modules', 'prettier','index.js']
+    ))
+})
+
+test('Testing getTextFromFilePath function ', () => {
+    const filePath = path.resolve(__dirname,'../../tests/fixtures/utils/text.js')
+    const output = getTextFromFilePath(filePath)
+    const expected = fs.readFileSync(filePath,'utf8')
+    expect(output).toBe(expected)
+})
