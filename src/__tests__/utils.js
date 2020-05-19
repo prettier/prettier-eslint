@@ -313,3 +313,140 @@ test('Turn off unfixable rules', () => {
     useEslintrc: false
   });
 });
+
+const emptyESLintConfig = { rules: [] };
+
+const getPrettierParserTests = [
+  {
+    eslintConfig: { rules: [], parser: 'babel-eslint' },
+    parser: 'babel'
+  },
+  {
+    eslintConfig: { rules: [], parser: '@typescript-eslint' },
+    parser: 'typescript'
+  },
+  {
+    eslintConfig: { rules: [], parser: 'vue-eslint-parser' },
+    parser: 'vue'
+  },
+  {
+    eslintConfig: { rules: [], parser: 'unknown-parser' },
+    parser: 'babel'
+  },
+  {
+    eslintConfig: { rules: [], parser: 'unknown-parser' },
+    fallbackPrettierOptions: { parser: 'typescript' },
+    parser: 'typescript'
+  },
+  {
+    eslintConfig: { rules: [], parser: 'babel-eslint' },
+    fallbackPrettierOptions: { parser: 'ignored' },
+    parser: 'babel'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.css',
+    parser: 'css'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.gql',
+    parser: 'graphql'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.html',
+    parser: 'html'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.md',
+    parser: 'markdown'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.js',
+    parser: 'babel'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.json',
+    parser: 'json'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.jsx',
+    parser: 'babel'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.less',
+    parser: 'less'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.scss',
+    parser: 'scss'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.tsx',
+    parser: 'typescript'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.ts',
+    parser: 'typescript'
+  }
+];
+
+getPrettierParserTests.forEach(
+  (
+    { eslintConfig, fallbackPrettierOptions = {}, fileExtension, parser },
+    index
+  ) => {
+    test(`getPrettierParserTests ${index}`, () => {
+      const { prettier } = getOptionsForFormatting(
+        eslintConfig,
+        {},
+        fallbackPrettierOptions,
+        eslintPath,
+        fileExtension
+      );
+      expect(prettier.parser).toEqual(parser);
+    });
+  }
+);
+
+const getESLintParserTests = [
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.ts',
+    parser: '@typescript-eslint'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.tsx',
+    parser: '@typescript-eslint'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
+    fileExtension: '.vue',
+    parser: 'vue-eslint-parser'
+  }
+];
+
+getESLintParserTests.forEach(
+  ({ eslintConfig, fileExtension, parser }, index) => {
+    test(`getESLintParserTests ${index}`, () => {
+      const { eslint } = getOptionsForFormatting(
+        eslintConfig,
+        {},
+        {},
+        eslintPath,
+        fileExtension
+      );
+      expect(eslint.parser).toContain(parser);
+    });
+  }
+);

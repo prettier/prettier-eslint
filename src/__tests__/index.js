@@ -149,6 +149,22 @@ const tests = [
     output: '.stop {\n  color: red;\n}'
   },
   {
+    title: 'HTML example',
+    input: {
+      text: `<div class="stop">\n\tRed</div>`,
+      filePath: path.resolve('./test.html')
+    },
+    output: '<div class="stop">\n  Red\n</div>'
+  },
+  {
+    title: 'Markdown example',
+    input: {
+      text: '1. John\n3. George\n2. Paul\n4. Ringo',
+      filePath: path.resolve('./test.md')
+    },
+    output: '1. John\n2. George\n3. Paul\n4. Ringo'
+  },
+  {
     title: 'LESS example',
     input: {
       text: '.stop{color:red};',
@@ -247,6 +263,7 @@ tests.forEach(({ title, modifier, input, output }) => {
     // adding the newline in the expected because
     // prettier adds a newline to the end of the input
     expect(actual).toBe(`${expected}\n`);
+    if (!input.filePath) expect(logger.warn).toHaveBeenCalledTimes(1);
   });
 });
 

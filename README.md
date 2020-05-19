@@ -33,7 +33,7 @@ This formats your code via `prettier`, and then passes the result of that to
 formatting capabilities, but also benefit from the configuration capabilities of
 `eslint`.
 
-> For files with an extension of `.css`, `.less`, `.scss`, or `.json` this only
+> For files with an extension of `.css`, `.gql`, `.html`, `.less`, `.md`, `.scss`, or `.json` this only
 > runs `prettier` since `eslint` cannot process those.
 
 ## Installation
@@ -102,16 +102,18 @@ The options to pass for formatting with `prettier`. If not provided,
 of the options and have the remaining options derived via your eslint config.
 This is useful for options like `parser`.
 
-**NOTE:** these options _override_ the eslint config. If you want fallback
-options to be used only in the case that the rule cannot be inferred from
+**NOTE:** These options _override_ the eslint config. If you want fallback
+options to be used only in the case that the option cannot be inferred from
 eslint, see "fallbackPrettierOptions" below.
+
+**NOTE:** The option `parser` is derived from the `eslintConfig`, `fallbackPrettierOptions`, or `filePath` extension when it's not provided. If the attempt is unsuccessful, `parser` defaults to `babel` as its value, which may cause unexpected formatting results.
 
 #### fallbackPrettierOptions (?Object)
 
 The options to pass for formatting with `prettier` if `prettier-eslint` is not
 able to create the options based on the the `eslintConfig` (whether that's
 provided or derived via `filePath`). These options will only be used in the case
-that the corresponding eslint rule cannot be found and the prettier option has
+that the corresponding eslint config setting cannot be found and the prettier option has
 not been manually defined in `prettierOptions`. If the fallback is not given,
 `prettier-eslint` will just use the default `prettier` value in this scenario.
 
@@ -181,9 +183,9 @@ fall back to the `prettier` defaults:
   bracketSpacing: true,
   semi: true,
   useTabs: false,
+  parser: 'babel',
   // prettier-eslint doesn't currently support
-  // inferring these two (Pull Requests welcome):
-  parser: 'babylon',
+  // inferring this (Pull Request welcome):
   jsxBracketSameLine: false,
 }
 ```

@@ -1,5 +1,8 @@
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
 /* eslint complexity: [1, 13] */
+// need trimStart and trimEnd for Node 8
+import 'core-js/modules/es.string.trim-start';
+import 'core-js/modules/es.string.trim-end';
 import fs from 'fs';
 import path from 'path';
 import requireRelative from 'require-relative';
@@ -76,11 +79,13 @@ function format(options) {
     options.prettierOptions
   );
 
+  const fileExtension = path.extname(filePath || '');
   const formattingOptions = getOptionsForFormatting(
     eslintConfig,
     prettierOptions,
     fallbackPrettierOptions,
-    eslintPath
+    eslintPath,
+    fileExtension
   );
 
   logger.debug(
@@ -97,15 +102,7 @@ function format(options) {
     })
   );
 
-  const eslintExtensions = eslintConfig.extensions || [
-    '.js',
-    '.jsx',
-    '.ts',
-    '.tsx',
-    '.mjs',
-    '.vue'
-  ];
-  const fileExtension = path.extname(filePath || '');
+  const eslintExtensions = eslintConfig.extensions || ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.vue'];
 
   // If we don't get filePath run eslint on text, otherwise only run eslint
   // if it's a configured extension or fall back to a "supported" file type.
@@ -117,17 +114,6 @@ function format(options) {
 
   if (onlyPrettier) {
     return prettify(text);
-  }
-
-  if (['.ts', '.tsx'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser ||
-      require.resolve('@typescript-eslint/parser');
-  }
-
-  if (['.vue'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser || require.resolve('vue-eslint-parser');
   }
 
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);

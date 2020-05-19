@@ -55,7 +55,19 @@ const OPTION_GETTERS = {
     ruleValueToPrettierOption: getArrowParens
   }
 };
-
+const PARSER_EXTENSION_MAPPING = {
+  css: 'css',
+  gql: 'graphql',
+  html: 'html',
+  js: 'babel',
+  json: 'json',
+  jsx: 'babel',
+  less: 'less',
+  md: 'markdown',
+  scss: 'scss',
+  tsx: 'typescript',
+  ts: 'typescript'
+};
 /* eslint import/prefer-default-export:0 */
 export { getESLintCLIEngine, getOptionsForFormatting, requireModule };
 
@@ -63,18 +75,46 @@ function getOptionsForFormatting(
   eslintConfig,
   prettierOptions = {},
   fallbackPrettierOptions = {},
-  eslintPath
+  eslintPath,
+  fileExtension
 ) {
-  const eslint = getRelevantESLintConfig(eslintConfig, eslintPath);
+  const eslint = getRelevantESLintConfig({
+    eslintConfig,
+    eslintPath,
+    fileExtension
+  });
+
   const prettier = getPrettierOptionsFromESLintRules(
     eslintConfig,
     prettierOptions,
     fallbackPrettierOptions
   );
+  prettier.parser = getPrettierOptionsParser(
+    prettierOptions.parser,
+    fallbackPrettierOptions.parser,
+    eslint.parser,
+    fileExtension
+  );
+
   return { eslint, prettier };
 }
 
-function getRelevantESLintConfig(eslintConfig, eslintPath) {
+function getESLintConfigParser(parser, fileExtension) {
+  if (parser) {
+    return parser;
+  }
+
+  if (['.ts', '.tsx'].includes(fileExtension)) {
+    return require.resolve('@typescript-eslint/parser');
+  }
+
+  if (['.vue'].includes(fileExtension)) {
+    return require.resolve('vue-eslint-parser');
+  }
+  return undefined;
+}
+
+function getRelevantESLintConfig({ eslintConfig, eslintPath, fileExtension }) {
   const cliEngine = getESLintCLIEngine(eslintPath);
   // TODO: Actually test this branch
   // istanbul ignore next
@@ -95,7 +135,7 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
         } = loadedRules.get(name);
 
         if (!fixable) {
-          logger.trace('turing off rule:', JSON.stringify({ [name]: rule }));
+          logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
           rule = ['off'];
         }
       }
@@ -105,6 +145,8 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
     },
     {}
   );
+
+  const parser = getESLintConfigParser(eslintConfig.parser, fileExtension);
 
   return {
     // defaults
@@ -116,7 +158,8 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
     // overrides
     rules: relevantRules,
     fix: true,
-    globals: []
+    globals: [],
+    parser
   };
 }
 
@@ -399,6 +442,45 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
       let prettier decide
     `
   );
+  return undefined;
+}
+
+function getPrettierOptionsParser(
+  prettierParser,
+  fallbackPrettierParser,
+  eslintParser,
+  fileExtension
+) {
+  const parser =
+    prettierParser ||
+    getPrettierParserFromESLintConfig(eslintParser) ||
+    fallbackPrettierParser;
+
+  const mappedParser =
+    fileExtension && PARSER_EXTENSION_MAPPING[fileExtension.slice(1)];
+
+  if (!parser && !mappedParser) {
+    logger.warn(
+      `The prettier option 'parser' cannot be inferred, using 'babel' as fallback.`
+    );
+    return 'babel';
+  }
+  return parser || mappedParser;
+}
+
+function getPrettierParserFromESLintConfig(esLintParser) {
+  if (esLintParser) {
+    if (esLintParser.includes('babel-eslint')) {
+      return 'babel';
+    }
+    if (esLintParser.includes('@typescript-eslint')) {
+      return 'typescript';
+    }
+    if (esLintParser.includes('vue-eslint-parser')) {
+      return 'vue';
+    }
+    return undefined;
+  }
   return undefined;
 }
 
