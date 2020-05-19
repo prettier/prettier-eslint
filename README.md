@@ -106,7 +106,7 @@ This is useful for options like `parser`.
 options to be used only in the case that the option cannot be inferred from
 eslint, see "fallbackPrettierOptions" below.
 
-**NOTE:** The option `parser` is derived from the `eslintConfig`, `fallbackPrettierOptions`, or `filePath` extension when it's not provided. If the attempt is unsuccessful, `parser` defaults to `babel` as its value, which may cause unexpected formatting results.
+**NOTE:** The option `parser` is derived from the `eslintConfig`, `fallbackPrettierOptions`, or `filePath` when it's not provided. If the attempt is unsuccessful, `parser` defaults to `babel` as its value, which may cause unexpected formatting results.
 
 #### fallbackPrettierOptions (?Object)
 
