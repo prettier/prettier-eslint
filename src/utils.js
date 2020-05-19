@@ -55,20 +55,6 @@ const OPTION_GETTERS = {
     ruleValueToPrettierOption: getArrowParens
   }
 };
-const PARSER_EXTENSION_MAPPING = {
-  css: 'css',
-  gql: 'graphql',
-  html: 'html',
-  js: 'babel',
-  json: 'json',
-  jsx: 'babel',
-  less: 'less',
-  md: 'markdown',
-  mjs: 'babel',
-  scss: 'scss',
-  tsx: 'typescript',
-  ts: 'typescript'
-};
 /* eslint import/prefer-default-export:0 */
 export { getESLintCLIEngine, getOptionsForFormatting, requireModule };
 
@@ -79,11 +65,11 @@ function getOptionsForFormatting(
   eslintPath,
   fileExtension
 ) {
-  const eslint = getRelevantESLintConfig({
+  const eslint = getRelevantESLintConfig(
     eslintConfig,
     eslintPath,
     fileExtension
-  });
+  );
 
   const prettier = getPrettierOptionsFromESLintRules(
     eslintConfig,
@@ -92,9 +78,8 @@ function getOptionsForFormatting(
   );
   prettier.parser = getPrettierOptionsParser(
     prettierOptions.parser,
-    fallbackPrettierOptions.parser,
     eslint.parser,
-    fileExtension
+    fallbackPrettierOptions.parser
   );
 
   return { eslint, prettier };
@@ -115,7 +100,7 @@ function getESLintConfigParser(parser, fileExtension) {
   return undefined;
 }
 
-function getRelevantESLintConfig({ eslintConfig, eslintPath, fileExtension }) {
+function getRelevantESLintConfig(eslintConfig, eslintPath, fileExtension) {
   const cliEngine = getESLintCLIEngine(eslintPath);
   // TODO: Actually test this branch
   // istanbul ignore next
@@ -451,25 +436,20 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
 
 function getPrettierOptionsParser(
   prettierParser,
-  fallbackPrettierParser,
   eslintParser,
-  fileExtension
+  fallbackPrettierParser
 ) {
   const parser =
     prettierParser ||
     getPrettierParserFromESLintConfig(eslintParser) ||
     fallbackPrettierParser;
-
-  const mappedParser =
-    fileExtension && PARSER_EXTENSION_MAPPING[fileExtension.slice(1)];
-
-  if (!parser && !mappedParser) {
+  if (!parser) {
     logger.warn(
       `The prettier option 'parser' cannot be inferred, using 'babel' as fallback.`
     );
     return 'babel';
   }
-  return parser || mappedParser;
+  return parser;
 }
 
 function getPrettierParserFromESLintConfig(esLintParser) {

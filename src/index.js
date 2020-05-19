@@ -246,12 +246,16 @@ function getESLintConfig(filePath, eslintPath) {
 
 function getPrettierConfig(filePath, prettierPath) {
   const prettier = requireModule(prettierPath, 'prettier');
-  return (
+  const config =
     (prettier.resolveConfig &&
       prettier.resolveConfig.sync &&
       prettier.resolveConfig.sync(filePath)) ||
-    {}
-  );
+    {};
+  if (filePath && !config.parser) {
+    const fileInfo = prettier.getFileInfo.sync(filePath);
+    config.parser = fileInfo.inferredParser;
+  }
+  return config;
 }
 
 function getModulePath(filePath = __filename, moduleName) {

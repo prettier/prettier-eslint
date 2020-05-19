@@ -342,67 +342,67 @@ const getPrettierParserTests = [
     eslintConfig: { rules: [], parser: 'babel-eslint' },
     fallbackPrettierOptions: { parser: 'ignored' },
     parser: 'babel'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.css',
-    parser: 'css'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.gql',
-    parser: 'graphql'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.html',
-    parser: 'html'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.md',
-    parser: 'markdown'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.mjs',
-    parser: 'babel'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.js',
-    parser: 'babel'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.json',
-    parser: 'json'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.jsx',
-    parser: 'babel'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.less',
-    parser: 'less'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.scss',
-    parser: 'scss'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.tsx',
-    parser: 'typescript'
-  },
-  {
-    eslintConfig: emptyESLintConfig,
-    fileExtension: '.ts',
-    parser: 'typescript'
   }
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   filePath: path.resolve('./mock/default-config.js'),
+  //   parser: 'css'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.gql',
+  //   parser: 'graphql'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.html',
+  //   parser: 'html'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.md',
+  //   parser: 'markdown'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.mjs',
+  //   parser: 'babel'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.js',
+  //   parser: 'babel'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.json',
+  //   parser: 'json'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.jsx',
+  //   parser: 'babel'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.less',
+  //   parser: 'less'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.scss',
+  //   parser: 'scss'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.tsx',
+  //   parser: 'typescript'
+  // },
+  // {
+  //   eslintConfig: emptyESLintConfig,
+  //   fileExtension: '.ts',
+  //   parser: 'typescript'
+  // }
 ];
 
 getPrettierParserTests.forEach(
