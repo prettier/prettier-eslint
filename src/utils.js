@@ -55,6 +55,7 @@ const OPTION_GETTERS = {
     ruleValueToPrettierOption: getArrowParens
   }
 };
+
 /* eslint import/prefer-default-export:0 */
 export { getESLintCLIEngine, getOptionsForFormatting, requireModule };
 
@@ -434,6 +435,22 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
   return undefined;
 }
 
+function getPrettierParserFromESLintConfig(eslintParser) {
+  if (eslintParser) {
+    if (eslintParser.includes('babel-eslint')) {
+      return 'babel';
+    }
+    if (eslintParser.includes('@typescript-eslint')) {
+      return 'typescript';
+    }
+    if (eslintParser.includes('vue-eslint-parser')) {
+      return 'vue';
+    }
+    return undefined;
+  }
+  return undefined;
+}
+
 function getPrettierOptionsParser(
   prettierParser,
   eslintParser,
@@ -450,22 +467,6 @@ function getPrettierOptionsParser(
     return 'babel';
   }
   return parser;
-}
-
-function getPrettierParserFromESLintConfig(esLintParser) {
-  if (esLintParser) {
-    if (esLintParser.includes('babel-eslint')) {
-      return 'babel';
-    }
-    if (esLintParser.includes('@typescript-eslint')) {
-      return 'typescript';
-    }
-    if (esLintParser.includes('vue-eslint-parser')) {
-      return 'vue';
-    }
-    return undefined;
-  }
-  return undefined;
 }
 
 function requireModule(modulePath, name) {
