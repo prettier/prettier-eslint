@@ -64,6 +64,7 @@ const PARSER_EXTENSION_MAPPING = {
   jsx: 'babel',
   less: 'less',
   md: 'markdown',
+  mjs: 'babel',
   scss: 'scss',
   tsx: 'typescript',
   ts: 'typescript'
@@ -121,7 +122,10 @@ function getRelevantESLintConfig({ eslintConfig, eslintPath, fileExtension }) {
   const loadedRules =
     (cliEngine.getRules && cliEngine.getRules()) ||
     // XXX: Fallback list of unfixable rules, when using and old version of eslint
-    new Map([['global-require', { meta: {} }], ['no-with', { meta: {} }]]);
+    new Map([
+      ['global-require', { meta: {} }],
+      ['no-with', { meta: {} }]
+    ]);
 
   const { rules } = eslintConfig;
 

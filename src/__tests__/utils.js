@@ -365,6 +365,11 @@ const getPrettierParserTests = [
   },
   {
     eslintConfig: emptyESLintConfig,
+    fileExtension: '.mjs',
+    parser: 'babel'
+  },
+  {
+    eslintConfig: emptyESLintConfig,
     fileExtension: '.js',
     parser: 'babel'
   },

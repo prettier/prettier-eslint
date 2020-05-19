@@ -14,8 +14,13 @@ const config = {
     ],
     "comma-dangle": ["error", "never"],
     "arrow-parens": ["error", "as-needed"],
-    "array-element-newline": ["error", "never"],
-    "array-bracket-newline": ["error", "never"]
+    "array-element-newline": ["error", "consistent"],
+    "array-bracket-newline": [
+      "error",
+      {
+        multiline: true
+      }
+    ]
   }
 };
 

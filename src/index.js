@@ -102,7 +102,14 @@ function format(options) {
     })
   );
 
-  const eslintExtensions = eslintConfig.extensions || ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.vue'];
+  const eslintExtensions = eslintConfig.extensions || [
+    '.js',
+    '.jsx',
+    '.ts',
+    '.tsx',
+    '.mjs',
+    '.vue'
+  ];
 
   // If we don't get filePath run eslint on text, otherwise only run eslint
   // if it's a configured extension or fall back to a "supported" file type.
