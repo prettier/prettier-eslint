@@ -9,19 +9,12 @@ const config = {
       {
         anonymous: "never",
         named: "never",
-        asyncArrow: "always"
-      }
+        asyncArrow: "always",
+      },
     ],
     "comma-dangle": ["error", "never"],
     "arrow-parens": ["error", "as-needed"],
-    "array-element-newline": ["error", "consistent"],
-    "array-bracket-newline": [
-      "error",
-      {
-        multiline: true
-      }
-    ]
-  }
+  },
 };
 
 module.exports = config;
