@@ -75,7 +75,7 @@ function getOptionsForFormatting(
 }
 
 function getRelevantESLintConfig(eslintConfig, eslintPath) {
-  const cliEngine = getESLintCLIEngine(eslintPath, { ignore: false });
+  const cliEngine = getESLintCLIEngine(eslintPath);
   // TODO: Actually test this branch
   // istanbul ignore next
   const loadedRules =

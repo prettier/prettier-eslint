@@ -355,6 +355,7 @@ test('reads text from fs if filePath is provided but not text', () => {
   format({ filePath });
   
   expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
+
 });
 
 test('logs error if it cannot read the file from the filePath', () => {
