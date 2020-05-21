@@ -353,7 +353,7 @@ test('reads text from fs if filePath is provided but not text', () => {
 
   const filePath = '/blah-blah/some-file.js';
   format({ filePath });
-
+  
   expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 });
 
