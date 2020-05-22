@@ -126,7 +126,7 @@ const tests = [
         rules: { 'no-var': 'error' },
         ignorePattern: 'should-be-ignored'
       },
-      filePath: 'should-be-ignored.js'
+      filePath: path.resolve('should-be-ignored.js')
     },
     output: 'var x = 0;'
   },

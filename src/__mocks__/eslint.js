@@ -1,7 +1,7 @@
 // this mock file is so eslint doesn't attempt to actually
 // search around the file system for stuff
 
-const eslint = require.requireActual('eslint');
+const eslint = jest.requireActual('eslint');
 const { CLIEngine } = eslint;
 
 const mockGetConfigForFileSpy = jest.fn(mockGetConfigForFile);
