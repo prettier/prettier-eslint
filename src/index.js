@@ -1,5 +1,10 @@
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
 /* eslint complexity: [1, 13] */
+
+// Add node 8 polyfills, to be removed if we decide to let go node 8 support
+import 'core-js/modules/es.string.trim-start'; // eslint-disable-line 
+import 'core-js/modules/es.string.trim-end'; // eslint-disable-line 
+
 import fs from 'fs';
 import path from 'path';
 import requireRelative from 'require-relative';
