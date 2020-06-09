@@ -63,9 +63,10 @@ function getOptionsForFormatting(
   eslintConfig,
   prettierOptions = {},
   fallbackPrettierOptions = {},
-  eslintPath
+  eslintPath,
+  exitOnLintErr
 ) {
-  const eslint = getRelevantESLintConfig(eslintConfig, eslintPath);
+  const eslint = getRelevantESLintConfig(eslintConfig, eslintPath,exitOnLintErr);
   const prettier = getPrettierOptionsFromESLintRules(
     eslintConfig,
     prettierOptions,
@@ -74,7 +75,7 @@ function getOptionsForFormatting(
   return { eslint, prettier };
 }
 
-function getRelevantESLintConfig(eslintConfig, eslintPath) {
+function getRelevantESLintConfig(eslintConfig, eslintPath, exitOnLintErr) {
   const cliEngine = getESLintCLIEngine(eslintPath);
   // TODO: Actually test this branch
   // istanbul ignore next
@@ -87,7 +88,7 @@ function getRelevantESLintConfig(eslintConfig, eslintPath) {
 
   logger.debug('turning off unfixable rules');
 
-  const relevantRules = Object.entries(rules).reduce(
+  const relevantRules = exitOnLintErr ? rules : Object.entries(rules).reduce(
     (rulesAccumulator, [name, rule]) => {
       if (loadedRules.has(name)) {
         const {

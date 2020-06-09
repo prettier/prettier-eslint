@@ -18,11 +18,11 @@ import {
   getOptionsForFormatting,
   requireModule
 } from './utils';
-
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
 // CommonJS + ES6 modules... is it worth it? Probably not...
-module.exports = format;
+
+export default format
 
 /**
  * Formats the text with prettier and then eslint based on the given options
@@ -46,9 +46,10 @@ module.exports = format;
  * @param {String} options.logLevel - the level for the logs
  *  (error, warn, info, debug, trace)
  * @param {Boolean} options.prettierLast - Run Prettier Last
+ * @param {Boolean} options.exitOnLintErr - exit on lint error and report lint errors and warnings
  * @return {String} - the formatted string
  */
-function format(options) {
+async function format(options) {
   const { logLevel = getDefaultLogLevel() } = options;
   logger.setLevel(logLevel);
   logger.trace('called format with options:', prettyFormat(options));
@@ -85,7 +86,8 @@ function format(options) {
     eslintConfig,
     prettierOptions,
     fallbackPrettierOptions,
-    eslintPath
+    eslintPath,
+    options.exitOnLintErr
   );
 
   logger.debug(
@@ -135,12 +137,12 @@ function format(options) {
       formattingOptions.eslint.parser || require.resolve('vue-eslint-parser');
   }
 
-  const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);
+  const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath, options.exitOnLintErr);
 
   if (prettierLast) {
-    return prettify(eslintFix(text, filePath));
+    return prettify(await eslintFix(text, filePath));
   }
-  return eslintFix(prettify(text), filePath);
+  return await eslintFix(prettify(text), filePath);
 }
 
 function createPrettify(formatOptions, prettierPath) {
@@ -173,8 +175,8 @@ function createPrettify(formatOptions, prettierPath) {
   };
 }
 
-function createEslintFix(eslintConfig, eslintPath) {
-  return function eslintFix(text, filePath) {
+function createEslintFix(eslintConfig, eslintPath, exitOnLintErr) {
+  return async function eslintFix(text, filePath) {
     const cliEngine = getESLintCLIEngine(eslintPath, eslintConfig);
     try {
       logger.trace(`calling cliEngine.executeOnText with the text`);
@@ -185,7 +187,17 @@ function createEslintFix(eslintConfig, eslintPath) {
       );
       // default the output to text because if there's nothing
       // to fix, eslint doesn't provide `output`
-      const [{ output = text }] = report.results;
+      const [{ output = text, errorCount }] = report.results;
+      if (exitOnLintErr) {
+        const formatter = await cliEngine.getFormatter('stylish');
+        const output = await formatter(report.results);
+        if (output) {
+          console.info(output)
+          if (errorCount > 0) {
+            process.exit(1)
+          }
+        }
+      }
       logger.trace('eslint --fix: output === input', output === text);
       // NOTE: We're ignoring linting errors/warnings here and
       // defaulting to the given text if there are any
