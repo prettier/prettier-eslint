@@ -127,14 +127,16 @@ async function format(options) {
   }
 
   if (['.ts', '.tsx'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser ||
-      require.resolve('@typescript-eslint/parser');
+    formattingOptions.eslint.parser = require.resolve('@typescript-eslint/parser');
+    for (const k in formattingOptions.eslint.rules) {
+      if (k.includes('vue/')) {
+        formattingOptions.eslint.rules[k] = ['off'];
+      }
+    }
   }
 
   if (['.vue'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser || require.resolve('vue-eslint-parser');
+    formattingOptions.eslint.parser = require.resolve('vue-eslint-parser');
   }
 
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath, options.exitOnLintErr);
