@@ -20,6 +20,7 @@
   "dependencies": {
     "@typescript-eslint/parser": "^3.0.0",
     "common-tags": "^1.4.0",
+    "core-js": "^3.6.5",
     "dlv": "^1.1.0",
     "eslint": "^6.8.0",
     "indent-string": "^4.0.0",
