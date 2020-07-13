@@ -126,7 +126,7 @@ const tests = [
         rules: { 'no-var': 'error' },
         ignorePattern: 'should-be-ignored'
       },
-      filePath: 'should-be-ignored.js'
+      filePath: path.resolve('should-be-ignored.js')
     },
     output: 'var x = 0;'
   },
@@ -349,12 +349,13 @@ test('resolves to the local eslint module', () => {
 });
 
 test('reads text from fs if filePath is provided but not text', () => {
+  const readFileSyncMockSpy = jest.spyOn(fsMock, 'readFileSync');
+
   const filePath = '/blah-blah/some-file.js';
   format({ filePath });
-  // format({filePath}).catch(() => {})
-  // one hit to get the file and one for the eslintignore
-  expect(fsMock.readFileSync).toHaveBeenCalledTimes(2);
-  expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath, 'utf8');
+  
+  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
+
 });
 
 test('logs error if it cannot read the file from the filePath', () => {

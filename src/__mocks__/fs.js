@@ -1,4 +1,4 @@
-const fs = require.requireActual('fs');
+const fs = jest.requireActual('fs');
 module.exports = {
   ...fs,
   readFileSync: jest.fn(filename => {
