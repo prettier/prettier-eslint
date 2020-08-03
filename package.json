@@ -21,7 +21,7 @@
     "@typescript-eslint/parser": "^3.0.0",
     "common-tags": "^1.4.0",
     "dlv": "^1.1.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.6.0",
     "indent-string": "^4.0.0",
     "lodash.merge": "^4.6.0",
     "loglevel-colored-level-prefix": "^1.0.0",
