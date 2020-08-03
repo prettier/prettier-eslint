@@ -4,7 +4,6 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
-[![Dependencies][dependencyci-badge]][dependencyci]
 [![version][version-badge]][package] [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][license]
 
@@ -22,7 +21,7 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 The [`fix`][fix] feature of [`eslint`][eslint] is pretty great and can
 auto-format/fix much of your code according to your ESLint config.
 [`prettier`][prettier] is a more powerful automatic formatter. One of the nice
-things about prettier is how opinionated it is. Unfortunately it's not
+things about prettier is how opinionated it is. Unfortunately, it's not
 opinionated enough and/or some opinions differ from my own. So after prettier
 formats the code, I start getting linting errors.
 
@@ -59,18 +58,18 @@ const options = {
   text: sourceCode,
   eslintConfig: {
     parserOptions: {
-      ecmaVersion: 7
+      ecmaVersion: 7,
     },
     rules: {
-      semi: ["error", "never"]
-    }
+      semi: ["error", "never"],
+    },
   },
   prettierOptions: {
-    bracketSpacing: true
+    bracketSpacing: true,
   },
   fallbackPrettierOptions: {
-    singleQuote: false
-  }
+    singleQuote: false,
+  },
 };
 
 const formatted = format(options);
@@ -102,7 +101,7 @@ The options to pass for formatting with `prettier`. If not provided,
 of the options and have the remaining options derived via your eslint config.
 This is useful for options like `parser`.
 
-**NOTE:** these options _override_ the eslint config. If you want fallback
+**NOTE:** these options _override_ the eslint config. If you want the fallback
 options to be used only in the case that the rule cannot be inferred from
 eslint, see "fallbackPrettierOptions" below.
 
@@ -118,7 +117,7 @@ not been manually defined in `prettierOptions`. If the fallback is not given,
 #### logLevel (?Enum: ['trace', 'debug', 'info', 'warn', 'error', 'silent'])
 
 `prettier-eslint` does quite a bit of logging if you want it to. Pass this to
-set the amount of logs you want to see. Default is `process.env.LOG_LEVEL || 'warn'`.
+set the number of logs you want to see. Default is `process.env.LOG_LEVEL || 'warn'`.
 
 #### eslintPath (?String)
 
@@ -255,9 +254,7 @@ solutions.
 - [`prettier-vscode`][vscode-plugin] - Visual Studio Code plugin (set
   `prettier.eslintIntegration: true` in settings)
 - [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) -
-  ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output
-  of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and
-  integrates it with the regular ESLint workflow.
+  ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and integrates it with the regular ESLint workflow.
 - [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) -
   Prettier ESlint Webpack Plugin
 
@@ -308,6 +305,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -326,8 +324,6 @@ MIT
 [build]: https://travis-ci.org/prettier/prettier-eslint
 [coverage-badge]: https://img.shields.io/codecov/c/github/prettier/prettier-eslint.svg?style=flat-square
 [coverage]: https://codecov.io/github/prettier/prettier-eslint
-[dependencyci-badge]: https://dependencyci.com/github/prettier/prettier-eslint/badge?style=flat-square
-[dependencyci]: https://dependencyci.com/github/prettier/prettier-eslint
 [version-badge]: https://img.shields.io/npm/v/prettier-eslint.svg?style=flat-square
 [package]: https://www.npmjs.com/package/prettier-eslint
 [downloads-badge]: https://img.shields.io/npm/dm/prettier-eslint.svg?style=flat-square
