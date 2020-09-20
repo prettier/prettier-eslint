@@ -37,6 +37,8 @@ formatting capabilities, but also benefit from the configuration capabilities of
 
 ## Installation
 
+One quick and important note is that this package ships `eslint` and `prettier` as dependencies instead of relying on them listed as `peerDependencies`. This is intentional, as we have had many interopping issues between different versions of `eslint` and `prettier`. We suggest you refrain from explicitly adding those dependencies to your project. You've been warned!
+
 This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `devDependencies`:
 
