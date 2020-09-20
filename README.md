@@ -302,10 +302,14 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://hamidihamza.com"><img src="https://avatars0.githubusercontent.com/u/22576950?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hamza Hamidi</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=hamzahamidi" title="Code">💻</a> <a href="#ideas-hamzahamidi" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-hamzahamidi" title="Maintenance">🚧</a> <a href="#tool-hamzahamidi" title="Tools">🔧</a> <a href="https://github.com/prettier/prettier-eslint/pulls?q=is%3Apr+reviewed-by%3Ahamzahamidi" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://github.com/iamrajiv"><img src="https://avatars0.githubusercontent.com/u/42106787?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rajiv Ranjan Singh</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=iamrajiv" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/cy6erskunk"><img src="https://avatars3.githubusercontent.com/u/754849?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Igor</b></sub></a><br /><a href="#maintenance-cy6erskunk" title="Maintenance">🚧</a></td>
+  </tr>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

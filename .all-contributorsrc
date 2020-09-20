@@ -292,6 +292,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "cy6erskunk",
+      "name": "Igor",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/754849?v=4",
+      "profile": "https://github.com/cy6erskunk",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "repoType": "github",
