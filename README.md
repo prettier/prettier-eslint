@@ -304,6 +304,7 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/cy6erskunk"><img src="https://avatars3.githubusercontent.com/u/754849?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Igor</b></sub></a><br /><a href="#maintenance-cy6erskunk" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://www.kvetis.com/"><img src="https://avatars1.githubusercontent.com/u/4200436?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Martin Večeřa</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=kvetis" title="Code">💻</a></td>
   </tr>
 </table>
 

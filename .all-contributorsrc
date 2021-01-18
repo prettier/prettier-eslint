@@ -301,6 +301,15 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "kvetis",
+      "name": "Martin Večeřa",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/4200436?v=4",
+      "profile": "http://www.kvetis.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoType": "github",
