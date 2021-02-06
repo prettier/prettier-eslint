@@ -1,5 +1,5 @@
 import path from 'path';
-import { getOptionsForFormatting } from '../utils';
+import { getESLint, getOptionsForFormatting } from '../utils';
 
 const getPrettierOptionsFromESLintRulesTests = [
   {
@@ -312,4 +312,21 @@ test('Turn off unfixable rules', () => {
     globals: {},
     useEslintrc: false
   });
+});
+
+const otherEslintPath = path.join(__dirname, "../__mocks__/other-eslint");
+
+test("Caches eslint cli engine with same path and options", () => {
+  const eslintOptions = {};
+
+  expect(getESLint(eslintPath, eslintOptions)).toBe(getESLint(eslintPath, eslintOptions));
+  expect(getESLint(eslintPath)).toBe(getESLint(eslintPath));
+});
+
+test("Creates new eslint cli engine with different path or options", () => {
+  const eslintOptions = {};
+
+  expect(getESLint(eslintPath, eslintOptions)).not.toBe(getESLint(otherEslintPath, eslintOptions));
+  expect(getESLint(eslintPath)).not.toBe(getESLint(otherEslintPath));
+  expect(getESLint(eslintPath, {})).not.toBe(getESLint(eslintPath, {}));
 });
