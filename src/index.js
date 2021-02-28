@@ -2,8 +2,8 @@
 /* eslint complexity: [1, 13] */
 
 // Add node 8 polyfills, to be removed if we decide to let go node 8 support
-import 'core-js/modules/es.string.trim-start'; // eslint-disable-line 
-import 'core-js/modules/es.string.trim-end'; // eslint-disable-line 
+import 'core-js/modules/es.string.trim-start'; // eslint-disable-line
+import 'core-js/modules/es.string.trim-end'; // eslint-disable-line
 
 import fs from 'fs';
 import path from 'path';
@@ -16,13 +16,46 @@ import merge from 'lodash.merge';
 import {
   getESLintCLIEngine,
   getOptionsForFormatting,
-  requireModule
+  requireModule,
 } from './utils';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
 // CommonJS + ES6 modules... is it worth it? Probably not...
 module.exports = format;
+
+/**
+ * @description Allows for a dynamic adjustment of a file's parsing mechanism.
+ * @param {String} fileExtension
+ * @param {String} initialParser
+ */
+function chooseParser(fileExtension, initialParser) {
+  if (['.ts', '.tsx'].includes(fileExtension)) {
+    const parser = '@typescript-eslint/parser';
+
+    try {
+      return require.resolve(parser);
+    } catch (error) {
+      throw new Error(
+        `When using TypeScript, you must also install \`${parser}\` to "devDependencies".`
+      );
+    }
+  }
+
+  if (['.ts', '.tsx'].includes(fileExtension)) {
+    const parser = 'vue-eslint-parser';
+
+    try {
+      return require.resolve(parser);
+    } catch (error) {
+      throw new Error(
+        `When using Vue, you must also install \`${parser}\` to "devDependencies".`
+      );
+    }
+  }
+
+  return initialParser;
+}
 
 /**
  * Formats the text with prettier and then eslint based on the given options
@@ -59,7 +92,7 @@ function format(options) {
     eslintPath = getModulePath(filePath, 'eslint'),
     prettierPath = getModulePath(filePath, 'prettier'),
     prettierLast,
-    fallbackPrettierOptions
+    fallbackPrettierOptions,
   } = options;
 
   const eslintConfig = merge(
@@ -98,7 +131,7 @@ function format(options) {
       eslintConfig: formattingOptions.eslint,
       prettierOptions: formattingOptions.prettier,
       logLevel,
-      prettierLast
+      prettierLast,
     })
   );
 
@@ -108,8 +141,9 @@ function format(options) {
     '.ts',
     '.tsx',
     '.mjs',
-    '.vue'
+    '.vue',
   ];
+
   const fileExtension = path.extname(filePath || '');
 
   // If we don't get filePath run eslint on text, otherwise only run eslint
@@ -124,16 +158,10 @@ function format(options) {
     return prettify(text);
   }
 
-  if (['.ts', '.tsx'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser ||
-      require.resolve('@typescript-eslint/parser');
-  }
-
-  if (['.vue'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser || require.resolve('vue-eslint-parser');
-  }
+  formattingOptions.eslint.parser = chooseParser(
+    fileExtension,
+    formattingOptions.eslint.parser
+  );
 
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);
 
@@ -247,7 +275,7 @@ function getESLintConfig(filePath, eslintPath) {
     );
     return {
       ...eslintOptions,
-      ...config
+      ...config,
     };
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
