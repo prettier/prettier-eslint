@@ -61,6 +61,17 @@
     "typescript": ">=3.0.0",
     "vue-eslint-parser": "^7.0.0"
   },
+  "peerDependenciesMeta": {
+    "@typescript-eslint/parser": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    },
+    "vue-eslint-parser": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=10.0.0"
   },
