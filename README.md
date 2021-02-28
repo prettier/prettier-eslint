@@ -49,8 +49,19 @@ This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `devDependencies`:
 
 ```
-npm install --save-dev prettier-eslint
+npm install --save-dev prettier-eslint prettier eslint
 ```
+
+```
+yarn add -D prettier-eslint prettier eslint
+```
+
+Our parsing-related dependencies are listed as "peer dependencies" meaning you must have them installed in your project
+as well.
+
+If you use TypeScript, you should install `typescript` and `@typescript-eslint/parser` to "devDependencies".
+
+If you use Vue, you should install `vue-eslint-parser` to "devDependencies".
 
 ## Usage
 
