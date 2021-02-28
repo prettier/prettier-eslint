@@ -1,6 +1,7 @@
 # prettier-eslint
 
-Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`][eslint]
+Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`][eslint], giving ESLint the final say
+over any formatting.
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
@@ -15,6 +16,13 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
+
+## Summary
+
+We recommend (and Prettier [officially recommends](official-recommendation)) that you leverage
+[`eslint-config-prettier`](eslint-config-prettier) to simply disable lint rules which conflict with prettier's main
+job: formatting; however, you may want more control over the formatting of your code via ESLint formatting rules. This
+library aims to give you that control.
 
 ## The problem
 
@@ -49,10 +57,10 @@ npm install --save-dev prettier-eslint
 ### Example
 
 ```javascript
-const format = require("prettier-eslint");
+const format = require('prettier-eslint');
 
 // notice, no semicolon in the original text
-const sourceCode = "const {foo} = bar";
+const sourceCode = 'const {foo} = bar';
 
 const options = {
   text: sourceCode,
@@ -61,7 +69,7 @@ const options = {
       ecmaVersion: 7,
     },
     rules: {
-      semi: ["error", "never"],
+      semi: ['error', 'never'],
     },
   },
   prettierOptions: {
@@ -319,39 +327,41 @@ Contributions of any kind welcome!
 
 MIT
 
-[prettier]: https://github.com/jlongster/prettier
-[eslint]: http://eslint.org/
-[fix]: http://eslint.org/docs/user-guide/command-line-interface#fix
-[npm]: https://www.npmjs.com/
-[node]: https://nodejs.org
+[all-contributors]: https://github.com/kentcdodds/all-contributors
+[atom-dev-tools]: https://discuss.atom.io/t/how-to-make-developer-tools-appear/16232
+[atom-plugin]: https://github.com/prettier/prettier-atom
 [build-badge]: https://img.shields.io/travis/prettier/prettier-eslint.svg?style=flat-square
 [build]: https://travis-ci.org/prettier/prettier-eslint
-[coverage-badge]: https://img.shields.io/codecov/c/github/prettier/prettier-eslint.svg?style=flat-square
-[coverage]: https://codecov.io/github/prettier/prettier-eslint
-[version-badge]: https://img.shields.io/npm/v/prettier-eslint.svg?style=flat-square
-[package]: https://www.npmjs.com/package/prettier-eslint
-[downloads-badge]: https://img.shields.io/npm/dm/prettier-eslint.svg?style=flat-square
-[npm-stat]: http://npm-stat.com/charts.html?package=prettier-eslint&from=2016-04-01
-[license-badge]: https://img.shields.io/npm/l/prettier-eslint.svg?style=flat-square
-[license]: https://github.com/prettier/prettier-eslint/blob/master/other/LICENSE
-[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
-[prs]: http://makeapullrequest.com
-[donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
-[donate]: https://www.paypal.me/zimme
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 [coc]: https://github.com/prettier/prettier-eslint/blob/master/other/CODE_OF_CONDUCT.md
-[roadmap-badge]: https://img.shields.io/badge/%F0%9F%93%94-roadmap-CD9523.svg?style=flat-square
-[roadmap]: https://github.com/prettier/prettier-eslint/blob/master/other/ROADMAP.md
+[coverage-badge]: https://img.shields.io/codecov/c/github/prettier/prettier-eslint.svg?style=flat-square
+[coverage]: https://codecov.io/github/prettier/prettier-eslint
+[donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
+[donate]: https://www.paypal.me/zimme
+[downloads-badge]: https://img.shields.io/npm/dm/prettier-eslint.svg?style=flat-square
+[emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
+[eslint-config-prettier]: https://github.com/prettier/eslint-config-prettier
+[eslint]: http://eslint.org/
 [examples-badge]: https://img.shields.io/badge/%F0%9F%92%A1-examples-8C8E93.svg?style=flat-square
 [examples]: https://github.com/prettier/prettier-eslint/blob/master/other/EXAMPLES.md
-[github-watch-badge]: https://img.shields.io/github/watchers/prettier/prettier-eslint.svg?style=social
-[github-watch]: https://github.com/prettier/prettier-eslint/watchers
+[fix]: http://eslint.org/docs/user-guide/command-line-interface#fix
 [github-star-badge]: https://img.shields.io/github/stars/prettier/prettier-eslint.svg?style=social
 [github-star]: https://github.com/prettier/prettier-eslint/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20prettier-eslint!%20https://github.com/prettier/prettier-eslint%20%F0%9F%91%8D
+[github-watch-badge]: https://img.shields.io/github/watchers/prettier/prettier-eslint.svg?style=social
+[github-watch]: https://github.com/prettier/prettier-eslint/watchers
+[license-badge]: https://img.shields.io/npm/l/prettier-eslint.svg?style=flat-square
+[license]: https://github.com/prettier/prettier-eslint/blob/master/other/LICENSE
+[node]: https://nodejs.org
+[npm-stat]: http://npm-stat.com/charts.html?package=prettier-eslint&from=2016-04-01
+[npm]: https://www.npmjs.com/
+[official-recommendation]: https://prettier.io/docs/en/integrating-with-linters.html
+[package]: https://www.npmjs.com/package/prettier-eslint
+[prettier]: https://github.com/prettier/prettier
+[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+[prs]: http://makeapullrequest.com
+[roadmap-badge]: https://img.shields.io/badge/%F0%9F%93%94-roadmap-CD9523.svg?style=flat-square
+[roadmap]: https://github.com/prettier/prettier-eslint/blob/master/other/ROADMAP.md
 [twitter-badge]: https://img.shields.io/twitter/url/https/github.com/prettier/prettier-eslint.svg?style=social
-[emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
-[all-contributors]: https://github.com/kentcdodds/all-contributors
-[atom-plugin]: https://github.com/prettier/prettier-atom
-[atom-dev-tools]: https://discuss.atom.io/t/how-to-make-developer-tools-appear/16232
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20prettier-eslint!%20https://github.com/prettier/prettier-eslint%20%F0%9F%91%8D
+[version-badge]: https://img.shields.io/npm/v/prettier-eslint.svg?style=flat-square
 [vscode-plugin]: https://github.com/esbenp/prettier-vscode
