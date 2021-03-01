@@ -30,6 +30,8 @@ module.exports = format;
  * @param {String} initialParser
  */
 function chooseParser(fileExtension, initialParser) {
+  if (initialParser) return initialParser;
+
   if (['.ts', '.tsx'].includes(fileExtension)) {
     const parser = '@typescript-eslint/parser';
 
@@ -54,7 +56,7 @@ function chooseParser(fileExtension, initialParser) {
     }
   }
 
-  return initialParser;
+  return undefined;
 }
 
 /**
