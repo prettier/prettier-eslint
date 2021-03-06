@@ -2,8 +2,8 @@
 /* eslint complexity: [1, 13] */
 
 // Add node 8 polyfills, to be removed if we decide to let go node 8 support
-import 'core-js/modules/es.string.trim-start'; // eslint-disable-line
-import 'core-js/modules/es.string.trim-end'; // eslint-disable-line
+import 'core-js/modules/es.string.trim-start'; // eslint-disable-line import/no-extraneous-dependencies
+import 'core-js/modules/es.string.trim-end'; // eslint-disable-line import/no-extraneous-dependencies
 
 import fs from 'fs';
 import path from 'path';
@@ -44,7 +44,7 @@ function chooseParser(fileExtension, initialParser) {
     }
   }
 
-  if (['.ts', '.tsx'].includes(fileExtension)) {
+  if (['.vue'].includes(fileExtension)) {
     const parser = 'vue-eslint-parser';
 
     try {
