@@ -18,8 +18,14 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
 
-    - run: npm i
+    - name: Install dependencies
+      run: npm i
 
-    - run: npm start validate
+    - name: Lint, test, and build
+      run: npm start validate
 
-    - run: npx codecov
+    - name: Check test coverage
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+
