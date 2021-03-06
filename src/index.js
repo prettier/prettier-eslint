@@ -56,7 +56,7 @@ function chooseParser(fileExtension, initialParser) {
     }
   }
 
-  return undefined;
+  return initialParser;
 }
 
 /**
