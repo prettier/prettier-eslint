@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint no-console:0, import/default:0 */
 import path from 'path';
 import fsMock from 'fs';
@@ -20,6 +21,17 @@ const tests = [
     input: {
       text: defaultInputText(),
       eslintConfig: getESLintConfigWithDefaultRules(),
+    },
+    output: defaultOutput(),
+  },
+  {
+    title: 'explicitly defined parser',
+    input: {
+      text: defaultInputText(),
+      eslintConfig: {
+        ...getESLintConfigWithDefaultRules(),
+        parser: 'esprima',
+      },
     },
     output: defaultOutput(),
   },
