@@ -33,6 +33,7 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "@typescript-eslint/parser": "^4.0.0",
+    "@types/jest": "^25",
     "acorn": "^6.1.1",
     "ajv": "^6.12.2",
     "all-contributors-cli": "^6.7.0",
