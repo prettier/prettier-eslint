@@ -7,21 +7,50 @@ import prettierMock from 'prettier';
 import loglevelMock from 'loglevel-colored-level-prefix';
 import format from '../';
 
+const originalRequireResolve = require.resolve;
+
 jest.mock('fs');
 
 const {
-  mock: { logger }
+  mock: { logger },
 } = loglevelMock;
 // loglevelMock.mock.logThings = ['debug']
+
+const typescriptExampleInput = {
+  text: 'function Foo (this: void) { return this; }',
+  filePath: path.resolve('./test.ts'),
+};
+
+const vueExampleInput = {
+  eslintConfig: {
+    rules: {
+      'space-before-function-paren': [2, 'always'],
+    },
+  },
+  text:
+    '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
+  filePath: path.resolve('./test.vue'),
+};
 
 const tests = [
   {
     title: 'sanity test',
     input: {
       text: defaultInputText(),
-      eslintConfig: getESLintConfigWithDefaultRules()
+      eslintConfig: getESLintConfigWithDefaultRules(),
     },
-    output: defaultOutput()
+    output: defaultOutput(),
+  },
+  {
+    title: 'explicitly defined parser',
+    input: {
+      text: defaultInputText(),
+      eslintConfig: {
+        ...getESLintConfigWithDefaultRules(),
+        parser: 'esprima',
+      },
+    },
+    output: defaultOutput(),
   },
   {
     title: 'README example',
@@ -29,11 +58,11 @@ const tests = [
       text: 'const {foo} = bar',
       eslintConfig: {
         parserOptions: { ecmaVersion: 7 },
-        rules: { semi: ['error', 'never'] }
+        rules: { semi: ['error', 'never'] },
       },
-      prettierOptions: { bracketSpacing: true }
+      prettierOptions: { bracketSpacing: true },
     },
-    output: 'const { foo } = bar'
+    output: 'const { foo } = bar',
   },
   {
     // this one's actually hard to test now. This test doesn't
@@ -46,17 +75,17 @@ const tests = [
     input: {
       text: defaultInputText(),
       filePath: path.resolve('./mock/default-config.js'),
-      prettierLast: true
+      prettierLast: true,
     },
-    output: prettierLastOutput()
+    output: prettierLastOutput(),
   },
   {
     title: 'with a filePath and no config',
     input: {
       text: defaultInputText(),
-      filePath: path.resolve('./mock/default-config.js')
+      filePath: path.resolve('./mock/default-config.js'),
     },
-    output: defaultOutput()
+    output: defaultOutput(),
   },
   {
     title: 'with a default config and overrides',
@@ -66,18 +95,18 @@ const tests = [
         foo: true,
         // Won't be overridden
         parserOptions: {
-          ecmaVersion: 7
+          ecmaVersion: 7,
         },
         rules: {
           // Will be overridden
           semi: ['error', 'always'],
           // Won't be overridden
-          'object-curly-spacing': ['error', 'never']
-        }
+          'object-curly-spacing': ['error', 'never'],
+        },
       },
-      filePath: path.resolve('./mock/default-config.js')
+      filePath: path.resolve('./mock/default-config.js'),
     },
-    output: 'const {foo} = bar'
+    output: 'const {foo} = bar',
   },
   {
     title: 'with an empty config and fallbacks',
@@ -85,22 +114,22 @@ const tests = [
       text: 'const { foo } = bar;',
       eslintConfig: {},
       filePath: path.resolve('./mock/default-config.js'),
-      fallbackPrettierOptions: { bracketSpacing: false }
+      fallbackPrettierOptions: { bracketSpacing: false },
     },
-    output: 'const {foo} = bar'
+    output: 'const {foo} = bar',
   },
   {
     title: 'without a filePath and no config',
     input: { text: defaultInputText() },
-    output: noopOutput()
+    output: noopOutput(),
   },
   {
     title: 'inferring bracketSpacing',
     input: {
       text: 'var foo = {bar: baz};',
-      eslintConfig: { rules: { 'object-curly-spacing': ['error', 'always'] } }
+      eslintConfig: { rules: { 'object-curly-spacing': ['error', 'always'] } },
     },
-    output: 'var foo = { bar: baz };'
+    output: 'var foo = { bar: baz };',
   },
   {
     title: 'inferring bracketSpacing with eslint object-curly-spacing options',
@@ -111,12 +140,12 @@ const tests = [
           'object-curly-spacing': [
             'error',
             'always',
-            { objectsInObjects: false, arraysInObjects: false }
-          ]
-        }
-      }
+            { objectsInObjects: false, arraysInObjects: false },
+          ],
+        },
+      },
     },
-    output: 'var foo = { bar: { baz: qux }};\nvar fop = { bar: [1, 2, 3]};'
+    output: 'var foo = { bar: { baz: qux }};\nvar fop = { bar: [1, 2, 3]};',
   },
   {
     title: 'with a filePath-aware config',
@@ -124,11 +153,11 @@ const tests = [
       text: 'var x = 0;',
       eslintConfig: {
         rules: { 'no-var': 'error' },
-        ignorePattern: 'should-be-ignored'
+        ignorePattern: 'should-be-ignored',
       },
-      filePath: path.resolve('should-be-ignored.js')
+      filePath: path.resolve('should-be-ignored.js'),
     },
-    output: 'var x = 0;'
+    output: 'var x = 0;',
   },
   // if you have a bug report or something,
   // go ahead and add a test case here
@@ -136,80 +165,68 @@ const tests = [
     title: 'with code that needs no fixing',
     input: {
       text: 'var [foo, { bar }] = window.APP;',
-      eslintConfig: { rules: {} }
+      eslintConfig: { rules: {} },
     },
-    output: 'var [foo, { bar }] = window.APP;'
+    output: 'var [foo, { bar }] = window.APP;',
   },
   {
     title: 'CSS example',
     input: {
       text: '.stop{color:red};',
-      filePath: path.resolve('./test.css')
+      filePath: path.resolve('./test.css'),
     },
-    output: '.stop {\n  color: red;\n}'
+    output: '.stop {\n  color: red;\n}',
   },
   {
     title: 'LESS example',
     input: {
       text: '.stop{color:red};',
-      filePath: path.resolve('./test.less')
+      filePath: path.resolve('./test.less'),
     },
-    output: '.stop {\n  color: red;\n}'
+    output: '.stop {\n  color: red;\n}',
   },
   {
     title: 'SCSS example',
     input: {
       text: '.stop{color:red};',
-      filePath: path.resolve('./test.scss')
+      filePath: path.resolve('./test.scss'),
     },
-    output: '.stop {\n  color: red;\n}'
+    output: '.stop {\n  color: red;\n}',
   },
   {
     title: 'TypeScript example',
-    input: {
-      text: 'function Foo (this: void) { return this; }',
-      filePath: path.resolve('./test.ts')
-    },
-    output: 'function Foo(this: void) {\n  return this;\n}'
+    input: typescriptExampleInput,
+    output: 'function Foo(this: void) {\n  return this;\n}',
   },
   {
     title: 'Vue.js example',
-    input: {
-      eslintConfig: {
-        rules: {
-          'space-before-function-paren': [2, 'always']
-        }
-      },
-      text:
-        '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
-      filePath: path.resolve('./test.vue')
-    },
+    input: vueExampleInput,
     output:
-      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>'
+      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>',
   },
   {
     title: 'GraphQL example',
     input: {
       text: 'type Query{test: Test}',
-      filePath: path.resolve('./test.gql')
+      filePath: path.resolve('./test.gql'),
     },
-    output: 'type Query {\n  test: Test\n}'
+    output: 'type Query {\n  test: Test\n}',
   },
   {
     title: 'JSON example',
     input: {
       text: '{  "foo": "bar"}',
-      filePath: path.resolve('./test.json')
+      filePath: path.resolve('./test.json'),
     },
-    output: '{ "foo": "bar" }'
+    output: '{ "foo": "bar" }',
   },
   {
     title: 'Markdown example',
     input: {
       text: '#   Foo\n _bar_',
-      filePath: path.resolve('./test.md')
+      filePath: path.resolve('./test.md'),
     },
-    output: '# Foo\n\n_bar_'
+    output: '# Foo\n\n_bar_',
   },
   {
     title: 'Test eslintConfig.globals as an object',
@@ -217,12 +234,12 @@ const tests = [
       text: 'var foo = {  "bar": "baz"}',
       eslintConfig: {
         globals: {
-          someGlobal: true
-        }
-      }
+          someGlobal: true,
+        },
+      },
     },
-    output: 'var foo = { bar: "baz" };'
-  }
+    output: 'var foo = { bar: "baz" };',
+  },
 ];
 
 beforeEach(() => {
@@ -259,6 +276,30 @@ test('failure to fix with eslint throws and logs an error', () => {
   expect(logger.error).toHaveBeenCalledTimes(1);
   executeOnText.throwError = null;
 });
+
+// test.todo('error when required parser unresolved [typescript]', () => {
+//   const parser = '@typescript-eslint/parser';
+//   // https://github.com/facebook/jest/issues/9543#issue-562207754
+//   jest.mock('@typescript-eslint/parser', () => {}, { virtual: true });
+//   expect(() => format(typescriptExampleInput)).toThrow();
+
+//   const errorMessage = `When using TypeScript, you must also install \`${parser}\` to "devDependencies".`;
+//   expect(logger.error).toHaveBeenCalledTimes(1);
+//   expect(logger.error).toHaveBeenCalledWith(errorMessage);
+//   require.resolve = originalRequireResolve;
+// });
+
+// test.todo('error when required parser unresolved [vue]', () => {
+//   const parser = 'vue-eslint-parser';
+//   // https://github.com/facebook/jest/issues/9543#issue-562207754
+//   jest.mock('vue-eslint-parser', () => {}, { virtual: true });
+//   expect(() => format(vueExampleInput)).toThrow();
+
+//   const errorMessage = `When using TypeScript, you must also install \`${parser}\` to "devDependencies".`;
+//   expect(logger.error).toHaveBeenCalledTimes(1);
+//   expect(logger.error).toHaveBeenCalledWith(errorMessage);
+//   require.resolve = originalRequireResolve;
+// });
 
 test('logLevel is used to configure the logger', () => {
   logger.setLevel = jest.fn();
@@ -331,7 +372,7 @@ test('resolves to the eslint module relative to the given filePath', () => {
     ),
     prettierPath: require.resolve(
       '../../tests/fixtures/paths/node_modules/prettier/index.js'
-    )
+    ),
   };
   expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj);
 });
@@ -344,7 +385,7 @@ test('resolves to the local eslint module', () => {
     // project modules :) The fact that jest's mocking is being
     // applied is good enough for this test.
     eslintPath: require.resolve('../__mocks__/eslint'),
-    prettierPath: require.resolve('../__mocks__/prettier')
+    prettierPath: require.resolve('../__mocks__/prettier'),
   });
 });
 
@@ -353,9 +394,8 @@ test('reads text from fs if filePath is provided but not text', () => {
 
   const filePath = '/blah-blah/some-file.js';
   format({ filePath });
-  
-  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 
+  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 });
 
 test('logs error if it cannot read the file from the filePath', () => {
@@ -375,7 +415,7 @@ test('calls prettier.resolveConfig.sync with the file path', () => {
   format({
     filePath,
     text: defaultInputText(),
-    eslintConfig: getESLintConfigWithDefaultRules()
+    eslintConfig: getESLintConfigWithDefaultRules(),
   });
   expect(prettierMock.resolveConfig.sync).toHaveBeenCalledTimes(1);
   expect(prettierMock.resolveConfig.sync).toHaveBeenCalledWith(filePath);
@@ -390,7 +430,7 @@ test('does not raise an error if prettier.resolveConfig.sync is not defined', ()
     return format({
       filePath,
       text: defaultInputText(),
-      eslintConfig: getESLintConfigWithDefaultRules()
+      eslintConfig: getESLintConfigWithDefaultRules(),
     });
   }
 
@@ -408,7 +448,7 @@ test('does not raise an error if prettier.resolveConfig is not defined', () => {
     return format({
       filePath,
       text: defaultInputText(),
-      eslintConfig: getESLintConfigWithDefaultRules()
+      eslintConfig: getESLintConfigWithDefaultRules(),
     });
   }
 
@@ -442,12 +482,12 @@ function getESLintConfigWithDefaultRules(overrides) {
           objects: 'always-multiline',
           imports: 'always-multiline',
           exports: 'always-multiline',
-          functions: 'always-multiline'
-        }
+          functions: 'always-multiline',
+        },
       ],
       'arrow-parens': [2, 'as-needed'],
-      ...overrides
-    }
+      ...overrides,
+    },
   };
 }
 
