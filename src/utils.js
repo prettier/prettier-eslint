@@ -1,7 +1,10 @@
 /* eslint import/no-dynamic-require:0 */
+import fs from 'fs';
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
 import getLogger from 'loglevel-colored-level-prefix';
+import requireRelative from 'require-relative';
+
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 const RULE_DISABLED = {};
@@ -57,7 +60,7 @@ const OPTION_GETTERS = {
 };
 
 /* eslint import/prefer-default-export:0 */
-export { getESLintCLIEngine, getOptionsForFormatting, requireModule };
+export { getESLintCLIEngine, getOptionsForFormatting, requireModule , getTextFromFilePath, getModulePath};
 
 function getOptionsForFormatting(
   eslintConfig,
@@ -424,5 +427,42 @@ function getESLintCLIEngine(eslintPath, eslintOptions) {
   } catch (error) {
     logger.error(`There was trouble creating the ESLint CLIEngine.`);
     throw error;
+  }
+}
+
+
+function getTextFromFilePath(filePath) {
+  try {
+    logger.trace(
+      oneLine`
+        attempting fs.readFileSync to get
+        the text for file at "${filePath}"
+      `
+    );
+    return fs.readFileSync(filePath, 'utf8');
+  } catch (error) {
+    logger.error(
+      oneLine`
+        failed to get the text to format
+        from the given filePath: "${filePath}"
+      `
+    );
+    throw error;
+  }
+}
+
+function getModulePath(filePath = __filename, moduleName) {
+  try {
+    return requireRelative.resolve(moduleName, filePath);
+  } catch (error) {
+    logger.debug(
+      oneLine`
+        There was a problem finding the ${moduleName}
+        module. Using prettier-eslint's version.
+      `,
+      error.message,
+      error.stack
+    );
+    return require.resolve(moduleName);
   }
 }

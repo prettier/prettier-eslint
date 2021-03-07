@@ -7,7 +7,6 @@ import 'core-js/modules/es.string.trim-end'; // eslint-disable-line
 
 import fs from 'fs';
 import path from 'path';
-import requireRelative from 'require-relative';
 import prettyFormat from 'pretty-format';
 import { oneLine, stripIndent } from 'common-tags';
 import indentString from 'indent-string';
@@ -16,7 +15,9 @@ import merge from 'lodash.merge';
 import {
   getESLintCLIEngine,
   getOptionsForFormatting,
-  requireModule
+  requireModule,
+  getTextFromFilePath,
+  getModulePath
 } from './utils';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
@@ -61,7 +62,7 @@ function format(options) {
     prettierLast,
     fallbackPrettierOptions
   } = options;
-
+  
   const eslintConfig = merge(
     {},
     options.eslintConfig,
@@ -206,25 +207,7 @@ function createEslintFix(eslintConfig, eslintPath) {
   };
 }
 
-function getTextFromFilePath(filePath) {
-  try {
-    logger.trace(
-      oneLine`
-        attempting fs.readFileSync to get
-        the text for file at "${filePath}"
-      `
-    );
-    return fs.readFileSync(filePath, 'utf8');
-  } catch (error) {
-    logger.error(
-      oneLine`
-        failed to get the text to format
-        from the given filePath: "${filePath}"
-      `
-    );
-    throw error;
-  }
-}
+
 
 function getESLintConfig(filePath, eslintPath) {
   const eslintOptions = {};
@@ -266,21 +249,6 @@ function getPrettierConfig(filePath, prettierPath) {
   );
 }
 
-function getModulePath(filePath = __filename, moduleName) {
-  try {
-    return requireRelative.resolve(moduleName, filePath);
-  } catch (error) {
-    logger.debug(
-      oneLine`
-        There was a problem finding the ${moduleName}
-        module. Using prettier-eslint's version.
-      `,
-      error.message,
-      error.stack
-    );
-    return require.resolve(moduleName);
-  }
-}
 
 function getDefaultLogLevel() {
   return process.env.LOG_LEVEL || 'warn';
