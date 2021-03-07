@@ -261,7 +261,7 @@ function getPrettierConfig(filePath, prettierPath) {
   return (
     (prettier.resolveConfig &&
       prettier.resolveConfig.sync &&
-      prettier.resolveConfig.sync(filePath)) ||
+      prettier.resolveConfig.sync(filePath, { editorconfig: true })) ||
     {}
   );
 }

@@ -353,7 +353,7 @@ test('reads text from fs if filePath is provided but not text', () => {
 
   const filePath = '/blah-blah/some-file.js';
   format({ filePath });
-  
+
   expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 
 });
@@ -370,7 +370,7 @@ test('logs error if it cannot read the file from the filePath', () => {
   fsMock.readFileSync = originalMock;
 });
 
-test('calls prettier.resolveConfig.sync with the file path', () => {
+test('calls prettier.resolveConfig.sync with the file path and editorconfig', () => {
   const filePath = require.resolve('../../tests/fixtures/paths/foo.js');
   format({
     filePath,
@@ -378,7 +378,10 @@ test('calls prettier.resolveConfig.sync with the file path', () => {
     eslintConfig: getESLintConfigWithDefaultRules()
   });
   expect(prettierMock.resolveConfig.sync).toHaveBeenCalledTimes(1);
-  expect(prettierMock.resolveConfig.sync).toHaveBeenCalledWith(filePath);
+  expect(prettierMock.resolveConfig.sync).toHaveBeenCalledWith(
+    filePath,
+    { editorconfig: true },
+  );
 });
 
 test('does not raise an error if prettier.resolveConfig.sync is not defined', () => {
