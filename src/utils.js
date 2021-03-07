@@ -417,10 +417,24 @@ function requireModule(modulePath, name) {
   }
 }
 
+let cachedEslint = {};
+
 function getESLintCLIEngine(eslintPath, eslintOptions) {
-  const { CLIEngine } = requireModule(eslintPath, 'eslint');
+  if (
+    cachedEslint.cliEngine &&
+    cachedEslint.eslintPath === eslintPath &&
+    cachedEslint.eslintOptions === eslintOptions
+  ) {
+    return cachedEslint.cliEngine;
+  }
+
+  const { CLIEngine } = requireModule(eslintPath, "eslint");
   try {
-    return new CLIEngine(eslintOptions);
+    const cliEngine = new CLIEngine(eslintOptions);
+
+    cachedEslint = { eslintPath, cliEngine, eslintOptions };
+
+    return cliEngine;
   } catch (error) {
     logger.error(`There was trouble creating the ESLint CLIEngine.`);
     throw error;

@@ -301,6 +301,16 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "taye",
+      "name": "taye",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1679746?v=4",
+      "profile": "https://taye.me",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "repoType": "github",

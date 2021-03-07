@@ -304,6 +304,7 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/cy6erskunk"><img src="https://avatars3.githubusercontent.com/u/754849?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Igor</b></sub></a><br /><a href="#maintenance-cy6erskunk" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://mastodon.social/@taye"><img src="https://avatars.githubusercontent.com/u/1679746?v=4?s=100" width="100px;" alt=""/><br /><sub><b>taye</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=taye" title="Code">💻</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=taye" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
