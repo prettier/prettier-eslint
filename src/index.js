@@ -35,24 +35,28 @@ function chooseParser(fileExtension, initialParser) {
   if (['.ts', '.tsx'].includes(fileExtension)) {
     const parser = '@typescript-eslint/parser';
 
+    console.log('hello from', parser);
     try {
       return require.resolve(parser);
     } catch (error) {
-      throw new Error(
+      logger.error(
         `When using TypeScript, you must also install \`${parser}\` to "devDependencies".`
       );
+      throw error;
     }
   }
 
   if (['.vue'].includes(fileExtension)) {
     const parser = 'vue-eslint-parser';
 
+    console.log('hello from', parser);
     try {
       return require.resolve(parser);
     } catch (error) {
-      throw new Error(
+      logger.error(
         `When using Vue, you must also install \`${parser}\` to "devDependencies".`
       );
+      throw error;
     }
   }
 

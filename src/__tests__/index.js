@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint no-console:0, import/default:0 */
 import path from 'path';
 import fsMock from 'fs';
@@ -8,12 +7,30 @@ import prettierMock from 'prettier';
 import loglevelMock from 'loglevel-colored-level-prefix';
 import format from '../';
 
+const originalRequireResolve = require.resolve;
+
 jest.mock('fs');
 
 const {
   mock: { logger },
 } = loglevelMock;
 // loglevelMock.mock.logThings = ['debug']
+
+const typescriptExampleInput = {
+  text: 'function Foo (this: void) { return this; }',
+  filePath: path.resolve('./test.ts'),
+};
+
+const vueExampleInput = {
+  eslintConfig: {
+    rules: {
+      'space-before-function-paren': [2, 'always'],
+    },
+  },
+  text:
+    '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
+  filePath: path.resolve('./test.vue'),
+};
 
 const tests = [
   {
@@ -178,24 +195,12 @@ const tests = [
   },
   {
     title: 'TypeScript example',
-    input: {
-      text: 'function Foo (this: void) { return this; }',
-      filePath: path.resolve('./test.ts'),
-    },
+    input: typescriptExampleInput,
     output: 'function Foo(this: void) {\n  return this;\n}',
   },
   {
     title: 'Vue.js example',
-    input: {
-      eslintConfig: {
-        rules: {
-          'space-before-function-paren': [2, 'always'],
-        },
-      },
-      text:
-        '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
-      filePath: path.resolve('./test.vue'),
-    },
+    input: vueExampleInput,
     output:
       '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>',
   },
@@ -271,6 +276,30 @@ test('failure to fix with eslint throws and logs an error', () => {
   expect(logger.error).toHaveBeenCalledTimes(1);
   executeOnText.throwError = null;
 });
+
+// test.todo('error when required parser unresolved [typescript]', () => {
+//   const parser = '@typescript-eslint/parser';
+//   // https://github.com/facebook/jest/issues/9543#issue-562207754
+//   jest.mock('@typescript-eslint/parser', () => {}, { virtual: true });
+//   expect(() => format(typescriptExampleInput)).toThrow();
+
+//   const errorMessage = `When using TypeScript, you must also install \`${parser}\` to "devDependencies".`;
+//   expect(logger.error).toHaveBeenCalledTimes(1);
+//   expect(logger.error).toHaveBeenCalledWith(errorMessage);
+//   require.resolve = originalRequireResolve;
+// });
+
+// test.todo('error when required parser unresolved [vue]', () => {
+//   const parser = 'vue-eslint-parser';
+//   // https://github.com/facebook/jest/issues/9543#issue-562207754
+//   jest.mock('vue-eslint-parser', () => {}, { virtual: true });
+//   expect(() => format(vueExampleInput)).toThrow();
+
+//   const errorMessage = `When using TypeScript, you must also install \`${parser}\` to "devDependencies".`;
+//   expect(logger.error).toHaveBeenCalledTimes(1);
+//   expect(logger.error).toHaveBeenCalledWith(errorMessage);
+//   require.resolve = originalRequireResolve;
+// });
 
 test('logLevel is used to configure the logger', () => {
   logger.setLevel = jest.fn();
