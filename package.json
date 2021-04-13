@@ -40,7 +40,7 @@
     "all-contributors-cli": "^6.7.0",
     "babel-jest": "^25.0.0",
     "chalk": "^2.1.0",
-    "eslint-config-kentcdodds": "~16.0.1",
+    "eslint-config-kentcdodds": "~18.0.0",
     "husky": "^2.4.1",
     "jest": "^25.0.0",
     "jest-cli": "^25.0.0",
