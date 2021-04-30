@@ -4,10 +4,8 @@ const config = {
       '@babel/env',
       {
         targets: {
-          node: '8'
-        },
-        useBuiltIns: 'usage',
-        corejs: 3
+          node: '10'
+        }
       }
     ]
   ]
