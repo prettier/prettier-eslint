@@ -143,7 +143,7 @@ const tests = [
     title: 'accepts config globals as array',
     input: {
       text: defaultInputText(),
-      eslintConfig: { globals: ['window:writable']}
+      eslintConfig: { globals: ['window:writable'] }
     },
     output: noopOutput()
   },
@@ -187,8 +187,7 @@ const tests = [
           'space-before-function-paren': [2, 'always']
         }
       },
-      text:
-        '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
+      text: '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
       filePath: path.resolve('./test.vue')
     },
     output:
@@ -274,7 +273,7 @@ test('logLevel is used to configure the logger', async () => {
   expect(logger.setLevel).toHaveBeenCalledWith('silent');
 });
 
-test(`when prettier throws, log to logger.error and throw the error`, async () => {
+test('when prettier throws, log to logger.error and throw the error', async () => {
   const error = new Error('something bad happened');
   prettierMock.format.throwError = error;
 
@@ -309,8 +308,8 @@ test('fails with an error if the eslint module cannot be resolved.', async () =>
 
 test('can accept a path to a prettier module and uses that instead.', async () => {
   const prettierPath = path.join(__dirname, '../__mocks__/prettier');
-  await format({ text: '', prettierPath});
-  
+  await format({ text: '', prettierPath });
+
   expect(prettierMock.format).toHaveBeenCalledTimes(1);
 });
 
@@ -361,9 +360,8 @@ test('reads text from fs if filePath is provided but not text', async () => {
 
   const filePath = '/blah-blah/some-file.js';
   await format({ filePath });
-  
-  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 
+  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 });
 
 test('logs error if it cannot read the file from the filePath', async () => {
@@ -371,9 +369,9 @@ test('logs error if it cannot read the file from the filePath', async () => {
   fsMock.readFileSync = jest.fn(() => {
     throw new Error('some error');
   });
-  await expect(() => format({ filePath: '/some-path.js' })).rejects.toThrowError(
-    /some error/
-  );
+  await expect(() =>
+    format({ filePath: '/some-path.js' })
+  ).rejects.toThrowError(/some error/);
   expect(logger.error).toHaveBeenCalledTimes(1);
   fsMock.readFileSync = originalMock;
 });
@@ -437,26 +435,25 @@ test('logs if there is a problem making the CLIEngine', async () => {
 
 function getESLintConfigWithDefaultRules(overrides) {
   return {
-    
-      parserOptions: { ecmaVersion: 7 },
-      rules: {
-        semi: [2, 'never'],
-        'max-len': [2, 120, 2],
-        indent: [2, 2, { SwitchCase: 1 }],
-        quotes: [2, 'single', { avoidEscape: true, allowTemplateLiterals: true }],
-        'comma-dangle': [
-          2,
-          {
-            arrays: 'always-multiline',
-            objects: 'always-multiline',
-            imports: 'always-multiline',
-            exports: 'always-multiline',
-            functions: 'always-multiline'
-          }
-        ],
-        'arrow-parens': [2, 'as-needed'],
-        ...overrides
-      }
+    parserOptions: { ecmaVersion: 7 },
+    rules: {
+      semi: [2, 'never'],
+      'max-len': [2, 120, 2],
+      indent: [2, 2, { SwitchCase: 1 }],
+      quotes: [2, 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+      'comma-dangle': [
+        2,
+        {
+          arrays: 'always-multiline',
+          objects: 'always-multiline',
+          imports: 'always-multiline',
+          exports: 'always-multiline',
+          functions: 'always-multiline'
+        }
+      ],
+      'arrow-parens': [2, 'as-needed'],
+      ...overrides
+    }
   };
 }
 

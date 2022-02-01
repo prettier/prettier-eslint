@@ -63,7 +63,7 @@ export { getESLint, getOptionsForFormatting, requireModule };
 function getOptionsForFormatting(
   eslintConfig,
   prettierOptions = {},
-  fallbackPrettierOptions = {},
+  fallbackPrettierOptions = {}
 ) {
   const eslint = getRelevantESLintConfig(eslintConfig);
   const prettier = getPrettierOptionsFromESLintRules(
@@ -79,21 +79,19 @@ function getRelevantESLintConfig(eslintConfig) {
   const rules = linter.getRules();
   logger.debug('turning off unfixable rules');
 
-  const relevantRules = {}; 
-  
+  const relevantRules = {};
+
   rules.forEach((rule, name) => {
-        const {
-          meta: { fixable }
-        } = rule;
-        
-        if (!fixable) {
-          logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
-          rule = ['off'];
-          relevantRules[name] = rule;
-        }
-    },
-    {}
-  );
+    const {
+      meta: { fixable }
+    } = rule;
+
+    if (!fixable) {
+      logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
+      rule = ['off'];
+      relevantRules[name] = rule;
+    }
+  }, {});
 
   return {
     // defaults
@@ -333,7 +331,7 @@ function extractRuleValue(objPath, name, value) {
 
 function getRuleValue(rules, name, objPath) {
   const ruleConfig = rules[name];
-  
+
   if (Array.isArray(ruleConfig)) {
     const [ruleSetting, value] = ruleConfig;
 
@@ -411,7 +409,7 @@ function getESLint(eslintPath, eslintOptions) {
   try {
     return new ESLint(eslintOptions);
   } catch (error) {
-    logger.error(`There was trouble creating the ESLint CLIEngine.`);
+    logger.error('There was trouble creating the ESLint CLIEngine.');
     throw error;
   }
 }

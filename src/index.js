@@ -9,11 +9,7 @@ import { oneLine, stripIndent } from 'common-tags';
 import indentString from 'indent-string';
 import getLogger from 'loglevel-colored-level-prefix';
 import merge from 'lodash.merge';
-import {
-  getESLint,
-  getOptionsForFormatting,
-  requireModule
-} from './utils';
+import { getESLint, getOptionsForFormatting, requireModule } from './utils';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
@@ -57,7 +53,7 @@ async function format(options) {
     prettierLast,
     fallbackPrettierOptions
   } = options;
-  
+
   const eslintConfig = merge(
     {},
     options.eslintConfig,
@@ -124,7 +120,7 @@ async function format(options) {
     formattingOptions.eslint.parser =
       formattingOptions.eslint.parser || require.resolve('vue-eslint-parser');
   }
-  
+
   const eslintFix = await createEslintFix(formattingOptions.eslint, eslintPath);
 
   if (prettierLast) {
@@ -146,7 +142,7 @@ function createPrettify(formatOptions, prettierPath) {
     );
     const prettier = requireModule(prettierPath, 'prettier');
     try {
-      logger.trace(`calling prettier.format with the text and prettierOptions`);
+      logger.trace('calling prettier.format with the text and prettierOptions');
       const output = prettier.format(text, formatOptions);
       logger.trace('prettier: output === input', output === text);
       logger.trace(
@@ -166,23 +162,22 @@ function createPrettify(formatOptions, prettierPath) {
 
 function createEslintFix(eslintConfig, eslintPath) {
   return async function eslintFix(text, filePath) {
-
     if (Array.isArray(eslintConfig.globals)) {
       const tempGlobals = {};
       eslintConfig.globals.forEach(g => {
-        const [key,value] = g.split(':');
+        const [key, value] = g.split(':');
         tempGlobals[key] = value;
       });
       eslintConfig.globals = tempGlobals;
     }
 
-    eslintConfig.overrideConfig = { 
+    eslintConfig.overrideConfig = {
       rules: eslintConfig.rules,
       parser: eslintConfig.parser,
       globals: eslintConfig.globals,
       parserOptions: eslintConfig.parserOptions,
       ignorePatterns: eslintConfig.ignorePattern,
-      ...eslintConfig.overrideConfig,
+      ...eslintConfig.overrideConfig
     };
 
     delete eslintConfig.rules;
@@ -193,10 +188,13 @@ function createEslintFix(eslintConfig, eslintPath) {
 
     const eslint = getESLint(eslintPath, eslintConfig);
     try {
-      logger.trace(`calling cliEngine.executeOnText with the text`);
-      const report = await eslint.lintText(text, { filePath, warnIgnored: true });
+      logger.trace('calling cliEngine.executeOnText with the text');
+      const report = await eslint.lintText(text, {
+        filePath,
+        warnIgnored: true
+      });
       logger.trace(
-        `executeOnText returned the following report:`,
+        'executeOnText returned the following report:',
         prettyFormat(report)
       );
       // default the output to text because if there's nothing

@@ -211,7 +211,7 @@ test('if prettierOptions are provided, those are preferred', () => {
 });
 
 // eslint-disable-next-line max-len
-test(`if fallbacks are provided, those are preferred over disabled eslint rules`, () => {
+test('if fallbacks are provided, those are preferred over disabled eslint rules', () => {
   const { prettier } = getOptionsForFormatting(
     {
       rules: {

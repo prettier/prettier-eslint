@@ -39,7 +39,7 @@ function mockCalculateConfigForFile(filePath) {
   }
   if (filePath.includes('default-config')) {
     return {
-        rules: {
+      rules: {
         semi: [2, 'never'],
         'max-len': [2, 120, 2],
         indent: [2, 2, { SwitchCase: 1 }],
@@ -59,7 +59,8 @@ function mockCalculateConfigForFile(filePath) {
           }
         ],
         'arrow-parens': [2, 'as-needed']
-    }};
+      }
+    };
   } else if (filePath.includes('fixtures/paths')) {
     return { rules: {} };
   } else {
