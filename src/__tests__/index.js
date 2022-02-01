@@ -299,9 +299,10 @@ test('fails with an error if the eslint module cannot be resolved.', async () =>
   expect(logger.error).toHaveBeenCalledWith(errorString);
 });
 
-test('can accept a path to a prettier module and uses that instead.', () => {
+test('can accept a path to a prettier module and uses that instead.', async () => {
   const prettierPath = path.join(__dirname, '../__mocks__/prettier');
-  format({ text: '', prettierPath });
+  await format({ text: '', prettierPath});
+  
   expect(prettierMock.format).toHaveBeenCalledTimes(1);
 });
 
@@ -321,9 +322,9 @@ test('fails with an error if the prettier module cannot be resolved.', async () 
   expect(logger.error).toHaveBeenCalledWith(errorString);
 });
 
-test('resolves to the eslint module relative to the given filePath', () => {
+test('resolves to the eslint module relative to the given filePath', async () => {
   const filePath = require.resolve('../../tests/fixtures/paths/foo.js');
-  format({ text: '', filePath });
+  await format({ text: '', filePath });
   const stateObj = {
     eslintPath: require.resolve(
       '../../tests/fixtures/paths/node_modules/eslint/index.js'

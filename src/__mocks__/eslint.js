@@ -71,7 +71,7 @@ function mockCalculateConfigForFile(filePath) {
 }
 
 function mockLintText(...args) {
-  /* eslint babel/no-invalid-this:0 */
+  /* eslint no-invalid-this:0 */
   if (mockLintTextSpy.throwError) {
     throw mockLintTextSpy.throwError;
   }

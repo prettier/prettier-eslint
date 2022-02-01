@@ -128,7 +128,8 @@ async function format(options) {
   const eslintFix = await createEslintFix(formattingOptions.eslint, eslintPath);
 
   if (prettierLast) {
-    return prettify(eslintFix(text, filePath));
+    const eslintFixed = await eslintFix(text, filePath);
+    return prettify(eslintFixed);
   }
   return eslintFix(prettify(text), filePath);
 }

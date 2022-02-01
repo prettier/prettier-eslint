@@ -10,7 +10,8 @@ const config = {
         named: "never",
         asyncArrow: "always"
       }
-    ]
+    ],
+    "import/no-import-module-exports": "off"
   }
 };
 

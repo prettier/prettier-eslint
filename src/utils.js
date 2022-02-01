@@ -2,7 +2,6 @@
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
 import getLogger from 'loglevel-colored-level-prefix';
-import merge from 'lodash.merge';
 import { Linter } from 'eslint';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
