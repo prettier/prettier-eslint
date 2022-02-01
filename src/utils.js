@@ -105,7 +105,7 @@ function getRelevantESLintConfig(eslintConfig) {
     // overrides
     rules: { ...eslintConfig.rules, ...relevantRules },
     fix: true,
-    globals: []
+    globals: eslintConfig.globals || {}
   };
 }
 

@@ -140,6 +140,14 @@ const tests = [
     output: 'var [foo, { bar }] = window.APP;'
   },
   {
+    title: 'accepts config globals as array',
+    input: {
+      text: defaultInputText(),
+      eslintConfig: { globals: ['window:writable']}
+    },
+    output: noopOutput()
+  },
+  {
     title: 'CSS example',
     input: {
       text: '.stop{color:red};',

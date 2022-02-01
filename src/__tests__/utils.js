@@ -309,7 +309,7 @@ test('Turn off unfixable rules', () => {
       quotes: ['error', 'double']
     },
     fix: true,
-    globals: [],
+    globals: {},
     useEslintrc: false
   });
 });
