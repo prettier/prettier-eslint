@@ -2,35 +2,35 @@
 // search around the file system for stuff
 
 const eslint = jest.requireActual('eslint');
-const { CLIEngine } = eslint;
+const { ESLint } = eslint;
 
-const mockGetConfigForFileSpy = jest.fn(mockGetConfigForFile);
-mockGetConfigForFileSpy.overrides = {};
-const mockExecuteOnTextSpy = jest.fn(mockExecuteOnText);
+const mockCalculateConfigForFileSpy = jest.fn(mockCalculateConfigForFile);
+mockCalculateConfigForFileSpy.overrides = {};
+const mockLintTextSpy = jest.fn(mockLintText);
 
 module.exports = Object.assign(eslint, {
-  CLIEngine: jest.fn(MockCLIEngine),
+  ESLint: jest.fn(MockESLint),
   mock: {
-    getConfigForFile: mockGetConfigForFileSpy,
-    executeOnText: mockExecuteOnTextSpy
+    calculateConfigForFile: mockCalculateConfigForFileSpy,
+    lintText: mockLintTextSpy
   }
 });
 
-function MockCLIEngine(...args) {
+function MockESLint(...args) {
   global.__PRETTIER_ESLINT_TEST_STATE__.eslintPath = __filename;
-  const cliEngine = new CLIEngine(...args);
-  cliEngine.getConfigForFile = mockGetConfigForFileSpy;
-  cliEngine._originalExecuteOnText = cliEngine.executeOnText;
-  cliEngine.executeOnText = mockExecuteOnTextSpy;
-  return cliEngine;
+  const eslintInstance = new ESLint(...args);
+  eslintInstance.calculateConfigForFile = mockCalculateConfigForFileSpy;
+  eslintInstance._originalLintText = eslintInstance.lintText;
+  eslintInstance.lintText = mockLintTextSpy;
+  return eslintInstance;
 }
 
-MockCLIEngine.prototype = Object.create(CLIEngine.prototype);
+MockESLint.prototype = Object.create(ESLint.prototype);
 
 // eslint-disable-next-line complexity
-function mockGetConfigForFile(filePath) {
-  if (mockGetConfigForFileSpy.throwError) {
-    throw mockGetConfigForFileSpy.throwError;
+function mockCalculateConfigForFile(filePath) {
+  if (mockCalculateConfigForFileSpy.throwError) {
+    throw mockCalculateConfigForFileSpy.throwError;
   }
   if (!filePath) {
     return {
@@ -71,10 +71,10 @@ function mockGetConfigForFile(filePath) {
   }
 }
 
-function mockExecuteOnText(...args) {
-  /* eslint babel/no-invalid-this:0 */
-  if (mockExecuteOnTextSpy.throwError) {
-    throw mockExecuteOnTextSpy.throwError;
+function mockLintText(...args) {
+  /* eslint no-invalid-this:0 */
+  if (mockLintTextSpy.throwError) {
+    throw mockLintTextSpy.throwError;
   }
-  return this._originalExecuteOnText(...args);
+  return this._originalLintText(...args);
 }

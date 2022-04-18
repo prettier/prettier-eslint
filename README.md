@@ -72,7 +72,7 @@ const options = {
   },
 };
 
-const formatted = format(options);
+const formatted = await format(options);
 
 // notice no semicolon in the formatted text
 formatted; // const { foo } = bar
@@ -304,6 +304,7 @@ Thanks goes to these people ([emoji key][emojis]):
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/cy6erskunk"><img src="https://avatars3.githubusercontent.com/u/754849?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Igor</b></sub></a><br /><a href="#maintenance-cy6erskunk" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://campcode.dev/"><img src="https://avatars.githubusercontent.com/u/10620169?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rebecca Vest</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=idahogurl" title="Code">💻</a></td>
   </tr>
 </table>
 
