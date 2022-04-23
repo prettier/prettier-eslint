@@ -57,7 +57,7 @@ async function format(options) {
   const eslintConfig = merge(
     {},
     options.eslintConfig,
-    getESLintConfig(filePath, eslintPath)
+    await getESLintConfig(filePath, eslintPath)
   );
 
   const prettierOptions = merge(
@@ -240,7 +240,7 @@ function getTextFromFilePath(filePath) {
   }
 }
 
-function getESLintConfig(filePath, eslintPath) {
+async function getESLintConfig(filePath, eslintPath) {
   const eslintOptions = {};
   if (filePath) {
     eslintOptions.cwd = path.dirname(filePath);
@@ -254,7 +254,7 @@ function getESLintConfig(filePath, eslintPath) {
   const eslint = getESLint(eslintPath, eslintOptions);
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
-    const config = eslint.calculateConfigForFile(filePath);
+    const config = await eslint.calculateConfigForFile(filePath);
     logger.trace(
       `eslint config for "${filePath}" received`,
       prettyFormat(config)
