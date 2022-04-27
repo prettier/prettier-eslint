@@ -176,15 +176,22 @@ function createEslintFix(eslintConfig, eslintPath) {
       parser: eslintConfig.parser,
       globals: eslintConfig.globals,
       parserOptions: eslintConfig.parserOptions,
-      ignorePatterns: eslintConfig.ignorePattern,
+      ignorePatterns: eslintConfig.ignorePatterns,
+      plugins: eslintConfig.plugins,
+      env: eslintConfig.env,
+      settings: eslintConfig.settings,
+      noInlineConfig: eslintConfig.noInlineConfig,
       ...eslintConfig.overrideConfig
     };
-
     delete eslintConfig.rules;
     delete eslintConfig.parser;
     delete eslintConfig.parserOptions;
     delete eslintConfig.globals;
-    delete eslintConfig.ignorePattern;
+    delete eslintConfig.ignorePatterns;
+    delete eslintConfig.plugins;
+    delete eslintConfig.env;
+    delete eslintConfig.noInlineConfig;
+    delete eslintConfig.settings;
 
     const eslint = getESLint(eslintPath, eslintConfig);
     try {
