@@ -57,7 +57,7 @@ async function format(options) {
   const eslintConfig = merge(
     {},
     options.eslintConfig,
-    await getESLintConfig(filePath, eslintPath)
+    await getESLintConfig(filePath, eslintPath, options.eslintConfig || {})
   );
 
   const prettierOptions = merge(
@@ -248,8 +248,24 @@ function getTextFromFilePath(filePath) {
   }
 }
 
-async function getESLintConfig(filePath, eslintPath) {
-  const eslintOptions = {};
+function getESLintApiOptions(eslintConfig) {
+  // https://eslint.org/docs/developer-guide/nodejs-api
+  // these options affect what calculateConfigForFile produces
+  return {
+    ignore: eslintConfig.ignore || true,
+    ignorePath: eslintConfig.ignorePath || null,
+    allowInlineConfig: eslintConfig.allowInlineConfig || true,
+    baseConfig: eslintConfig.baseConfig || null,
+    overrideConfig: eslintConfig.overrideConfig || null,
+    overrideConfigFile: eslintConfig.overrideConfigFile || null,
+    plugins: eslintConfig.plugins || null,
+    resolvePluginsRelativeTo: eslintConfig.resolvePluginsRelativeTo || null,
+    rulePaths: eslintConfig.rulePaths || [],
+    useEslintrc: eslintConfig.useEslintrc || true
+  };
+}
+
+async function getESLintConfig(filePath, eslintPath, eslintOptions) {
   if (filePath) {
     eslintOptions.cwd = path.dirname(filePath);
   }
@@ -259,7 +275,8 @@ async function getESLintConfig(filePath, eslintPath) {
       "${filePath || process.cwd()}"
     `
   );
-  const eslint = getESLint(eslintPath, eslintOptions);
+  const eslint = getESLint(eslintPath, getESLintApiOptions(eslintOptions));
+
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
     const config = await eslint.calculateConfigForFile(filePath);
