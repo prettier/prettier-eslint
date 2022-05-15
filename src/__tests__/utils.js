@@ -113,16 +113,16 @@ const getPrettierOptionsFromESLintRulesTests = [
   },
   {
     rules: {},
-    options: { jsxBracketSameLine: true },
-    fallbackPrettierOptions: { jsxBracketSameLine: true }
+    options: { bracketSameLine: true },
+    fallbackPrettierOptions: { bracketSameLine: true }
   },
   {
     rules: { 'react/jsx-closing-bracket-location': [2, 'after-props'] },
-    options: { jsxBracketSameLine: true }
+    options: { bracketSameLine: true }
   },
   {
     rules: { 'react/jsx-closing-bracket-location': [2, 'tag-aligned'] },
-    options: { jsxBracketSameLine: false }
+    options: { bracketSameLine: false }
   },
   {
     rules: {
@@ -133,7 +133,7 @@ const getPrettierOptionsFromESLintRulesTests = [
         }
       ]
     },
-    options: { jsxBracketSameLine: true }
+    options: { bracketSameLine: true }
   },
   {
     rules: {

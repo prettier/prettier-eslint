@@ -310,6 +310,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "chrisbobbe",
+      "name": "Chris Bobbe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22248748?v=4",
+      "profile": "https://github.com/chrisbobbe",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "repoType": "github",

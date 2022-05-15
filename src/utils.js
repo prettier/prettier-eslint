@@ -46,10 +46,10 @@ const OPTION_GETTERS = {
     ruleValue: rules => getRuleValue(rules, 'indent'),
     ruleValueToPrettierOption: getUseTabs
   },
-  jsxBracketSameLine: {
+  bracketSameLine: {
     ruleValue: rules =>
       getRuleValue(rules, 'react/jsx-closing-bracket-location', 'nonEmpty'),
-    ruleValueToPrettierOption: getJsxBracketSameLine
+    ruleValueToPrettierOption: getBracketSameLine
   },
   arrowParens: {
     ruleValue: rules => getRuleValue(rules, 'arrow-parens'),
@@ -263,7 +263,7 @@ function getUseTabs(eslintValue, fallbacks) {
   return makePrettierOption('useTabs', prettierValue, fallbacks);
 }
 
-function getJsxBracketSameLine(eslintValue, fallbacks) {
+function getBracketSameLine(eslintValue, fallbacks) {
   let prettierValue;
 
   if (eslintValue === 'after-props') {
@@ -278,7 +278,7 @@ function getJsxBracketSameLine(eslintValue, fallbacks) {
     prettierValue = eslintValue;
   }
 
-  return makePrettierOption('jsxBracketSameLine', prettierValue, fallbacks);
+  return makePrettierOption('bracketSameLine', prettierValue, fallbacks);
 }
 
 function getArrowParens(eslintValue, fallbacks) {

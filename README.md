@@ -183,7 +183,7 @@ fall back to the `prettier` defaults:
   // prettier-eslint doesn't currently support
   // inferring these two (Pull Requests welcome):
   parser: 'babylon',
-  jsxBracketSameLine: false,
+  bracketSameLine: false,
 }
 ```
 
@@ -305,12 +305,12 @@ Thanks goes to these people ([emoji key][emojis]):
   <tr>
     <td align="center"><a href="https://github.com/cy6erskunk"><img src="https://avatars3.githubusercontent.com/u/754849?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Igor</b></sub></a><br /><a href="#maintenance-cy6erskunk" title="Maintenance">🚧</a></td>
     <td align="center"><a href="https://campcode.dev/"><img src="https://avatars.githubusercontent.com/u/10620169?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rebecca Vest</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=idahogurl" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/chrisbobbe"><img src="https://avatars.githubusercontent.com/u/22248748?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Chris Bobbe</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/issues?q=author%3Achrisbobbe" title="Bug reports">🐛</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=chrisbobbe" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
