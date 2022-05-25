@@ -90,6 +90,6 @@ declare namespace format {
  * supplied configuration. The auto-formatting is limited to the issues that
  * Prettier and ESLint can automatically fix.
  */
-declare function format(options: format.Options): string;
+declare function format(options: format.Options): Promise<string>;
 
 export = format;
