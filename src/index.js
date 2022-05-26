@@ -38,7 +38,7 @@ module.exports = format;
  * @param {String} options.logLevel - the level for the logs
  *  (error, warn, info, debug, trace)
  * @param {Boolean} options.prettierLast - Run Prettier Last
- * @return {String} - the formatted string
+ * @return {Promise<String>} - the formatted string
  */
 async function format(options) {
   const { logLevel = getDefaultLogLevel() } = options;
