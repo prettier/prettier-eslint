@@ -53,7 +53,7 @@
     "opt-cli": "^1.5.2",
     "prettier-eslint-cli": "^7.0.0",
     "rimraf": "^2.5.4",
-    "semantic-release": "^15.13.16",
+    "semantic-release": "^19.0.3",
     "strip-indent": "^3.0.0"
   },
   "engines": {
