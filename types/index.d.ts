@@ -8,7 +8,7 @@ declare namespace format {
     /**
      * Logging level for the traceback of the synchronous formatting process.
      */
-    type LogLevel = "error" | "warn" | "info" | "debug" | "trace";
+    type LogLevel = "error" | "warn" | "info" | "debug" | "trace" | "silent";
 
     /**
      * Options to format text with Prettier and ESLint.
