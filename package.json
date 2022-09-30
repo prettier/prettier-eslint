@@ -42,7 +42,7 @@
     "acorn": "^6.1.1",
     "ajv": "^6.12.2",
     "all-contributors-cli": "^6.7.0",
-    "babel-jest": "^25.0.0",
+    "babel-jest": "^29.1.2",
     "chalk": "^2.1.0",
     "eslint-config-kentcdodds": "^20.0.1",
     "husky": "^2.4.1",
