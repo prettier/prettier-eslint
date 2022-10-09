@@ -425,12 +425,23 @@ test('does not raise an error if prettier.resolveConfig is not defined', async (
 
 test('logs if there is a problem making the CLIEngine', async () => {
   const error = new Error('fake error');
-  eslintMock.ESLint.mockImplementation(() => {
+  eslintMock.ESLint.mockImplementationOnce(() => {
     throw error;
   });
   await expect(() => format({ text: '' })).rejects.toThrowError(error);
-  eslintMock.ESLint.mockReset();
   expect(logger.error).toHaveBeenCalledTimes(1);
+});
+
+test('can accept reportUnusedDisableDirectives option without throwing value error', async () => {
+  async function callingFormat() {
+    return format({
+      text: '',
+      eslintConfig: {
+        reportUnusedDisableDirectives: true
+      }
+    });
+  }
+  await expect(callingFormat).not.toThrowError();
 });
 
 function getESLintConfigWithDefaultRules(overrides) {
