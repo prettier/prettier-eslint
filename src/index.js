@@ -88,7 +88,7 @@ async function format(options) {
     })
   );
 
-  const eslintExtensions = eslintConfig.extensions || [
+  const eslintExtensions = eslintConfig.apiOptions.extensions || [
     '.js',
     '.jsx',
     '.ts',
@@ -171,30 +171,11 @@ function createEslintFix(eslintConfig, eslintPath) {
       eslintConfig.globals = tempGlobals;
     }
 
-    eslintConfig.overrideConfig = {
-      rules: eslintConfig.rules,
-      parser: eslintConfig.parser,
-      globals: eslintConfig.globals,
-      parserOptions: eslintConfig.parserOptions,
-      ignorePatterns: eslintConfig.ignorePatterns || eslintConfig.ignorePattern,
-      plugins: eslintConfig.plugins,
-      env: eslintConfig.env,
-      settings: eslintConfig.settings,
-      noInlineConfig: eslintConfig.noInlineConfig,
-      ...eslintConfig.overrideConfig
-    };
-    delete eslintConfig.rules;
-    delete eslintConfig.parser;
-    delete eslintConfig.parserOptions;
-    delete eslintConfig.globals;
-    delete eslintConfig.ignorePatterns;
-    delete eslintConfig.ignorePattern;
-    delete eslintConfig.plugins;
-    delete eslintConfig.env;
-    delete eslintConfig.noInlineConfig;
-    delete eslintConfig.settings;
+    const eslintOptions = eslintConfig.apiOptions;
+    delete eslintConfig.apiOptions;
+    eslintOptions.overrideConfig = eslintConfig;
 
-    const eslint = getESLint(eslintPath, eslintConfig);
+    const eslint = getESLint(eslintPath, eslintOptions);
     try {
       logger.trace('calling cliEngine.executeOnText with the text');
       const report = await eslint.lintText(text, {
@@ -259,15 +240,17 @@ function getESLintApiOptions(eslintConfig) {
     overrideConfig: eslintConfig.overrideConfig || null,
     overrideConfigFile: eslintConfig.overrideConfigFile || null,
     plugins: eslintConfig.plugins || null,
+    reportUnusedDisableDirectives: eslintConfig.reportUnusedDisableDirectives || null,
     resolvePluginsRelativeTo: eslintConfig.resolvePluginsRelativeTo || null,
     rulePaths: eslintConfig.rulePaths || [],
     useEslintrc: eslintConfig.useEslintrc || true
   };
 }
 
-async function getESLintConfig(filePath, eslintPath, eslintOptions) {
+async function getESLintConfig(filePath, eslintPath, eslintConfig) {
+  eslintConfig.apiOptions = {};
   if (filePath) {
-    eslintOptions.cwd = path.dirname(filePath);
+    eslintConfig.apiOptions.cwd = path.dirname(filePath);
   }
   logger.trace(
     oneLine`
@@ -275,7 +258,7 @@ async function getESLintConfig(filePath, eslintPath, eslintOptions) {
       "${filePath || process.cwd()}"
     `
   );
-  const eslint = getESLint(eslintPath, getESLintApiOptions(eslintOptions));
+  const eslint = getESLint(eslintPath, getESLintApiOptions(eslintConfig.apiOptions));
 
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
@@ -285,7 +268,7 @@ async function getESLintConfig(filePath, eslintPath, eslintOptions) {
       prettyFormat(config)
     );
     return {
-      ...eslintOptions,
+      ...eslintConfig,
       ...config
     };
   } catch (error) {

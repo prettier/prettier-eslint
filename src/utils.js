@@ -93,13 +93,17 @@ function getRelevantESLintConfig(eslintConfig) {
     }
   }, {});
 
-  return {
+  eslintConfig.apiOptions = {
     // defaults
     useEslintrc: false,
-    ...eslintConfig,
+    ...eslintConfig.apiOptions,
     // overrides
+    fix: true
+  }
+
+  return {
+    ...eslintConfig,
     rules: { ...eslintConfig.rules, ...relevantRules },
-    fix: true,
     globals: eslintConfig.globals || {}
   };
 }
