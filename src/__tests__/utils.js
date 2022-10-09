@@ -274,20 +274,32 @@ test('eslint config has only necessary properties', () => {
     eslintPath
   );
   expect(eslint).toMatchObject({
-    fix: true,
-    useEslintrc: false,
+    apiOptions: {
+      fix: true,
+      useEslintrc: false
+    },
     rules: { quotes: [2, 'single'] }
   });
 });
 
 test('useEslintrc is set to the given config value', () => {
   const { eslint } = getOptionsForFormatting(
-    { useEslintrc: true, rules: {} },
+    {
+      rules: {},
+      apiOptions: {
+        useEslintrc: true,
+      }
+    },
     undefined,
     undefined,
     eslintPath
   );
-  expect(eslint).toMatchObject({ fix: true, useEslintrc: true });
+  expect(eslint).toMatchObject({
+    apiOptions: {
+      fix: true,
+      useEslintrc: true
+    }
+  });
 });
 
 test('Turn off unfixable rules', () => {
@@ -308,8 +320,10 @@ test('Turn off unfixable rules', () => {
       'global-require': ['off'],
       quotes: ['error', 'double']
     },
-    fix: true,
     globals: {},
-    useEslintrc: false
+    apiOptions:{
+      fix: true,
+      useEslintrc: false
+    }
   });
 });

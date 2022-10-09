@@ -123,7 +123,7 @@ const tests = [
       text: 'var x = 0;',
       eslintConfig: {
         rules: { 'no-var': 'error' },
-        ignorePattern: 'should-be-ignored'
+        ignorePatterns: 'should-be-ignored'
       },
       filePath: path.resolve('should-be-ignored.js')
     },
@@ -443,6 +443,7 @@ test('can accept reportUnusedDisableDirectives option without throwing value err
   }
   await expect(callingFormat).not.toThrowError();
 });
+
 
 function getESLintConfigWithDefaultRules(overrides) {
   return {
