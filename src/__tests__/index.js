@@ -5,7 +5,7 @@ import stripIndent from 'strip-indent';
 import eslintMock from 'eslint';
 import prettierMock from 'prettier';
 import loglevelMock from 'loglevel-colored-level-prefix';
-import format from '../';
+import {format, analyze} from '../';
 
 jest.mock('fs');
 
@@ -255,6 +255,22 @@ tests.forEach(({ title, modifier, input, output }) => {
     expect(actual).toBe(`${expected}\n`);
   });
 });
+
+test('analyze returns the messages', async () => {
+  const text = 'var x = 0;';
+  const result = await analyze({
+    text,
+    eslintConfig: {
+      rules: { 'no-var': 'error' }
+    }
+  })
+  expect(result.output).toBe(`${text}\n`);
+  expect(result.messages).toHaveLength(1);
+  const msg = result.messages[0];
+  expect(msg.ruleId).toBe('no-var');
+  expect(msg.column).toBe(1);
+  expect(msg.endColumn).toBe(11);
+})
 
 test('failure to fix with eslint throws and logs an error', async () => {
   const { lintText } = eslintMock.mock;

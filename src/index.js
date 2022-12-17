@@ -41,9 +41,25 @@ module.exports = format;
  * @return {Promise<String>} - the formatted string
  */
 async function format(options) {
+  const {output} = await analyze(options);
+  return output;
+}
+
+/**
+ * Analyzes and formats text with prettier and eslint, based on the
+ * identical options as for the `format` function. It differs from
+ * `format` only in that the return value is a simple object with
+ * properties `output` giving the formatted code and `messages` giving
+ * any error messages generated in the analysis.
+ * @param {Object} identical to options parameter of `format`
+ * @returns {Promise<Object>} the return value is an object `r` such that
+ *  `r.output` is the formatted string and `r.messages` is an array of
+ *  message specifications from eslint.
+ */
+async function analyze(options) {
   const { logLevel = getDefaultLogLevel() } = options;
   logger.setLevel(logLevel);
-  logger.trace('called format with options:', prettyFormat(options));
+  logger.trace('called analyze with options:', prettyFormat(options));
 
   const {
     filePath,
@@ -128,11 +144,17 @@ async function format(options) {
     const eslintFixed = await eslintFix(text, filePath);
     return prettify(eslintFixed);
   }
-  return eslintFix(await prettify(text), filePath);
+  return eslintFix((await prettify(text)).output, filePath);
 }
 
 function createPrettify(formatOptions, prettierPath) {
-  return async function prettify(text) {
+  return async function prettify(param) {
+    let text = param
+    let messages = []
+    if (typeof param !== 'string') {
+      text = param.output
+      messages = param.text
+    }
     logger.debug('calling prettier on text');
     logger.trace(
       stripIndent`
@@ -153,7 +175,7 @@ function createPrettify(formatOptions, prettierPath) {
         ${indentString(output, 2)}
       `
       );
-      return output;
+      return {output, messages};
     } catch (error) {
       logger.error('prettier formatting failed due to a prettier error');
       throw error;
@@ -208,7 +230,7 @@ function createEslintFix(eslintConfig, eslintPath) {
       );
       // default the output to text because if there's nothing
       // to fix, eslint doesn't provide `output`
-      const [{ output = text }] = await report;
+      const [{ output = text, messages }] = await report;
       logger.trace('eslint --fix: output === input', output === text);
       // NOTE: We're ignoring linting errors/warnings here and
       // defaulting to the given text if there are any
@@ -221,7 +243,7 @@ function createEslintFix(eslintConfig, eslintPath) {
         ${indentString(output, 2)}
       `
       );
-      return output;
+      return {output, messages};
     } catch (error) {
       logger.error('eslint fix failed due to an eslint error');
       throw error;
@@ -320,3 +342,8 @@ function getModulePath(filePath = __filename, moduleName) {
 function getDefaultLogLevel() {
   return process.env.LOG_LEVEL || 'warn';
 }
+
+// Allow named imports of either `analyze` or `format` from this module,
+// while leaving `format` in place as the default import:
+module.exports.format = format
+module.exports.analyze = analyze

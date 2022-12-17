@@ -21,6 +21,9 @@ const config = {
     'import/no-import-module-exports': 'off',
     'arrow-parens': ['error', 'as-needed'],
     quotes: ['error', 'single', { avoidEscape: true }],
+  },
+  settings: {
+    'import/ignore': ['node_modules', 'src'] // Using CommonJS in src
   }
 };
 
