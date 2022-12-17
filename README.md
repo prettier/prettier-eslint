@@ -146,7 +146,46 @@ This allows you to use `eslint` to look for bugs and/or bad practices, and use
 
 `prettier-eslint` will **only** propagate _parsing_ errors when either `prettier` or `eslint` fails. In addition to propagating the errors, it will also log a specific message indicating what it was doing at the time of the failure.
 
-**Note:** `prettier-eslint` will not show any message regarding broken rules in either `prettier` or `eslint`.
+**Note:** `format` will not show any message regarding broken rules in either `prettier` or `eslint`.
+
+## Capturing eslint messages
+
+```javascript
+const {analyze} = require("prettier-eslint");
+
+const text = 'var x = 0;';
+const result = await analyze({
+  text,
+  eslintConfig: {
+    rules: { 'no-var': 'error' }
+  }
+})    
+console.log(result.messages);
+```
+
+produces on the console
+
+```
+[{
+  ruleId: 'no-var',
+  severity: 2,
+  message: 'Unexpected var, use let or const instead.',
+  line: 1,
+  column: 1,
+  nodeType: 'VariableDeclaration',
+  messageId: 'unexpectedVar',
+  endLine: 1,
+  endColumn: 11
+}]
+```
+
+The additional export `analyze` is identical to `format` except that it
+returns a simple object with properties `output` giving the exact string
+that `format` would return, and `messages` giving the array of message
+descriptions (with the structure shown above) produced by the `eslint`
+analysis of the code. You may use `analyze` in place of `format` if you
+would like to perform the formatting but also capture any errors that
+`eslint` may notice.
 
 ## Technical details
 
