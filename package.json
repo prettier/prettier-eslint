@@ -30,7 +30,7 @@
     "lodash.merge": "^4.6.0",
     "loglevel-colored-level-prefix": "^1.0.0",
     "prettier": "^2.5.1",
-    "pretty-format": "^23.0.1",
+    "pretty-format": "^29.4.1",
     "require-relative": "^0.8.7",
     "typescript": "^4.5.4",
     "vue-eslint-parser": "^9.1.0"
