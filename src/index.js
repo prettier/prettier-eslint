@@ -11,10 +11,32 @@ import getLogger from 'loglevel-colored-level-prefix';
 import merge from 'lodash.merge';
 import { getESLint, getOptionsForFormatting, requireModule } from './utils';
 
-const logger = getLogger({ prefix: 'prettier-eslint' });
+let logger;
 
 // CommonJS + ES6 modules... is it worth it? Probably not...
 module.exports = format;
+
+/**
+ *
+ *
+ * @param {Object} options.externalLogger - logger instance with error, warn, info, debug, trace functions
+ * @param {String} options.logLevel - the level for the logs
+ *  (error, warn, info, debug, trace). Ignored if 'externalLogger' is passed.
+ * @return {*} 
+ */
+function setLogger(options) {
+  const { logLevel, externalLogger } = options;
+  console.log(logger);
+  if (!logger) {
+    console.log('NO LOGGER')
+    if (externalLogger) {
+      logger = getLogger({ prefix: 'prettier-eslint' });
+      logger.setLevel(logLevel);
+      return;
+    }
+    logger = externalLogger;
+  }
+}
 
 /**
  * Formats the text with prettier and then eslint based on the given options
@@ -35,14 +57,17 @@ module.exports = format;
  * @param {Object} options.fallbackPrettierOptions - the options to pass for
  *  formatting with `prettier` if the given option is not inferrable from the
  *  eslintConfig.
+ * @param {Object} options.logger - logger instance with error, warn, info, debug, trace functions
  * @param {String} options.logLevel - the level for the logs
- *  (error, warn, info, debug, trace)
+ *  (error, warn, info, debug, trace). Ignored if 'externalLogger' is passed.
  * @param {Boolean} options.prettierLast - Run Prettier Last
  * @return {Promise<String>} - the formatted string
  */
+
 async function format(options) {
-  const { logLevel = getDefaultLogLevel() } = options;
-  logger.setLevel(logLevel);
+  const { logLevel = getDefaultLogLevel(), logger: externalLogger } = options;
+  setLogger({ logLevel, externalLogger });
+  console.log(logger);
   logger.trace('called format with options:', prettyFormat(options));
 
   const {

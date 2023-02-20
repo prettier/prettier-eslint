@@ -1,3 +1,4 @@
+/* eslint-env jest */
 /* eslint no-console:0, import/default:0 */
 import path from 'path';
 import fsMock from 'fs';
@@ -5,6 +6,9 @@ import stripIndent from 'strip-indent';
 import eslintMock from 'eslint';
 import prettierMock from 'prettier';
 import loglevelMock from 'loglevel-colored-level-prefix';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { createLogger } from 'bunyan';
+
 import format from '../';
 
 jest.mock('fs');
@@ -272,6 +276,12 @@ test('logLevel is used to configure the logger', async () => {
   expect(logger.setLevel).toHaveBeenCalledTimes(1);
   expect(logger.setLevel).toHaveBeenCalledWith('silent');
 });
+
+// test('externalLogger is used', async () => { 
+//   // try with pino, winston, or bunyan
+//   const externalLogger = createLogger({name: 'prettier-eslint', level: 'trace' });
+//   await format({ text: '', logger: externalLogger });
+// })
 
 test('when prettier throws, log to logger.error and throw the error', async () => {
   const error = new Error('something bad happened');
