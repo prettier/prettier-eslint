@@ -148,7 +148,7 @@ This allows you to use `eslint` to look for bugs and/or bad practices, and use
 
 **Note:** `format` will not show any message regarding broken rules in either `prettier` or `eslint`.
 
-## Capturing eslint messages
+## Capturing ESLint messages
 
 ```javascript
 const {analyze} = require("prettier-eslint");
