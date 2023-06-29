@@ -1,7 +1,7 @@
 /* eslint import/no-dynamic-require:0 */
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
-import getLogger from 'loglevel-colored-level-prefix';
+import getLogger from '@ashcorr/loglevel-colored-level-prefix';
 import { Linter } from 'eslint';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
