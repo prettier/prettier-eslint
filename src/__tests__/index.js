@@ -4,10 +4,11 @@ import fsMock from 'fs';
 import stripIndent from 'strip-indent';
 import eslintMock from 'eslint';
 import prettierMock from 'prettier';
-import loglevelMock from 'loglevel-colored-level-prefix';
+import loglevelMock from '../logger';
 import format from '../';
 
 jest.mock('fs');
+jest.mock('../logger');
 
 const {
   mock: { logger }

@@ -13,7 +13,7 @@ Object.assign(module.exports, {
   mock
 });
 
-function getLogger() {
+export default function getLogger() {
   return logger;
 }
 

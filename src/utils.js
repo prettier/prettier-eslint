@@ -1,8 +1,8 @@
 /* eslint import/no-dynamic-require:0 */
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
-import getLogger from 'loglevel-colored-level-prefix';
 import { Linter } from 'eslint';
+import getLogger from './logger';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 const RULE_DISABLED = {};

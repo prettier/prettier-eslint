@@ -7,8 +7,8 @@ import requireRelative from 'require-relative';
 import prettyFormat from 'pretty-format';
 import { oneLine, stripIndent } from 'common-tags';
 import indentString from 'indent-string';
-import getLogger from 'loglevel-colored-level-prefix';
 import merge from 'lodash.merge';
+import getLogger from './logger';
 import { getESLint, getOptionsForFormatting, requireModule } from './utils';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
