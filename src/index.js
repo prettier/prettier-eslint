@@ -19,14 +19,14 @@ module.exports = format;
 /**
  * Formats the text with prettier and then eslint based on the given options
  * @param {String} options.filePath - the path of the file being formatted
- *  can be used in leu of `eslintConfig` (eslint will be used to find the
+ *  can be used in lieu of `eslintConfig` (eslint will be used to find the
  *  relevant config for the file). Will also be used to load the `text` if
  *  `text` is not provided.
  * @param {String} options.text - the text (JavaScript code) to format
  * @param {String} options.eslintPath - the path to the eslint module to use.
  *   Will default to require.resolve('eslint')
  * @param {String} options.prettierPath - the path to the prettier module.
- *   Will default to require.resovlve('prettier')
+ *   Will default to require.resolve('prettier')
  * @param {Object} options.eslintConfig - the config to use for formatting
  *  with ESLint.
  * @param {Object} options.prettierOptions - the options to pass for
@@ -62,7 +62,9 @@ async function format(options) {
 
   const prettierOptions = merge(
     {},
-    filePath && { filepath: filePath },
+    // Let prettier infer the parser using the filepath, if present. Otherwise
+    // assume the file is JS and default to the babel parser.
+    filePath ? { filepath: filePath } : { parser: 'babel' },
     getPrettierConfig(filePath, prettierPath),
     options.prettierOptions
   );
@@ -111,14 +113,11 @@ async function format(options) {
   }
 
   if (['.ts', '.tsx'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser ||
-      require.resolve('@typescript-eslint/parser');
+    formattingOptions.eslint.parser ||= require.resolve('@typescript-eslint/parser');
   }
 
   if (['.vue'].includes(fileExtension)) {
-    formattingOptions.eslint.parser =
-      formattingOptions.eslint.parser || require.resolve('vue-eslint-parser');
+    formattingOptions.eslint.parser ||= require.resolve('vue-eslint-parser');
   }
 
   const eslintFix = await createEslintFix(formattingOptions.eslint, eslintPath);
