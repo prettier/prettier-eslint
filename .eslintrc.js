@@ -20,7 +20,7 @@ const config = {
     ],
     'import/no-import-module-exports': 'off',
     'arrow-parens': ['error', 'as-needed'],
-    quotes: ['error', 'single']
+    quotes: ['error', 'single', { avoidEscape: true }],
   }
 };
 
