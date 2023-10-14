@@ -1,5 +1,8 @@
 const config = {
   extends: ['kentcdodds', 'kentcdodds/jest'],
+  parserOptions: {
+    ecmaVersion: 2021,
+  },
   rules: {
     'valid-jsdoc': 'off',
     'max-len': 'off',
