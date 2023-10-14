@@ -1,6 +1,6 @@
 {
   "name": "prettier-eslint",
-  "version": "15.0.1",
+  "version": "16.0.0",
   "description": "Formats your JavaScript using prettier followed by eslint --fix",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
