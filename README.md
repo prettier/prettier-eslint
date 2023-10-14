@@ -324,8 +324,8 @@ MIT
 [fix]: http://eslint.org/docs/user-guide/command-line-interface#fix
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/prettier/prettier-eslint.svg?style=flat-square
-[build]: https://travis-ci.org/prettier/prettier-eslint
+[build-badge]: https://img.shields.io/github/actions/workflow/status/prettier/prettier-eslint/ci.yml?style=flat-square
+[build]: https://github.com/prettier/prettier-eslint/actions/workflows/ci.yml
 [coverage-badge]: https://img.shields.io/codecov/c/github/prettier/prettier-eslint.svg?style=flat-square
 [coverage]: https://codecov.io/github/prettier/prettier-eslint
 [version-badge]: https://img.shields.io/npm/v/prettier-eslint.svg?style=flat-square
