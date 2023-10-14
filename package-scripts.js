@@ -45,12 +45,8 @@ module.exports = {
     },
     release: {
       description:
-        'We automate releases with semantic-release. This should only be run on travis',
-      script: series(
-        'semantic-release pre',
-        'npm publish',
-        'semantic-release post'
-      ),
+        'We automate releases with changesets. This should only be run on GitHub Actions',
+      script: 'changeset publish',
     },
     validate: {
       description:
