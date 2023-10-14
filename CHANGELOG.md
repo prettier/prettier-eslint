@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.1.1
+
+### Patch Changes
+
+- [#940](https://github.com/prettier/prettier-eslint/pull/940) [`b66a73a`](https://github.com/prettier/prettier-eslint/commit/b66a73a6e547d0538f51dc89d526e51aecfa0484) Thanks [@JounQin](https://github.com/JounQin)! - fix: @changesets/cli and @types/eslint should be devDependencies
+
 ## 16.1.0
 
 ### Minor Changes
