@@ -1,5 +1,9 @@
 const config = {
-  extends: ['kentcdodds', 'kentcdodds/jest'],
+  extends: [
+    'kentcdodds',
+    'kentcdodds/jest',
+    'plugin:node-dependencies/recommended'
+  ],
   parserOptions: {
     ecmaVersion: 2021
   },
