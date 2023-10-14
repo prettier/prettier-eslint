@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.1.0
+
+### Minor Changes
+
+- [#938](https://github.com/prettier/prettier-eslint/pull/938) [`4943e6b`](https://github.com/prettier/prettier-eslint/commit/4943e6b1cac553b781cc801e473ceb869a80d947) Thanks [@JounQin](https://github.com/JounQin)! - feat!: bump all (dev)Dependencies, drop node < 16.10
+
 ## 16.0.0
 
 ### Major Changes
