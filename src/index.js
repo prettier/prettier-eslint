@@ -113,7 +113,9 @@ async function format(options) {
   }
 
   if (['.ts', '.tsx'].includes(fileExtension)) {
-    formattingOptions.eslint.parser ||= require.resolve('@typescript-eslint/parser');
+    formattingOptions.eslint.parser ||= require.resolve(
+      '@typescript-eslint/parser'
+    );
   }
 
   if (['.vue'].includes(fileExtension)) {

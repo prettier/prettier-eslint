@@ -49,27 +49,27 @@ npm install --save-dev prettier-eslint
 ### Example
 
 ```javascript
-const format = require("prettier-eslint");
+const format = require('prettier-eslint');
 
 // notice, no semicolon in the original text
-const sourceCode = "const {foo} = bar";
+const sourceCode = 'const {foo} = bar';
 
 const options = {
   text: sourceCode,
   eslintConfig: {
     parserOptions: {
-      ecmaVersion: 7,
+      ecmaVersion: 7
     },
     rules: {
-      semi: ["error", "never"],
-    },
+      semi: ['error', 'never']
+    }
   },
   prettierOptions: {
-    bracketSpacing: true,
+    bracketSpacing: true
   },
   fallbackPrettierOptions: {
-    singleQuote: false,
-  },
+    singleQuote: false
+  }
 };
 
 const formatted = await format(options);

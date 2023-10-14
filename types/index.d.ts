@@ -1,64 +1,64 @@
 // Type definitions for prettier-eslint 12.0
 // Project: https://github.com/prettier/prettier-eslint
 
-import * as eslint from "eslint";
-import * as prettier from "prettier";
+import * as eslint from 'eslint';
+import * as prettier from 'prettier';
 
 declare namespace format {
-    /**
-     * Logging level for the traceback of the synchronous formatting process.
-     */
-    type LogLevel = "error" | "warn" | "info" | "debug" | "trace" | "silent";
+  /**
+   * Logging level for the traceback of the synchronous formatting process.
+   */
+  type LogLevel = 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent';
 
+  /**
+   * Options to format text with Prettier and ESLint.
+   */
+  interface Options {
     /**
-     * Options to format text with Prettier and ESLint.
+     * The config to use for formatting with ESLint.
      */
-    interface Options {
-        /**
-         * The config to use for formatting with ESLint.
-         */
-        eslintConfig?: eslint.Linter.Config;
-        /**
-         * The path to the eslint module to use.
-         * Will default to require.resolve('eslint')
-         */
-        eslintPath?: string;
-        /**
-         * The options to pass for formatting with `prettier` if the given
-         * option is not inferrable from the `eslintConfig`.
-         */
-        fallbackPrettierOptions?: prettier.Options;
-        /**
-         * The path of the file being formatted can be used in lieu of
-         * `eslintConfig` (eslint will be used to find the relevant
-         * config for the file). Will also be used to load the `text` if
-         * `text` is not provided.
-         */
-        filePath?: string;
-        /**
-         * The level for the logs (`error`, `warn`, `info`, `debug`, `trace`).
-         */
-        logLevel?: LogLevel;
-        /**
-         * The options to pass for formatting with `prettier`. If not provided,
-         * prettier-eslint will attempt to create the options based on the
-         * `eslintConfig` value.
-         */
-        prettierOptions?: prettier.Options;
-        /**
-         * The path to the `prettier` module.
-         * Will default to require.resovlve('prettier')
-         */
-        prettierPath?: string;
-        /**
-         * Run Prettier last.
-         */
-        prettierLast?: boolean;
-        /**
-         * The text (JavaScript code) to format.
-         */
-        text: string;
-    }
+    eslintConfig?: eslint.Linter.Config;
+    /**
+     * The path to the eslint module to use.
+     * Will default to require.resolve('eslint')
+     */
+    eslintPath?: string;
+    /**
+     * The options to pass for formatting with `prettier` if the given
+     * option is not inferrable from the `eslintConfig`.
+     */
+    fallbackPrettierOptions?: prettier.Options;
+    /**
+     * The path of the file being formatted can be used in lieu of
+     * `eslintConfig` (eslint will be used to find the relevant
+     * config for the file). Will also be used to load the `text` if
+     * `text` is not provided.
+     */
+    filePath?: string;
+    /**
+     * The level for the logs (`error`, `warn`, `info`, `debug`, `trace`).
+     */
+    logLevel?: LogLevel;
+    /**
+     * The options to pass for formatting with `prettier`. If not provided,
+     * prettier-eslint will attempt to create the options based on the
+     * `eslintConfig` value.
+     */
+    prettierOptions?: prettier.Options;
+    /**
+     * The path to the `prettier` module.
+     * Will default to require.resovlve('prettier')
+     */
+    prettierPath?: string;
+    /**
+     * Run Prettier last.
+     */
+    prettierLast?: boolean;
+    /**
+     * The text (JavaScript code) to format.
+     */
+    text: string;
+  }
 }
 
 /**

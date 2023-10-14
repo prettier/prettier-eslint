@@ -1,7 +1,7 @@
 const config = {
   extends: ['kentcdodds', 'kentcdodds/jest'],
   parserOptions: {
-    ecmaVersion: 2021,
+    ecmaVersion: 2021
   },
   rules: {
     'valid-jsdoc': 'off',
@@ -14,7 +14,9 @@ const config = {
         asyncArrow: 'always'
       }
     ],
-    'import/no-import-module-exports': 'off'
+    'import/no-import-module-exports': 'off',
+    'arrow-parens': ['error', 'as-needed'],
+    quotes: ['error', 'single']
   }
 };
 

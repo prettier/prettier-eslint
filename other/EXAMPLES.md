@@ -7,13 +7,13 @@ We can wrap `prettier-eslint` with a plugin to provide a simple interface
 ### Task
 
 ```js
-var prettierEslint = require("./plugins/prettier-eslint");
+var prettierEslint = require('./plugins/prettier-eslint');
 
-gulp.task("js:format", function() {
+gulp.task('js:format', function () {
   return gulp
-    .src("[source glob]")
+    .src('[source glob]')
     .pipe(prettierEslint())
-    .pipe(gulp.dest("[dest folder]")); // same folder to overwrite files
+    .pipe(gulp.dest('[dest folder]')); // same folder to overwrite files
 });
 ```
 
@@ -22,8 +22,8 @@ gulp.task("js:format", function() {
 (using [through2][through2] to help deal with streams)
 
 ```js
-var through = require("through2");
-var prettierEslint = require("prettier-eslint");
+var through = require('through2');
+var prettierEslint = require('prettier-eslint');
 
 const options = {
   eslintConfig: {
@@ -31,7 +31,7 @@ const options = {
       ecmaVersion: 7
     },
     rules: {
-      semi: ["error", "never"]
+      semi: ['error', 'never']
     }
   },
   prettierOptions: {
@@ -39,7 +39,7 @@ const options = {
   }
 };
 
-module.exports = function() {
+module.exports = function () {
   return through.obj(format);
 
   function format(file, encoding, callback) {
@@ -49,7 +49,7 @@ module.exports = function() {
 
     if (file.isStream()) {
       return callback(
-        new utils.PluginError("prettier-eslint", "doesn't support Streams")
+        new utils.PluginError('prettier-eslint', "doesn't support Streams")
       );
     }
 
