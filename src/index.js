@@ -65,7 +65,7 @@ async function format(options) {
     // Let prettier infer the parser using the filepath, if present. Otherwise
     // assume the file is JS and default to the babel parser.
     filePath ? { filepath: filePath } : { parser: 'babel' },
-    await getPrettierConfig(filePath, prettierPath) || {},
+    await getPrettierConfig(filePath, prettierPath),
     options.prettierOptions
   );
 
