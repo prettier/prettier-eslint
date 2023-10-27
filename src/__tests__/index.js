@@ -235,7 +235,7 @@ beforeEach(() => {
   eslintMock.mock.lintText.mockClear();
   eslintMock.mock.calculateConfigForFile.mockClear();
   prettierMock.format.mockClear();
-  prettierMock.resolveConfig.sync.mockClear();
+  prettierMock.resolveConfig.mockClear();
   fsMock.readFileSync.mockClear();
   loglevelMock.mock.clearAll();
   global.__PRETTIER_ESLINT_TEST_STATE__ = {};
@@ -376,33 +376,15 @@ test('logs error if it cannot read the file from the filePath', async () => {
   fsMock.readFileSync = originalMock;
 });
 
-test('calls prettier.resolveConfig.sync with the file path', async () => {
+test('calls prettier.resolveConfig with the file path', async () => {
   const filePath = require.resolve('../../tests/fixtures/paths/foo.js');
   await format({
     filePath,
     text: defaultInputText(),
     eslintConfig: getESLintConfigWithDefaultRules()
   });
-  expect(prettierMock.resolveConfig.sync).toHaveBeenCalledTimes(1);
-  expect(prettierMock.resolveConfig.sync).toHaveBeenCalledWith(filePath);
-});
-
-test('does not raise an error if prettier.resolveConfig.sync is not defined', () => {
-  const filePath = require.resolve('../../tests/fixtures/paths/foo.js');
-  const originalPrettierMockResolveConfigSync = prettierMock.resolveConfig.sync;
-  prettierMock.resolveConfig.sync = undefined;
-
-  function callingFormat() {
-    return format({
-      filePath,
-      text: defaultInputText(),
-      eslintConfig: getESLintConfigWithDefaultRules()
-    });
-  }
-
-  expect(callingFormat).not.toThrowError();
-
-  prettierMock.resolveConfig.sync = originalPrettierMockResolveConfigSync;
+  expect(prettierMock.resolveConfig).toHaveBeenCalledTimes(1);
+  expect(prettierMock.resolveConfig).toHaveBeenCalledWith(filePath);
 });
 
 test('does not raise an error if prettier.resolveConfig is not defined', async () => {

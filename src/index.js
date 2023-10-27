@@ -65,7 +65,7 @@ async function format(options) {
     // Let prettier infer the parser using the filepath, if present. Otherwise
     // assume the file is JS and default to the babel parser.
     filePath ? { filepath: filePath } : { parser: 'babel' },
-    getPrettierConfig(filePath, prettierPath),
+    await getPrettierConfig(filePath, prettierPath),
     options.prettierOptions
   );
 
@@ -298,12 +298,7 @@ async function getESLintConfig(filePath, eslintPath, eslintOptions) {
 
 function getPrettierConfig(filePath, prettierPath) {
   const prettier = requireModule(prettierPath, 'prettier');
-  return (
-    (prettier.resolveConfig &&
-      prettier.resolveConfig.sync &&
-      prettier.resolveConfig.sync(filePath)) ||
-    {}
-  );
+  return prettier.resolveConfig && prettier.resolveConfig(filePath);
 }
 
 function getModulePath(filePath = __filename, moduleName) {
