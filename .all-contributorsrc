@@ -340,6 +340,13 @@
         "test",
         "tool"
       ]
+    },
+    {
+      "login": "jkrehm",
+      "name": "Jonathan Rehm",
+      "avatar_url": "https://avatars.githubusercontent.com/u/999845?v=4",
+      "profile": "https://jonathan.rehm.me/",
+      "contributions": ["bug", "code"]
     }
   ],
   "repoType": "github",
