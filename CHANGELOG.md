@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.1.2
+
+### Patch Changes
+
+- [#942](https://github.com/prettier/prettier-eslint/pull/942) [`103cc51`](https://github.com/prettier/prettier-eslint/commit/103cc517ef5c2bdd8e043dba5a8facf860d0f6be) Thanks [@jkrehm](https://github.com/jkrehm)! - fix: update `resolveConfig` to work with Prettier 3
+
 ## 16.1.1
 
 ### Patch Changes
