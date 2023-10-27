@@ -298,7 +298,6 @@ async function getESLintConfig(filePath, eslintPath, eslintOptions) {
 
 function getPrettierConfig(filePath, prettierPath) {
   const prettier = requireModule(prettierPath, 'prettier');
-
   return prettier.resolveConfig && prettier.resolveConfig(filePath);
 }
 
