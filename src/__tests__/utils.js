@@ -190,8 +190,7 @@ getPrettierOptionsFromESLintRulesTests.forEach(
       const { prettier } = getOptionsForFormatting(
         { rules },
         prettierOptions,
-        fallbackPrettierOptions,
-        eslintPath
+        fallbackPrettierOptions
       );
       expect(prettier).toMatchObject(options);
     });
@@ -221,8 +220,7 @@ test('if fallbacks are provided, those are preferred over disabled eslint rules'
     {},
     {
       singleQuote: true
-    },
-    eslintPath
+    }
   );
   expect(prettier).toMatchObject({ singleQuote: true });
 });
@@ -233,8 +231,7 @@ test('if fallbacks are provided, those are used if not found in eslint', () => {
     undefined,
     {
       singleQuote: false
-    },
-    eslintPath
+    }
   );
   expect(prettier).toMatchObject({ singleQuote: false });
 });
@@ -253,8 +250,7 @@ test('eslint max-len.tabWidth value should be used for tabWidth when tabs are us
       }
     },
     undefined,
-    undefined,
-    eslintPath
+    undefined
   );
 
   expect(prettier).toMatchObject({
@@ -270,8 +266,7 @@ test('eslint config has only necessary properties', () => {
       rules: { 'no-with': 'error', quotes: [2, 'single'] }
     },
     undefined,
-    undefined,
-    eslintPath
+    undefined
   );
   expect(eslint).toMatchObject({
     fix: true,
@@ -284,8 +279,7 @@ test('useEslintrc is set to the given config value', () => {
   const { eslint } = getOptionsForFormatting(
     { useEslintrc: true, rules: {} },
     undefined,
-    undefined,
-    eslintPath
+    undefined
   );
   expect(eslint).toMatchObject({ fix: true, useEslintrc: true });
 });
@@ -299,8 +293,7 @@ test('Turn off unfixable rules', () => {
       }
     },
     undefined,
-    undefined,
-    eslintPath
+    undefined
   );
 
   expect(eslint).toMatchObject({
