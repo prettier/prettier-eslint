@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.2.0
+
+### Minor Changes
+
+- [#827](https://github.com/prettier/prettier-eslint/pull/827) [`6ba802531b74863c6a9cb858c2534d151630fa2b`](https://github.com/prettier/prettier-eslint/commit/6ba802531b74863c6a9cb858c2534d151630fa2b) Thanks [@gwhitney](https://github.com/gwhitney)! - feat: Allow clients to access messages from ESLint
+
 ## 16.1.2
 
 ### Patch Changes
