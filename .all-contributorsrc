@@ -347,6 +347,15 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/999845?v=4",
       "profile": "https://jonathan.rehm.me/",
       "contributions": ["bug", "code"]
+    },
+    {
+      "login": "gwhitney",
+      "name": "Glen Whitney",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3825429?v=4",
+      "profile": "https://github.com/gwhitney",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoType": "github",

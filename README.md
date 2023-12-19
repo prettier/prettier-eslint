@@ -146,7 +146,46 @@ This allows you to use `eslint` to look for bugs and/or bad practices, and use
 
 `prettier-eslint` will **only** propagate _parsing_ errors when either `prettier` or `eslint` fails. In addition to propagating the errors, it will also log a specific message indicating what it was doing at the time of the failure.
 
-**Note:** `prettier-eslint` will not show any message regarding broken rules in either `prettier` or `eslint`.
+**Note:** `format` will not show any message regarding broken rules in either `prettier` or `eslint`.
+
+## Capturing ESLint messages
+
+```javascript
+const {analyze} = require("prettier-eslint");
+
+const text = 'var x = 0;';
+const result = await analyze({
+  text,
+  eslintConfig: {
+    rules: { 'no-var': 'error' }
+  }
+})    
+console.log(result.messages);
+```
+
+produces on the console
+
+```
+[{
+  ruleId: 'no-var',
+  severity: 2,
+  message: 'Unexpected var, use let or const instead.',
+  line: 1,
+  column: 1,
+  nodeType: 'VariableDeclaration',
+  messageId: 'unexpectedVar',
+  endLine: 1,
+  endColumn: 11
+}]
+```
+
+The additional export `analyze` is identical to `format` except that it
+returns a simple object with properties `output` giving the exact string
+that `format` would return, and `messages` giving the array of message
+descriptions (with the structure shown above) produced by the `eslint`
+analysis of the code. You may use `analyze` in place of `format` if you
+would like to perform the formatting but also capture any errors that
+`eslint` may notice.
 
 ## Technical details
 
@@ -308,6 +347,7 @@ Thanks goes to these people ([emoji key][emojis]):
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/chrisbobbe"><img src="https://avatars.githubusercontent.com/u/22248748?v=4?s=100" width="100px;" alt="Chris Bobbe"/><br /><sub><b>Chris Bobbe</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/issues?q=author%3Achrisbobbe" title="Bug reports">🐛</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=chrisbobbe" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.1stg.me/"><img src="https://avatars.githubusercontent.com/u/8336744?v=4?s=100" width="100px;" alt="JounQin"/><br /><sub><b>JounQin</b></sub></a><br /><a href="#question-JounQin" title="Answering Questions">💬</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=JounQin" title="Code">💻</a> <a href="#design-JounQin" title="Design">🎨</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=JounQin" title="Documentation">📖</a> <a href="#ideas-JounQin" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-JounQin" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-JounQin" title="Maintenance">🚧</a> <a href="#plugin-JounQin" title="Plugin/utility libraries">🔌</a> <a href="#projectManagement-JounQin" title="Project Management">📆</a> <a href="https://github.com/prettier/prettier-eslint/pulls?q=is%3Apr+reviewed-by%3AJounQin" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=JounQin" title="Tests">⚠️</a> <a href="#tool-JounQin" title="Tools">🔧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://jonathan.rehm.me/"><img src="https://avatars.githubusercontent.com/u/999845?v=4?s=100" width="100px;" alt="Jonathan Rehm"/><br /><sub><b>Jonathan Rehm</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=jkrehm" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/gwhitney"><img src="https://avatars.githubusercontent.com/u/3825429?v=4?s=100" width="100px;" alt="Glen Whitney"/><br /><sub><b>Glen Whitney</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=gwhitney" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
