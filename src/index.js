@@ -112,7 +112,8 @@ async function analyze(options) {
     '.ts',
     '.tsx',
     '.mjs',
-    '.vue'
+    '.vue',
+    '.svelte'
   ];
   const fileExtension = path.extname(filePath || '');
 
@@ -136,6 +137,10 @@ async function analyze(options) {
 
   if (['.vue'].includes(fileExtension)) {
     formattingOptions.eslint.parser ||= require.resolve('vue-eslint-parser');
+  }
+
+  if (['.svelte'].includes(fileExtension)) {
+    formattingOptions.eslint.parser ||= require.resolve('svelte-eslint-parser');
   }
 
   const eslintFix = await createEslintFix(formattingOptions.eslint, eslintPath);
