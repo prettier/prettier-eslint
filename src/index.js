@@ -56,6 +56,7 @@ async function format(options) {
  *  `r.output` is the formatted string and `r.messages` is an array of
  *  message specifications from eslint.
  */
+// eslint-disable-next-line complexity
 async function analyze(options) {
   const { logLevel = getDefaultLogLevel() } = options;
   logger.setLevel(logLevel);
