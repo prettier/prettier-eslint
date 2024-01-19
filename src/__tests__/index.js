@@ -196,16 +196,15 @@ const tests = [
   {
     title: 'Svelte example',
     input: {
-      eslintConfig: {
-        rules: {
-          'space-before-function-paren': [2, 'always']
-        }
-      },
+      prettierOptions: {
+          plugins: ['prettier-plugin-svelte'],
+          overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }]
+        },
       text: '<script>\nfunction foo() { return "foo" }\n</script>\n  <div>test</div>\n<style>\n</style>',
       filePath: path.resolve('./test.svelte')
     },
     output:
-      '<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<div>test</div>\n<style></style>'
+      '<script>\n  function foo() {\n    return "foo";\n  }\n</script>\n\n<div>test</div>\n\n<style>\n</style>'
   },
   {
     title: 'GraphQL example',
