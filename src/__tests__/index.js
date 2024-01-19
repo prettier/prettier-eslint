@@ -194,6 +194,20 @@ const tests = [
       '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>'
   },
   {
+    title: 'Svelte example',
+    input: {
+      eslintConfig: {
+        rules: {
+          'space-before-function-paren': [2, 'always']
+        }
+      },
+      text: '<script>\nfunction foo() { return "foo" }\n</script>\n  <div>test</div>\n<style>\n</style>',
+      filePath: path.resolve('./test.svelte')
+    },
+    output:
+      '<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<div>test</div>\n<style></style>'
+  },
+  {
     title: 'GraphQL example',
     input: {
       text: 'type Query{test: Test}',

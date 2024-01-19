@@ -32,7 +32,8 @@
     "pretty-format": "^29.7.0",
     "require-relative": "^0.8.7",
     "typescript": "^5.2.2",
-    "vue-eslint-parser": "^9.1.0"
+    "vue-eslint-parser": "^9.1.0",
+    "svelte-eslint-parser": "^0.33.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.9",
