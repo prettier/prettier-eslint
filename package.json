@@ -29,11 +29,8 @@
     "lodash.merge": "^4.6.0",
     "loglevel-colored-level-prefix": "^1.0.0",
     "prettier": "^3.0.1",
-    "prettier-plugin-svelte": "^3.1.2",
     "pretty-format": "^29.7.0",
     "require-relative": "^0.8.7",
-    "svelte": "^4.2.9",
-    "svelte-eslint-parser": "^0.33.1",
     "typescript": "^5.2.2",
     "vue-eslint-parser": "^9.1.0"
   },
@@ -54,6 +51,11 @@
     "prettier-eslint-cli": "^8.0.0",
     "rimraf": "^5.0.5",
     "strip-indent": "^3.0.0"
+  },
+  "optionalDependencies": {
+    "prettier-plugin-svelte": "^3.1.2",
+    "svelte": "^4.2.9",
+    "svelte-eslint-parser": "^0.33.1"
   },
   "engines": {
     "node": ">=16.10.0"
