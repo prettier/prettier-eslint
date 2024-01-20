@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.3.0
+
+### Minor Changes
+
+- [#950](https://github.com/prettier/prettier-eslint/pull/950) [`84184387e6adadc4fb800194edfcf499a46585d4`](https://github.com/prettier/prettier-eslint/commit/84184387e6adadc4fb800194edfcf499a46585d4) Thanks [@robertheessels](https://github.com/robertheessels)! - feat: support handling `.svelte` files
+
 ## 16.2.0
 
 ### Minor Changes
