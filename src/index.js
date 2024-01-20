@@ -56,6 +56,7 @@ async function format(options) {
  *  `r.output` is the formatted string and `r.messages` is an array of
  *  message specifications from eslint.
  */
+// eslint-disable-next-line complexity
 async function analyze(options) {
   const { logLevel = getDefaultLogLevel() } = options;
   logger.setLevel(logLevel);
@@ -112,7 +113,8 @@ async function analyze(options) {
     '.ts',
     '.tsx',
     '.mjs',
-    '.vue'
+    '.vue',
+    '.svelte'
   ];
   const fileExtension = path.extname(filePath || '');
 
@@ -136,6 +138,10 @@ async function analyze(options) {
 
   if (['.vue'].includes(fileExtension)) {
     formattingOptions.eslint.parser ||= require.resolve('vue-eslint-parser');
+  }
+
+  if (['.svelte'].includes(fileExtension)) {
+    formattingOptions.eslint.parser ||= require.resolve('svelte-eslint-parser');
   }
 
   const eslintFix = await createEslintFix(formattingOptions.eslint, eslintPath);

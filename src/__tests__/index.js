@@ -194,6 +194,19 @@ const tests = [
       '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>'
   },
   {
+    title: 'Svelte example',
+    input: {
+      prettierOptions: {
+          plugins: ['prettier-plugin-svelte'],
+          overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }]
+        },
+      text: '<script>\nfunction foo() { return "foo" }\n</script>\n  <div>test</div>\n<style>\n</style>',
+      filePath: path.resolve('./test.svelte')
+    },
+    output:
+      '<script>\n  function foo() {\n    return "foo";\n  }\n</script>\n\n<div>test</div>\n\n<style>\n</style>'
+  },
+  {
     title: 'GraphQL example',
     input: {
       text: 'type Query{test: Test}',
