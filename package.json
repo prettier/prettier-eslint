@@ -20,6 +20,18 @@
     "JounQin (https://www.1stG.me) <admin@1stg.me>"
   ],
   "license": "MIT",
+  "peerDependencies": {
+    "prettier-plugin-svelte": "^3.0.0",
+    "svelte-eslint-parser": "*"
+  },
+  "peerDependenciesMeta": {
+    "prettier-plugin-svelte": {
+      "optional": true
+    },
+    "svelte-eslint-parser": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "@typescript-eslint/parser": "^6.7.5",
     "common-tags": "^1.4.0",
@@ -54,22 +66,6 @@
     "strip-indent": "^3.0.0",
     "svelte": "^4.2.9",
     "svelte-eslint-parser": "^0.33.1"
-  },
-  "peerDependencies": {
-    "prettier-plugin-svelte": "^3.0.0",
-    "svelte": "^4.2.9",
-    "svelte-eslint-parser": "*"
-  },
-  "peerDependenciesMeta": {
-    "prettier-plugin-svelte": {
-      "optional": true
-    },
-    "svelte": {
-      "optional": true
-    },
-    "svelte-eslint-parser": {
-      "optional": true
-    }
   },
   "engines": {
     "node": ">=16.10.0"
