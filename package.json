@@ -37,7 +37,7 @@
     "common-tags": "^1.4.0",
     "dlv": "^1.1.0",
     "eslint": "^8.7.0",
-    "indent-string": "^4.0.0",
+    "indent-string": "^5.0.0",
     "lodash.merge": "^4.6.0",
     "loglevel-colored-level-prefix": "^1.0.0",
     "prettier": "^3.0.1",
