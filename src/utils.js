@@ -1,16 +1,18 @@
-/* eslint import/no-dynamic-require:0 */
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
-import getLogger from 'loglevel-colored-level-prefix';
 import { Linter } from 'eslint';
+import {ESLint} from 'eslint';
+import getLogger from 'loglevel-colored-level-prefix';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 const RULE_DISABLED = {};
 const RULE_NOT_CONFIGURED = 'RULE_NOT_CONFIGURED';
+
 const ruleValueExists = prettierRuleValue =>
   prettierRuleValue !== RULE_NOT_CONFIGURED &&
   prettierRuleValue !== RULE_DISABLED &&
   typeof prettierRuleValue !== 'undefined';
+
 const OPTION_GETTERS = {
   printWidth: {
     ruleValue: rules => getRuleValue(rules, 'max-len', 'code'),
@@ -19,9 +21,11 @@ const OPTION_GETTERS = {
   tabWidth: {
     ruleValue: rules => {
       let value = getRuleValue(rules, 'indent');
+
       if (value === 'tab') {
         value = getRuleValue(rules, 'max-len', 'tabWidth');
       }
+
       return value;
     },
     ruleValueToPrettierOption: getTabWidth
@@ -58,7 +62,7 @@ const OPTION_GETTERS = {
 };
 
 /* eslint import/prefer-default-export:0 */
-export { getESLint, getOptionsForFormatting, requireModule };
+export { getESLint, getOptionsForFormatting };
 
 function getOptionsForFormatting(
   eslintConfig,
@@ -66,17 +70,20 @@ function getOptionsForFormatting(
   fallbackPrettierOptions = {}
 ) {
   const eslint = getRelevantESLintConfig(eslintConfig);
+
   const prettier = getPrettierOptionsFromESLintRules(
     eslintConfig,
     prettierOptions,
     fallbackPrettierOptions
   );
+
   return { eslint, prettier };
 }
 
 function getRelevantESLintConfig(eslintConfig) {
   const linter = new Linter();
   const rules = linter.getRules();
+
   logger.debug('turning off unfixable rules');
 
   const relevantRules = {};
@@ -114,7 +121,6 @@ function getPrettierOptionsFromESLintRules(
   fallbackPrettierOptions
 ) {
   const { rules } = eslintConfig;
-
   const prettierPluginOptions = getRuleValue(rules, 'prettier/prettier', []);
 
   if (ruleValueExists(prettierPluginOptions)) {
@@ -350,6 +356,7 @@ function getRuleValue(rules, name, objPath) {
           non-object value of ${value}. Using that value.
         `
       );
+
       return value;
     }
   }
@@ -367,6 +374,7 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
   }
 
   const fallback = fallbacks[prettierRuleName];
+
   if (typeof fallback !== 'undefined') {
     logger.debug(
       oneLine`
@@ -374,6 +382,7 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
         using provided fallback of ${fallback}
       `
     );
+
     return fallback;
   }
 
@@ -383,26 +392,11 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
       let prettier decide
     `
   );
+
   return undefined;
 }
 
-function requireModule(modulePath, name) {
-  try {
-    logger.trace(`requiring "${name}" module at "${modulePath}"`);
-    return require(modulePath);
-  } catch (error) {
-    logger.error(
-      oneLine`
-      There was trouble getting "${name}".
-      Is "${modulePath}" a correct path to the "${name}" module?
-    `
-    );
-    throw error;
-  }
-}
-
 function getESLint(eslintPath, eslintOptions) {
-  const { ESLint } = requireModule(eslintPath, 'eslint');
   try {
     return new ESLint(eslintOptions);
   } catch (error) {

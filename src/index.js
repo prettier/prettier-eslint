@@ -1,20 +1,23 @@
+/* eslint-disable import/no-unused-modules */
 /* eslint no-console:0, global-require:0, import/no-dynamic-require:0 */
 /* eslint complexity: [1, 13] */
 
-import fs from 'fs';
-import path from 'path';
-import requireRelative from 'require-relative';
-import prettyFormat from 'pretty-format';
 import { oneLine, stripIndent } from 'common-tags';
 import indentString from 'indent-string';
-import getLogger from 'loglevel-colored-level-prefix';
 import merge from 'lodash.merge';
-import { getESLint, getOptionsForFormatting, requireModule } from './utils';
+import getLogger from 'loglevel-colored-level-prefix';
+import prettier from 'prettier';
+import prettyFormat from 'pretty-format';
+import requireRelative from 'require-relative';
 
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+import { getESLint, getOptionsForFormatting } from './utils';
+
+const __filename = fileURLToPath(import.meta.url);
 const logger = getLogger({ prefix: 'prettier-eslint' });
-
-// CommonJS + ES6 modules... is it worth it? Probably not...
-module.exports = format;
 
 /**
  * Formats the text with prettier and then eslint based on the given options
@@ -24,9 +27,9 @@ module.exports = format;
  *  `text` is not provided.
  * @param {String} options.text - the text (JavaScript code) to format
  * @param {String} options.eslintPath - the path to the eslint module to use.
- *   Will default to require.resolve('eslint')
+ *   Will default to import.meta.resolve('eslint')
  * @param {String} options.prettierPath - the path to the prettier module.
- *   Will default to require.resolve('prettier')
+ *   Will default to import.meta.resolve('prettier')
  * @param {Object} options.eslintConfig - the config to use for formatting
  *  with ESLint.
  * @param {Object} options.prettierOptions - the options to pass for
@@ -42,6 +45,7 @@ module.exports = format;
  */
 async function format(options) {
   const {output} = await analyze(options);
+
   return output;
 }
 
@@ -59,6 +63,7 @@ async function format(options) {
 // eslint-disable-next-line complexity
 async function analyze(options) {
   const { logLevel = getDefaultLogLevel() } = options;
+
   logger.setLevel(logLevel);
   logger.trace('called analyze with options:', prettyFormat(options));
 
@@ -123,7 +128,6 @@ async function analyze(options) {
   const onlyPrettier = filePath
     ? !eslintExtensions.includes(fileExtension)
     : false;
-
   const prettify = createPrettify(formattingOptions.prettier, prettierPath);
 
   if (onlyPrettier) {
@@ -131,36 +135,40 @@ async function analyze(options) {
   }
 
   if (['.ts', '.tsx'].includes(fileExtension)) {
-    formattingOptions.eslint.parser ||= require.resolve(
+    formattingOptions.eslint.parser ||= import.meta.resolve(
       '@typescript-eslint/parser'
     );
   }
 
   if (['.vue'].includes(fileExtension)) {
-    formattingOptions.eslint.parser ||= require.resolve('vue-eslint-parser');
+    formattingOptions.eslint.parser ||= import.meta.resolve('vue-eslint-parser');
   }
 
   if (['.svelte'].includes(fileExtension)) {
-    formattingOptions.eslint.parser ||= require.resolve('svelte-eslint-parser');
+    formattingOptions.eslint.parser ||= import.meta.resolve('svelte-eslint-parser');
   }
 
   const eslintFix = await createEslintFix(formattingOptions.eslint, eslintPath);
 
   if (prettierLast) {
     const eslintFixed = await eslintFix(text, filePath);
+
     return prettify(eslintFixed);
   }
+
   return eslintFix((await prettify(text)).output, filePath);
 }
 
 function createPrettify(formatOptions, prettierPath) {
   return async function prettify(param) {
-    let text = param
-    let messages = []
+    let text = param;
+    let messages = [];
+
     if (typeof param !== 'string') {
-      text = param.output
-      messages = param.text
+      text = param.output;
+      messages = param.text;
     }
+
     logger.debug('calling prettier on text');
     logger.trace(
       stripIndent`
@@ -169,10 +177,12 @@ function createPrettify(formatOptions, prettierPath) {
       ${indentString(text, 2)}
     `
     );
-    const prettier = requireModule(prettierPath, 'prettier');
+
     try {
       logger.trace('calling prettier.format with the text and prettierOptions');
+
       const output = await prettier.format(text, formatOptions);
+
       logger.trace('prettier: output === input', output === text);
       logger.trace(
         stripIndent`
@@ -181,6 +191,7 @@ function createPrettify(formatOptions, prettierPath) {
         ${indentString(output, 2)}
       `
       );
+
       return {output, messages};
     } catch (error) {
       logger.error('prettier formatting failed due to a prettier error');
@@ -193,8 +204,10 @@ function createEslintFix(eslintConfig, eslintPath) {
   return async function eslintFix(text, filePath) {
     if (Array.isArray(eslintConfig.globals)) {
       const tempGlobals = {};
+
       eslintConfig.globals.forEach(g => {
         const [key, value] = g.split(':');
+
         tempGlobals[key] = value;
       });
       eslintConfig.globals = tempGlobals;
@@ -224,19 +237,24 @@ function createEslintFix(eslintConfig, eslintPath) {
     delete eslintConfig.settings;
 
     const eslint = getESLint(eslintPath, eslintConfig);
+
     try {
       logger.trace('calling cliEngine.executeOnText with the text');
+
       const report = await eslint.lintText(text, {
         filePath,
         warnIgnored: true
       });
+
       logger.trace(
         'executeOnText returned the following report:',
         prettyFormat(report)
       );
+
       // default the output to text because if there's nothing
       // to fix, eslint doesn't provide `output`
       const [{ output = text, messages }] = await report;
+
       logger.trace('eslint --fix: output === input', output === text);
       // NOTE: We're ignoring linting errors/warnings here and
       // defaulting to the given text if there are any
@@ -249,6 +267,7 @@ function createEslintFix(eslintConfig, eslintPath) {
         ${indentString(output, 2)}
       `
       );
+
       return {output, messages};
     } catch (error) {
       logger.error('eslint fix failed due to an eslint error');
@@ -265,6 +284,7 @@ function getTextFromFilePath(filePath) {
         the text for file at "${filePath}"
       `
     );
+
     return fs.readFileSync(filePath, 'utf8');
   } catch (error) {
     logger.error(
@@ -282,15 +302,12 @@ function getESLintApiOptions(eslintConfig) {
   // these options affect what calculateConfigForFile produces
   return {
     ignore: eslintConfig.ignore || true,
-    ignorePath: eslintConfig.ignorePath || null,
+    ignorePatterns: eslintConfig.ignorePatterns || null,
     allowInlineConfig: eslintConfig.allowInlineConfig || true,
     baseConfig: eslintConfig.baseConfig || null,
     overrideConfig: eslintConfig.overrideConfig || null,
     overrideConfigFile: eslintConfig.overrideConfigFile || null,
-    plugins: eslintConfig.plugins || null,
-    resolvePluginsRelativeTo: eslintConfig.resolvePluginsRelativeTo || null,
-    rulePaths: eslintConfig.rulePaths || [],
-    useEslintrc: eslintConfig.useEslintrc || true
+    plugins: eslintConfig.plugins || null
   };
 }
 
@@ -298,21 +315,26 @@ async function getESLintConfig(filePath, eslintPath, eslintOptions) {
   if (filePath) {
     eslintOptions.cwd = path.dirname(filePath);
   }
+
   logger.trace(
     oneLine`
       creating ESLint CLI Engine to get the config for
       "${filePath || process.cwd()}"
     `
   );
+
   const eslint = getESLint(eslintPath, getESLintApiOptions(eslintOptions));
 
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
+
     const config = await eslint.calculateConfigForFile(filePath);
+
     logger.trace(
       `eslint config for "${filePath}" received`,
       prettyFormat(config)
     );
+
     return {
       ...eslintOptions,
       ...config
@@ -320,12 +342,12 @@ async function getESLintConfig(filePath, eslintPath, eslintOptions) {
   } catch (error) {
     // is this noisy? Try setting options.disableLog to false
     logger.debug('Unable to find config');
+
     return { rules: {} };
   }
 }
 
 function getPrettierConfig(filePath, prettierPath) {
-  const prettier = requireModule(prettierPath, 'prettier');
   return prettier.resolveConfig && prettier.resolveConfig(filePath);
 }
 
@@ -341,7 +363,8 @@ function getModulePath(filePath = __filename, moduleName) {
       error.message,
       error.stack
     );
-    return require.resolve(moduleName);
+
+    return import.meta.resolve(moduleName);
   }
 }
 
@@ -351,5 +374,9 @@ function getDefaultLogLevel() {
 
 // Allow named imports of either `analyze` or `format` from this module,
 // while leaving `format` in place as the default import:
-module.exports.format = format
-module.exports.analyze = analyze
+export default format;
+
+export {
+  format,
+  analyze
+};
