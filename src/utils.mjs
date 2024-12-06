@@ -14,7 +14,7 @@ const ruleValueExists = prettierRuleValue =>
 const OPTION_GETTERS = {
   printWidth: {
     ruleValue: rules => getRuleValue(rules, 'max-len', 'code'),
-    ruleValueToPrettierOption: getPrintWidth
+    ruleValueToPrettierOption: getPrintWidth,
   },
   tabWidth: {
     ruleValue: rules => {
@@ -24,54 +24,52 @@ const OPTION_GETTERS = {
       }
       return value;
     },
-    ruleValueToPrettierOption: getTabWidth
+    ruleValueToPrettierOption: getTabWidth,
   },
   singleQuote: {
     ruleValue: rules => getRuleValue(rules, 'quotes'),
-    ruleValueToPrettierOption: getSingleQuote
+    ruleValueToPrettierOption: getSingleQuote,
   },
   trailingComma: {
     ruleValue: rules => getRuleValue(rules, 'comma-dangle', []),
-    ruleValueToPrettierOption: getTrailingComma
+    ruleValueToPrettierOption: getTrailingComma,
   },
   bracketSpacing: {
     ruleValue: rules => getRuleValue(rules, 'object-curly-spacing'),
-    ruleValueToPrettierOption: getBracketSpacing
+    ruleValueToPrettierOption: getBracketSpacing,
   },
   semi: {
     ruleValue: rules => getRuleValue(rules, 'semi'),
-    ruleValueToPrettierOption: getSemi
+    ruleValueToPrettierOption: getSemi,
   },
   useTabs: {
     ruleValue: rules => getRuleValue(rules, 'indent'),
-    ruleValueToPrettierOption: getUseTabs
+    ruleValueToPrettierOption: getUseTabs,
   },
   bracketSameLine: {
     ruleValue: rules =>
       getRuleValue(rules, 'react/jsx-closing-bracket-location', 'nonEmpty'),
-    ruleValueToPrettierOption: getBracketSameLine
+    ruleValueToPrettierOption: getBracketSameLine,
   },
   arrowParens: {
     ruleValue: rules => getRuleValue(rules, 'arrow-parens'),
-    ruleValueToPrettierOption: getArrowParens
-  }
+    ruleValueToPrettierOption: getArrowParens,
+  },
 };
 
-/* eslint import/prefer-default-export:0 */
-export { getESLint, getOptionsForFormatting, requireModule };
-
-function getOptionsForFormatting(
+export function getOptionsForFormatting(
   eslintConfig,
   prettierOptions = {},
-  fallbackPrettierOptions = {}
+  fallbackPrettierOptions = {},
 ) {
-  const eslint = getRelevantESLintConfig(eslintConfig);
-  const prettier = getPrettierOptionsFromESLintRules(
-    eslintConfig,
-    prettierOptions,
-    fallbackPrettierOptions
-  );
-  return { eslint, prettier };
+  return {
+    eslint: getRelevantESLintConfig(eslintConfig),
+    prettier: getPrettierOptionsFromESLintRules(
+      eslintConfig,
+      prettierOptions,
+      fallbackPrettierOptions,
+    ),
+  };
 }
 
 function getRelevantESLintConfig(eslintConfig) {
@@ -79,29 +77,25 @@ function getRelevantESLintConfig(eslintConfig) {
   const rules = linter.getRules();
   logger.debug('turning off unfixable rules');
 
-  const relevantRules = {};
-
+  // Mutate the config, turning off unfixable rules
   rules.forEach((rule, name) => {
-    const {
-      meta: { fixable }
-    } = rule;
-
-    if (!fixable) {
-      logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
-      rule = ['off'];
-      relevantRules[name] = rule;
+    if (!rule.meta.fixable) {
+      logger.trace('turning off rule:', name);
+      rules.set(name, ['off']);
     }
-  }, {});
+  });
 
-  return {
-    // defaults
+  const finalConfig = {
     useEslintrc: false,
     ...eslintConfig,
-    // overrides
-    rules: { ...eslintConfig.rules, ...relevantRules },
+    ...(eslintConfig.rules.size
+      ? { rules: Object.fromEntries(Object.entries(eslintConfig.rules)) }
+      : undefined),
     fix: true,
-    globals: eslintConfig.globals || {}
+    globals: eslintConfig.globals ?? {},
   };
+
+  return finalConfig;
 }
 
 /**
@@ -111,7 +105,7 @@ function getRelevantESLintConfig(eslintConfig) {
 function getPrettierOptionsFromESLintRules(
   eslintConfig,
   prettierOptions,
-  fallbackPrettierOptions
+  fallbackPrettierOptions,
 ) {
   const { rules } = eslintConfig;
 
@@ -128,9 +122,9 @@ function getPrettierOptionsFromESLintRules(
         fallbackPrettierOptions,
         key,
         options,
-        rules
+        rules,
       ),
-    prettierOptions
+    prettierOptions,
   );
 }
 
@@ -141,7 +135,7 @@ function configureOptions(
   fallbackPrettierOptions,
   key,
   options,
-  rules
+  rules,
 ) {
   const givenOption = prettierOptions[key];
   const optionIsGiven = givenOption !== undefined;
@@ -155,7 +149,7 @@ function configureOptions(
     const option = ruleValueToPrettierOption(
       eslintRuleValue,
       fallbackPrettierOptions,
-      rules
+      rules,
     );
 
     if (option !== undefined) {
@@ -305,7 +299,7 @@ function extractRuleValue(objPath, name, value) {
       oneLine`
         Getting the value from object configuration of ${name}.
         delving into ${JSON.stringify(value)} with path "${objPath}"
-      `
+      `,
     );
 
     return delve(value, objPath, RULE_NOT_CONFIGURED);
@@ -319,7 +313,7 @@ function extractRuleValue(objPath, name, value) {
       not currently capable of getting the prettier value
       based on an object configuration for ${name}.
       Please file an issue (and make a pull request?)
-    `
+    `,
   );
 
   // istanbul ignore next
@@ -348,7 +342,7 @@ function getRuleValue(rules, name, objPath) {
         oneLine`
           The ${name} rule is configured with a
           non-object value of ${value}. Using that value.
-        `
+        `,
       );
       return value;
     }
@@ -372,7 +366,7 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
       oneLine`
         The ${prettierRuleName} rule is not configured,
         using provided fallback of ${fallback}
-      `
+      `,
     );
     return fallback;
   }
@@ -381,28 +375,30 @@ function makePrettierOption(prettierRuleName, prettierRuleValue, fallbacks) {
     oneLine`
       The ${prettierRuleName} rule is not configured,
       let prettier decide
-    `
+    `,
   );
   return undefined;
 }
 
-function requireModule(modulePath, name) {
+export async function importModule(modulePath, name) {
   try {
-    logger.trace(`requiring "${name}" module at "${modulePath}"`);
-    return require(modulePath);
+    logger.trace(`importing "${name}" module at "${modulePath}"`);
+    return await import(modulePath).then(
+      ({ default: defaultExport }) => defaultExport,
+    );
   } catch (error) {
     logger.error(
       oneLine`
       There was trouble getting "${name}".
       Is "${modulePath}" a correct path to the "${name}" module?
-    `
+    `,
     );
     throw error;
   }
 }
 
-function getESLint(eslintPath, eslintOptions) {
-  const { ESLint } = requireModule(eslintPath, 'eslint');
+export async function getESLint(eslintPath, eslintOptions) {
+  const { ESLint } = await importModule(eslintPath, 'eslint');
   try {
     return new ESLint(eslintOptions);
   } catch (error) {

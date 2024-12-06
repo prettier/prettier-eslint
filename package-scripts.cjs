@@ -22,23 +22,15 @@ module.exports = {
       // with ESM. ESM support is needed due to prettier v3’s use of a dynamic
       // `import()` in its `.cjs` file. The flag can be removed when node
       // supports modules in the VM API or the import is removed from prettier.
-      default: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage'
-      ),
-      update: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --updateSnapshot'
-      ),
-      watch: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch'
-      ),
+      default: crossEnv('vitest --coverage run'),
+      update: crossEnv('vitest --coverage --updateSnapshot'),
+      watch: crossEnv('vitest'),
       openCoverage: 'open coverage/lcov-report/index.html',
     },
     build: {
-      description: 'delete the dist directory and run babel to build the files',
-      script: series(
-        rimraf('dist'),
-        'babel --out-dir dist --ignore "src/__tests__/**/*","src/__mocks__/**/*" src'
-      ),
+      description:
+        'delete the dist directory and run Rollup to build the files',
+      script: series(rimraf('dist'), 'rollup -c'),
     },
     lint: {
       description: 'lint the entire project',
@@ -57,7 +49,11 @@ module.exports = {
     validate: {
       description:
         'This runs several scripts to make sure things look good before committing or on clean install',
-      script: concurrent.nps('lint', 'build', 'test'),
+      script: concurrent([
+        'nps -c ./package-scripts.cjs lint',
+        'nps -c ./package-scripts.cjs build',
+        'nps -c ./package-scripts.cjs test',
+      ]),
     },
     format: {
       description: 'Formats everything with prettier-eslint',
