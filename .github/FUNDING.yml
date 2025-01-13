@@ -1,12 +1,14 @@
 github:
+  - prettier-eslint
   - JounQin
   - 1stG
   - rx-ts
   - un-ts
-patreon: 1stG
-open_collective: prettier
+patreon: PrettierESLint
+open_collective: prettier-eslint
 custom:
   - https://opencollective.com/1stG
   - https://opencollective.com/rxts
   - https://opencollective.com/unts
+  - https://patreon.com/1stG
   - https://afdian.net/@JounQin
