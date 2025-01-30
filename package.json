@@ -49,9 +49,6 @@
     "vue-eslint-parser": "^9.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.22.9",
-    "@babel/core": "^7.23.2",
-    "@babel/preset-env": "^7.22.9",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
     "@rollup/plugin-commonjs": "^28.0.1",

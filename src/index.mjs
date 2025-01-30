@@ -89,7 +89,7 @@ export async function analyze(options) {
   const prettierOptions = merge(
     {},
     // Let prettier infer the parser using the filepath, if present. Otherwise
-    // assume the file is JS and default to the babel parser.
+    // assume the file is JS and use prettier's babel parser
     filePath ? { filepath: filePath } : { parser: 'babel' },
     prettierConfigFromFilePath,
     options.prettierOptions,
