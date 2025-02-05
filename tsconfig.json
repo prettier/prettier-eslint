@@ -1,14 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
-    "lib": ["ES2020", "DOM"],
-    "moduleResolution": "Node",
-    "rootDir": ".",
-    "strict": true,
-    "noEmit": true,
+    "target": "ES2022",
+    "module": "esnext",
+    "lib": ["ES2022"],
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "./dts",
+    "moduleResolution": "bundler",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
-    "baseUrl": "./"
+    "resolveJsonModule": true,
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "scripts",
+    "dts",
+    "**/__tests__/**"
+  ]
 }

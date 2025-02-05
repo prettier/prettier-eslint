@@ -1,95 +1,68 @@
-// Type definitions for prettier-eslint 12.0
-// Project: https://github.com/prettier/prettier-eslint
+import { ESLint } from 'eslint';
 
-import * as eslint from 'eslint';
-import * as prettier from 'prettier';
-
-declare namespace format {
-  /**
-   * Logging level for the traceback of the synchronous formatting process.
-   */
-  type LogLevel = 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent';
-
-  /**
-   * Options to format text with Prettier and ESLint.
-   */
-  interface Options {
-    /**
-     * The config to use for formatting with ESLint.
-     */
-    eslintConfig?: eslint.Linter.Config;
-    /**
-     * The path to the eslint module to use.
-     * Will default to require.resolve('eslint')
-     */
+interface FormatOptions {
+    /** The path of the file being formatted. Used to find the relevant ESLint config and load text if not provided. */
+    filePath?: string | undefined;
+    /** The JavaScript code to format. If not provided, it will be loaded from the `filePath`. */
+    text?: string;
+    /** The path to the ESLint module to use. Defaults to `require.resolve('eslint')`. */
     eslintPath?: string;
-    /**
-     * The options to pass for formatting with `prettier` if the given
-     * option is not inferrable from the `eslintConfig`.
-     */
-    fallbackPrettierOptions?: prettier.Options;
-    /**
-     * The path of the file being formatted can be used in lieu of
-     * `eslintConfig` (eslint will be used to find the relevant
-     * config for the file). Will also be used to load the `text` if
-     * `text` is not provided.
-     */
-    filePath?: string;
-    /**
-     * The level for the logs (`error`, `warn`, `info`, `debug`, `trace`).
-     */
-    logLevel?: LogLevel;
-    /**
-     * The options to pass for formatting with `prettier`. If not provided,
-     * prettier-eslint will attempt to create the options based on the
-     * `eslintConfig` value.
-     */
-    prettierOptions?: prettier.Options;
-    /**
-     * The path to the `prettier` module.
-     * Will default to require.resovlve('prettier')
-     */
+    /** The path to the Prettier module. Defaults to `require.resolve('prettier')`. */
     prettierPath?: string;
-    /**
-     * Run Prettier last.
-     */
+    /** The ESLint options to use for formatting. If not provided, the config is inferred from the file path. */
+    eslintOptions?: ESLint.Options;
+    /** Options to pass to Prettier. If not provided, options will be inferred from ESLint config. */
+    prettierOptions?: PrettierFormatOptions;
+    /** Fallback options for Prettier if they cannot be inferred from ESLint config. */
+    fallbackPrettierOptions?: Record<string, unknown> | undefined;
+    /** Log level for debugging (error, warn, info, debug, trace). */
+    logLevel?: string;
+    /** Whether to run Prettier after ESLint. Defaults to `false`. */
     prettierLast?: boolean;
-    /**
-     * The text (JavaScript code) to format.
-     */
-    text: string;
-  }
+}
+/**
+ * Represents options for Prettier formatting.
+ */
+interface PrettierFormatOptions {
+    [key: string]: unknown;
 }
 
 /**
- * Formats the text with Prettier and then ESLint while obeying the user's
- * configuration.
+ * Formats JavaScript code using Prettier and then ESLint based on the provided options.
  *
- * @param options Options to format text with Prettier and Eslint.
- * @param options.eslintConfig The config to use for formatting
- * with ESLint.
- * @param options.eslintPath The path to the eslint module to use.
- * Will default to require.resolve('eslint')
- * @param options.fallbackPrettierOptions The options to pass for
- * formatting with `prettier` if the given option is not inferrable from the
- * eslintConfig.
- * @param options.filePath The path of the file being formatted
- * can be used in lieu of `eslintConfig` (eslint will be used to find the
- * relevant config for the file). Will also be used to load the `text` if
- * `text` is not provided.
- * @param options.prettierOptions The options to pass for
- * formatting with `prettier`. If not provided, prettier-eslint will attempt
- * to create the options based on the `eslintConfig` value.
- * @param options.prettierLast Run Prettier last.
- * @param options.prettierPath The path to the prettier module.
- * Will default to require.resovlve('prettier')
- * @param options.logLevel The level for the logs (`error`, `warn`,
- * `info`, `debug`, `trace`).
- * @param options.text The text (JavaScript code) to format.
- * @return Auto-formatted text that is mostly compliant with the
- * supplied configuration. The auto-formatting is limited to the issues that
- * Prettier and ESLint can automatically fix.
+ * This function first analyzes the code using ESLint and Prettier, then returns the formatted output.
+ *
+ * @param {FormatOptions} options - The configuration options for formatting.
+ * @returns {Promise<string>} A promise that resolves with the formatted code.
+ *
+ * @example
+ * ```ts
+ * const formattedCode = await format({ filePath: './example.js', text: 'const x=1;' });
+ * console.log(formattedCode); // Output: 'const x = 1;'
+ * ```
  */
-declare function format(options: format.Options): Promise<string>;
+declare const format: (options: FormatOptions) => Promise<string>;
+/**
+ * Analyzes and formats text using Prettier and ESLint.
+ *
+ * This function applies Prettier and ESLint formatting based on the provided options.
+ * It first retrieves configuration settings from the given file path and modules,
+ * then formats the code accordingly. The function ensures proper ordering of Prettier
+ * and ESLint operations based on the `prettierLast` flag.
+ *
+ * @param {FormatOptions} options - The configuration options for formatting.
+ * @returns {Promise<{ output: string; messages: any[] }>}
+ *          A promise resolving to an object containing formatted output and ESLint messages.
+ *
+ * @example
+ * ```ts
+ * const formatted = await analyze({ filePath: './example.js', text: 'const x=1;' });
+ * console.log(formatted.output); // Formatted code
+ * ```
+ */
+declare const analyze: (options: FormatOptions) => Promise<{
+    output: string;
+    messages: any[];
+}>;
 
-export = format;
+export { analyze, format };

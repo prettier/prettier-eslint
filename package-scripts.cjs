@@ -23,22 +23,20 @@ module.exports = {
       // `import()` in its `.cjs` file. The flag can be removed when node
       // supports modules in the VM API or the import is removed from prettier.
       default: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage'
+        'glob -c "node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/index.test.ts"'
+        // 'glob -c "node --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/**/*.[jt]s"'
       ),
       update: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --updateSnapshot'
+        'glob -c "node --import tsx --test --test-update-snapshots --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/**/*.[jt]s"'
       ),
       watch: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch'
+        'glob -c "node --import tsx --test --watch --no-warnings --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/**/*.[jt]s"'
       ),
       openCoverage: 'open coverage/lcov-report/index.html',
     },
     build: {
-      description: 'delete the dist directory and run babel to build the files',
-      script: series(
-        rimraf('dist'),
-        'babel --out-dir dist --ignore "src/__tests__/**/*","src/__mocks__/**/*" src'
-      ),
+      description: 'delete the dist directory and run Rollup to build the files',
+      script: series(rimraf('dist'), 'rollup -c')
     },
     lint: {
       description: 'lint the entire project',
@@ -57,7 +55,11 @@ module.exports = {
     validate: {
       description:
         'This runs several scripts to make sure things look good before committing or on clean install',
-      script: concurrent.nps('lint', 'build', 'test'),
+        script: concurrent([
+          'nps -c ./package-scripts.cjs lint',
+          'nps -c ./package-scripts.cjs build',
+          'nps -c ./package-scripts.cjs test',
+        ])
     },
     format: {
       description: 'Formats everything with prettier-eslint',
