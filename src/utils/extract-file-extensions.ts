@@ -1,5 +1,3 @@
-
-
 /**
  * Extracts unique file extensions from an array of glob patterns.
  *
@@ -21,12 +19,14 @@ export const extractFileExtensions = (patterns: string[]): string[] => {
     .flatMap((pattern) => {
       // Handle patterns with multiple extensions like `*.{log,txt}`
       const matchMultiple = pattern.match(/\.{([^}]+)}/);
+
       if (matchMultiple) {
         return matchMultiple[1].split(',');
       }
 
       // Match standard glob patterns like `**/*.js` or `doc/*.tex`
       const matchSingle = pattern.match(/(?:\/|\*)?\*(\.[a-zA-Z0-9]+)$/);
+
       if (matchSingle) {
         return matchSingle[1];
       }

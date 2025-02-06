@@ -1,8 +1,9 @@
-import { PrettierFormatOptions, PrettierInterface, PrettifyInput } from "../../types";
-import getLogger from 'loglevel-colored-level-prefix';
 import { stripIndent } from 'common-tags';
 import indentString from 'indent-string';
-import { importModule } from "../import-module";
+import getLogger from 'loglevel-colored-level-prefix';
+
+import { PrettierFormatOptions, PrettierInterface, PrettifyInput } from '../../types';
+import { importModule } from '../import-module';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
@@ -51,6 +52,7 @@ export const createPrettify = (
 
     try {
       logger.trace('Calling Prettier.format with the text and formatOptions');
+
       const output = await Prettier.format(text, formatOptions);
 
       logger.trace('Prettier: output === input', output === text);

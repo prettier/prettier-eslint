@@ -1,6 +1,7 @@
-import { oneLine } from "common-tags";
-import requireRelative from "require-relative";
+import { oneLine } from 'common-tags';
 import getLogger from 'loglevel-colored-level-prefix';
+import requireRelative from 'require-relative';
+
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -25,7 +26,7 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
 export const getModulePath = (filePath: string, moduleName: string): string => {
   try {
     return requireRelative.resolve(moduleName, filePath);
-  } catch (error: any) {
+  } catch (error) {
     logger.debug(
       oneLine`
         There was a problem finding the ${moduleName}
@@ -34,6 +35,7 @@ export const getModulePath = (filePath: string, moduleName: string): string => {
       error.message,
       error.stack
     );
+
     return require.resolve(moduleName);
   }
-}
+};

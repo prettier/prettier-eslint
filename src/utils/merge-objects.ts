@@ -1,4 +1,3 @@
-
 /**
  * Merges an array of objects into a single object.
  *
@@ -18,7 +17,8 @@
  */
 export const mergeObjects = (input: object | object[]): object => {
   if (!Array.isArray(input)) return input; // If input is a single object, return it
+
   if (input.length === 1) return input[0]; // If it's an array with one object, return that object
 
   return input.reduce((acc, obj) => ({ ...acc, ...obj }), {}); // Merge objects in the array
-}
+};

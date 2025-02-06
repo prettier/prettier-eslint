@@ -1,11 +1,11 @@
-import { ESLint, Linter } from "eslint";
+import { ESLint, Linter } from 'eslint';
 
-import { OPTION_GETTERS } from "../option-getters";
-import { mergeObjects } from "../merge-objects";
-import { getRuleValue } from "../get-rule-value";
-import { ruleValueExists } from "../rule-value-exists";
-import { configurePrettierOptions } from "./configure-prettier-options";
+import { getRuleValue } from '../get-rule-value';
+import { mergeObjects } from '../merge-objects';
+import { OPTION_GETTERS } from '../option-getters';
+import { ruleValueExists } from '../rule-value-exists';
 
+import { configurePrettierOptions } from './configure-prettier-options';
 
 /**
  * Converts an ESLint options into Prettier options.
@@ -30,19 +30,17 @@ export const getPrettierOptionsFromESLintRules = (
   prettierOptions: Record<string, unknown>,
   fallbackPrettierOptions: Record<string, unknown>
 ): Record<string, unknown> => {
-
   const config = mergeObjects(eslintOptions) as Linter.Config;
-
   const { rules } = config;
 
   if(rules){
-  // Extract Prettier-specific ESLint rules
-  const prettierPluginOptions = getRuleValue(rules, 'prettier/prettier') as object;
+    // Extract Prettier-specific ESLint rules
+    const prettierPluginOptions = getRuleValue(rules, 'prettier/prettier') as object;
 
-  if (ruleValueExists(prettierPluginOptions)) {
-    prettierOptions = { ...prettierPluginOptions, ...prettierOptions };
+    if (ruleValueExists(prettierPluginOptions)) {
+      prettierOptions = { ...prettierPluginOptions, ...prettierOptions };
+    }
   }
-}
 
   // Map ESLint rules to Prettier options using OPTION_GETTERS
   return Object.keys(OPTION_GETTERS).reduce(

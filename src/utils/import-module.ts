@@ -1,8 +1,10 @@
+import { oneLine } from 'common-tags';
 import getLogger from 'loglevel-colored-level-prefix';
-import { oneLine } from "common-tags";
-import { DynamicImportReturnType } from "../types";
+
+import { DynamicImportReturnType } from '../types';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
+
 /**
  * Dynamically imports a module and returns its default export.
  *
@@ -18,6 +20,7 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
  * ```ts
  * try {
  *   const prettier = await importModule('/path/to/prettier', 'prettier');
+ *
  *   console.log(prettier);
  * } catch (error) {
  *   console.error('Failed to import module:', error);
@@ -27,7 +30,7 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
 export const importModule = async (modulePath: string, name: string): DynamicImportReturnType =>{
   try {
     logger.trace(`Importing "${name}" module from "${modulePath}"`);
-    
+
     // Dynamically import the module and return its default export
     return await import(modulePath).then(({ default: defaultExport }) => defaultExport);
   } catch (error) {
@@ -37,6 +40,7 @@ export const importModule = async (modulePath: string, name: string): DynamicImp
         Is "${modulePath}" a correct path to the "${name}" module?
       `
     );
+
     throw error;
   }
-}
+};

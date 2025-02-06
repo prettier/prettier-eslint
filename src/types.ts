@@ -1,11 +1,11 @@
-import { ESLint, Linter } from "eslint";
-import { ResolveConfigOptions, Options} from "prettier";
+import { ESLint, Linter } from 'eslint';
+import { ResolveConfigOptions, Options} from 'prettier';
 
 
 export interface FormatOptions {
   /** The path of the file being formatted. Used to find the relevant ESLint config and load text if not provided. */
   filePath?: string|undefined;
-  
+
   /** The JavaScript code to format. If not provided, it will be loaded from the `filePath`. */
   text?: string;
 
@@ -52,7 +52,7 @@ export interface PrettifyInput {
 
 export type DynamicImportReturnType = Promise<Record<string, unknown>>;
 
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ESLintModule {
   Linter: { new (...args: any[]): any };
   loadESLint: (...args: any[]) => Promise<any>;
@@ -60,7 +60,7 @@ export interface ESLintModule {
   RuleTester: { new (...args: any[]): any };
   SourceCode: { new (...args: any[]): any };
 }
-
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Represents the formatting options returned by `getOptionsForFormatting`.
@@ -70,25 +70,27 @@ export interface FormattingOptions {
   prettier: Record<string, unknown>; // The Prettier configuration derived from ESLint
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
-* Represents the structure of an option getter for mapping ESLint rules to Prettier options.
-*/
+ * Represents the structure of an option getter for mapping ESLint rules to Prettier options.
+ */
 export interface OptionGetter {
- /**
-  * Function that retrieves the ESLint rule value.
-  * @param {Partial<Linter.RulesRecord>} rules - The ESLint rules configuration.
-  * @returns {Linter.RuleEntry | undefined | string | string} The value of the specified ESLint rule.
-  */
- ruleValue: (rules: Partial<Linter.RulesRecord>) => Linter.RuleEntry | undefined | string | string;
+  /**
+   * Function that retrieves the ESLint rule value.
+   * @param {Partial<Linter.RulesRecord>} rules - The ESLint rules configuration.
+   * @returns {Linter.RuleEntry | undefined | string | string} The value of the specified ESLint rule.
+   */
+  ruleValue: (rules: Partial<Linter.RulesRecord>) => Linter.RuleEntry | undefined | string | string;
 
- /**
-  * Function that converts the ESLint rule value to a corresponding Prettier option.
-  * @param {...args: any[]} ruleValue - The ESLint rule value.
-  * @returns {unknown} The converted Prettier option value.
-  */
- ruleValueToPrettierOption: (...args: any[]) => unknown;
+  /**
+   * Function that converts the ESLint rule value to a corresponding Prettier option.
+   * @param {...args: any[]} ruleValue - The ESLint rule value.
+   * @returns {unknown} The converted Prettier option value.
+   */
+  ruleValueToPrettierOption: (...args: any[]) => unknown;
 }
 
+/* eslint-enable @typescript-eslint/no-explicit-any */
 export interface PrettierInterface {
   format: (text: string, formatOptions: Options) => Promise<string>,
   resolveConfig: (

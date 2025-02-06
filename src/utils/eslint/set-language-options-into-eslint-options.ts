@@ -1,6 +1,6 @@
-import { ESLint, Linter } from "eslint";
-
+import { ESLint, Linter } from 'eslint';
 import getLogger from 'loglevel-colored-level-prefix';
+
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
 /**
@@ -37,13 +37,13 @@ export const setLanguageOptionsIntoESLintOptions = (
       // Handle case where baseConfig is an array
       eslintOptions.baseConfig[0].languageOptions = {
         ...eslintOptions.baseConfig[0].languageOptions,
-        [property]: value,
+        [property]: value
       };
     } else if (eslintOptions.baseConfig && eslintOptions.baseConfig.languageOptions) {
       // Handle case where baseConfig is an object
       eslintOptions.baseConfig.languageOptions = {
         ...eslintOptions.baseConfig.languageOptions,
-        [property]: value,
+        [property]: value
       };
     }
   } catch (error) {

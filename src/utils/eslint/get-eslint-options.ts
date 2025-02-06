@@ -1,14 +1,18 @@
-import path from 'node:path';
-import {format as prettyFormat} from 'pretty-format';
-import getLogger from 'loglevel-colored-level-prefix';
+/* global process */
 
 import { ESLint, Linter } from 'eslint';
-import { getESLint } from './get-eslint';
-import { getESLintApiOptions } from './get-eslint-api-options';
+import getLogger from 'loglevel-colored-level-prefix';
+import {format as prettyFormat} from 'pretty-format';
+
+import path from 'node:path';
+
 import { mergeObjects } from '../merge-objects';
 
+import { getESLint } from './get-eslint';
+import { getESLintApiOptions } from './get-eslint-api-options';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
+
 /**
  * Retrieves the ESLint configuration for a given file.
  *
@@ -43,6 +47,7 @@ export const getESLintOptions = async(
 
   try {
     logger.debug(`Getting ESLint config for file at "${filePath}"`);
+
     const config = await eslint.calculateConfigForFile(filePath);
 
     logger.trace(`ESLint config for "${filePath}" received`, prettyFormat(config));
@@ -53,14 +58,17 @@ export const getESLintOptions = async(
         ...mergeObjects(eslintOptions.baseConfig as object|object[]),
         ...mergeObjects(config)
       }
-    }
-
+    };
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   } catch (error) {
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     // Log a debug message if ESLint configuration cannot be found
     logger.debug('Unable to find ESLint config');
+
     return {
       ...eslintOptions,
       baseConfig: [{ rules: {} }]
     };
   }
-}
+};
+

@@ -1,6 +1,7 @@
 import { oneLine } from 'common-tags';
-import fs from 'node:fs';
 import getLogger from 'loglevel-colored-level-prefix';
+
+import fs from 'node:fs';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 

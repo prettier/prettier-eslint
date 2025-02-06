@@ -1,8 +1,10 @@
-import getLogger from 'loglevel-colored-level-prefix';
-import { ruleValueExists } from '../rule-value-exists';
 import { oneLine } from 'common-tags';
+import getLogger from 'loglevel-colored-level-prefix';
+
+import { ruleValueExists } from '../rule-value-exists';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
+
 /**
  * Determines the appropriate Prettier option value based on rule configuration and fallbacks.
  *
@@ -39,6 +41,7 @@ export const makePrettierOption = (
         using provided fallback of ${fallback}
       `
     );
+
     return fallback;
   }
 

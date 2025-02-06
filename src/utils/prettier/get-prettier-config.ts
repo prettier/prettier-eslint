@@ -1,5 +1,5 @@
-import { PrettierInterface } from "../../types";
-import { importModule } from "../import-module";
+import { PrettierInterface } from '../../types';
+import { importModule } from '../import-module';
 
 /**
  * Dynamically imports the Prettier module and retrieves the Prettier configuration for a given file.
@@ -22,4 +22,4 @@ export const getPrettierConfig = async (filePath: string, prettierPath: string):
   const prettier = await importModule(prettierPath, 'prettier') as unknown as PrettierInterface;
 
   return prettier.resolveConfig ? await prettier.resolveConfig(filePath) : null;
-}
+};

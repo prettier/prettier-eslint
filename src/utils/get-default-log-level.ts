@@ -1,4 +1,4 @@
-
+/* global process */
 
 /**
  * Retrieves the default log level from the environment variables.
@@ -16,4 +16,4 @@
  */
 export const getDefaultLogLevel = (): string => {
   return process.env.LOG_LEVEL || 'warn';
-}
+};

@@ -1,9 +1,10 @@
+import { oneLine } from 'common-tags';
+import { Linter } from 'eslint';
 import getLogger from 'loglevel-colored-level-prefix';
-import { oneLine } from "common-tags";
-import { Linter } from "eslint";
-import { getValue } from "./get-value";
+
 import { RULE_NOT_CONFIGURED } from '../constants';
 
+import { getValue } from './get-value';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 

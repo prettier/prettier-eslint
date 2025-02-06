@@ -2,12 +2,13 @@ import { stripIndent } from 'common-tags';
 import { ESLint, Linter } from 'eslint';
 import indentString from 'indent-string';
 import getLogger from 'loglevel-colored-level-prefix';
-import { mergeObjects } from '../merge-objects';
-import { getESLint } from './get-eslint';
 import {format as prettyFormat} from 'pretty-format';
 
-const logger = getLogger({ prefix: 'prettier-eslint' });
+import { mergeObjects } from '../merge-objects';
 
+import { getESLint } from './get-eslint';
+
+const logger = getLogger({ prefix: 'prettier-eslint' });
 
 /**
  * Creates a function to apply ESLint fixes to a given text.
@@ -17,7 +18,7 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
  *
  * @param {ESLint.Options} eslintOptions - The ESLint options.
  * @param {string} eslintPath - The path to the ESLint module.
- * @returns {(text: string, filePath: string) => Promise<{ output: string; messages: any[] }>}
+ * @returns {(text: string, filePath: string) => Promise<{ output: string; messages: Linter.LintMessage[] }>}
  *          A function that takes `text` and `filePath` and returns the fixed text along with ESLint messages.
  *
  * @example
@@ -31,25 +32,23 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
 export const createEslintFix = (
   eslintOptions: ESLint.Options,
   eslintPath: string
-): ((text: string, filePath: string|undefined) => Promise<{ output: string; messages: any[] }>) => {
+): ((text: string, filePath: string|undefined) => Promise<{ output: string; messages: Linter.LintMessage[] }>) => {
   return async function eslintFix(text: string, filePath: string|undefined) {
-
     if(!eslintOptions.baseConfig) throw new Error('No baseConfig found in eslintOptions');
 
     const mergedConfigs = mergeObjects(eslintOptions.baseConfig) as Linter.Config;
 
-      // Convert global settings from an array to an object if necessary
-      if (mergedConfigs.languageOptions && Array.isArray(mergedConfigs.languageOptions.globals)) {
-        const tempGlobals: Linter.Globals = {};
-        mergedConfigs.languageOptions.globals.forEach((g) => {
-          const [key, value] = g.split(':');
-          tempGlobals[key] = value;
-        });
-        mergedConfigs.languageOptions.globals = tempGlobals;
-      }
+    // Convert global settings from an array to an object if necessary
+    if (mergedConfigs.languageOptions && Array.isArray(mergedConfigs.languageOptions.globals)) {
+      const tempGlobals: Linter.Globals = {};
 
+      mergedConfigs.languageOptions.globals.forEach((g) => {
+        const [key, value] = g.split(':');
 
-
+        tempGlobals[key] = value;
+      });
+      mergedConfigs.languageOptions.globals = tempGlobals;
+    }
 
     // Extract specific ESLint configuration settings
     const {
@@ -61,7 +60,6 @@ export const createEslintFix = (
       settings,
       ...restConfig
     } = mergedConfigs;
-
     // Construct the next ESLint options
     const nextEslintOptions = {
       ...eslintOptions,
@@ -73,10 +71,9 @@ export const createEslintFix = (
         plugins,
         rules,
         settings,
-        ...eslintOptions.overrideConfig,
-      },
+        ...eslintOptions.overrideConfig
+      }
     };
-
     // Initialize ESLint instance
     const eslint = await getESLint(eslintPath, nextEslintOptions) as unknown as ESLint;
 
@@ -86,7 +83,7 @@ export const createEslintFix = (
       // Run ESLint fix on the provided text
       const report = await eslint.lintText(text, {
         filePath,
-        warnIgnored: true,
+        warnIgnored: true
       });
 
       logger.trace('ESLint lintText returned the following report:', prettyFormat(report));

@@ -1,7 +1,9 @@
-import { Linter } from "eslint";
-import { OptionGetter } from "../types";
-import { getArrowParens, getBracketSameLine, getBracketSpacing, getPrintWidth, getSemi, getSingleQuote, getTabWidth, getTrailingComma, getUseTabs } from "./prettier/get-prettier-functions";
-import { getRuleValue } from "./get-rule-value";
+import { Linter } from 'eslint';
+
+import { OptionGetter } from '../types';
+
+import { getRuleValue } from './get-rule-value';
+import { getArrowParens, getBracketSameLine, getBracketSpacing, getPrintWidth, getSemi, getSingleQuote, getTabWidth, getTrailingComma, getUseTabs } from './prettier/get-prettier-functions';
 
 /**
  * Mapping of Prettier options to their corresponding ESLint rule values and converters.
@@ -11,44 +13,46 @@ import { getRuleValue } from "./get-rule-value";
 export const OPTION_GETTERS: Record<string, OptionGetter> = {
   printWidth: {
     ruleValue: (rules) => getRuleValue(rules, 'max-len', 'code'),
-    ruleValueToPrettierOption: getPrintWidth,
+    ruleValueToPrettierOption: getPrintWidth
   },
   tabWidth: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => {
       let value = getRuleValue(rules, 'indent');
+
       if (value === 'tab') {
         value = getRuleValue(rules, 'max-len', 'tabWidth');
       }
+
       return value;
     },
-    ruleValueToPrettierOption: getTabWidth,
+    ruleValueToPrettierOption: getTabWidth
   },
   singleQuote: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => getRuleValue(rules, 'quotes'),
-    ruleValueToPrettierOption: getSingleQuote,
+    ruleValueToPrettierOption: getSingleQuote
   },
   trailingComma: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => getRuleValue(rules, 'comma-dangle'),
-    ruleValueToPrettierOption: getTrailingComma,
+    ruleValueToPrettierOption: getTrailingComma
   },
   bracketSpacing: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => getRuleValue(rules, 'object-curly-spacing'),
-    ruleValueToPrettierOption: getBracketSpacing,
+    ruleValueToPrettierOption: getBracketSpacing
   },
   semi: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => getRuleValue(rules, 'semi'),
-    ruleValueToPrettierOption: getSemi,
+    ruleValueToPrettierOption: getSemi
   },
   useTabs: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => getRuleValue(rules, 'indent'),
-    ruleValueToPrettierOption: getUseTabs,
+    ruleValueToPrettierOption: getUseTabs
   },
   bracketSameLine: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => getRuleValue(rules, 'react/jsx-closing-bracket-location', 'nonEmpty'),
-    ruleValueToPrettierOption: getBracketSameLine,
+    ruleValueToPrettierOption: getBracketSameLine
   },
   arrowParens: {
     ruleValue: (rules: Partial<Linter.RulesRecord>) => getRuleValue(rules, 'arrow-parens'),
-    ruleValueToPrettierOption: getArrowParens,
-  },
+    ruleValueToPrettierOption: getArrowParens
+  }
 };

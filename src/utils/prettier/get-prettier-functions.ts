@@ -1,6 +1,7 @@
-import { RULE_NOT_CONFIGURED } from "../../constants";
-import { isAlways } from "../is-always";
-import { makePrettierOption } from "./make-prettier-option";
+import { RULE_NOT_CONFIGURED } from '../../constants';
+import { isAlways } from '../is-always';
+
+import { makePrettierOption } from './make-prettier-option';
 
 /** Converts ESLint rule values into Prettier options */
 export const getPrintWidth = (eslintValue: unknown, fallbacks: Record<string, unknown>) =>
@@ -11,6 +12,7 @@ export const getTabWidth = (eslintValue: unknown, fallbacks: Record<string, unkn
 
 export const getSingleQuote = (eslintValue: unknown, fallbacks: Record<string, unknown>) => {
   const prettierValue = eslintValue === 'single' ? true : false;
+
   return makePrettierOption('singleQuote', prettierValue, fallbacks);
 };
 
@@ -46,16 +48,19 @@ export const getValFromTrailingCommaConfig = (objectConfig: Record<string, unkno
 
 export const getBracketSpacing = (eslintValue: unknown, fallbacks: Record<string, unknown>) => {
   const prettierValue = eslintValue === 'never' ? false : true;
+
   return makePrettierOption('bracketSpacing', prettierValue, fallbacks);
 };
 
 export const getSemi = (eslintValue: unknown, fallbacks: Record<string, unknown>) => {
   const prettierValue = eslintValue === 'never' ? false : true;
+
   return makePrettierOption('semi', prettierValue, fallbacks);
 };
 
 export const getUseTabs = (eslintValue: unknown, fallbacks: Record<string, unknown>) => {
   const prettierValue = eslintValue === 'tab' ? true : RULE_NOT_CONFIGURED;
+
   return makePrettierOption('useTabs', prettierValue, fallbacks);
 };
 
@@ -75,5 +80,6 @@ export const getBracketSameLine = (eslintValue: unknown, fallbacks: Record<strin
 
 export const getArrowParens = (eslintValue: unknown, fallbacks: Record<string, unknown>) => {
   const prettierValue = eslintValue === 'as-needed' ? 'avoid' : eslintValue;
+
   return makePrettierOption('arrowParens', prettierValue, fallbacks);
 };

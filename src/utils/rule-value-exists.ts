@@ -1,5 +1,4 @@
-import { RULE_DISABLED, RULE_NOT_CONFIGURED } from "../constants";
-
+import { RULE_DISABLED, RULE_NOT_CONFIGURED } from '../constants';
 
 /**
  * Checks if a given Prettier rule value is valid and configured.
@@ -17,7 +16,7 @@ import { RULE_DISABLED, RULE_NOT_CONFIGURED } from "../constants";
  * console.log(ruleValueExists(undefined)); // Output: false
  * ```
  */
-export const ruleValueExists = (prettierRuleValue: unknown): boolean => 
+export const ruleValueExists = (prettierRuleValue: unknown): boolean =>
   prettierRuleValue !== RULE_NOT_CONFIGURED &&
   prettierRuleValue !== RULE_DISABLED &&
   prettierRuleValue !== undefined;

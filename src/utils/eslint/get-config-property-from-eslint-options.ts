@@ -1,7 +1,8 @@
-import { ESLint, Linter } from "eslint";
-import { mergeObjects } from "../merge-objects";
-
+import { ESLint, Linter } from 'eslint';
 import getLogger from 'loglevel-colored-level-prefix';
+
+import { mergeObjects } from '../merge-objects';
+
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
 /**

@@ -1,5 +1,6 @@
-import { Linter } from "eslint";
-import { OPTION_GETTERS } from "../option-getters";
+import { Linter } from 'eslint';
+
+import { OPTION_GETTERS } from '../option-getters';
 
 /**
  * Configures Prettier options based on ESLint rules.
@@ -31,14 +32,12 @@ export const configurePrettierOptions = (
 
     if(rules){
       const eslintRuleValue = ruleValue(rules);
-
       const option = ruleValueToPrettierOption(eslintRuleValue, fallbackPrettierOptions, rules);
 
       if (option !== undefined) {
         options[key] = option;
       }
     }
-
   }
 
   return options;

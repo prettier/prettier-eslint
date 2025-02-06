@@ -23,7 +23,6 @@ export const deepMerge = (...objs: (object | unknown[])[]): object | unknown[] |
    */
   const getType = (obj: unknown): string =>
     Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-
   /**
    * Deeply merges two objects.
    *
@@ -33,6 +32,7 @@ export const deepMerge = (...objs: (object | unknown[])[]): object | unknown[] |
   const mergeObj = (clone: Record<string, unknown>, obj: Record<string, unknown>): void => {
     Object.entries(obj).forEach(([key, value]) => {
       const type = getType(value);
+
       if (
         clone[key] !== undefined &&
         getType(clone[key]) === type &&

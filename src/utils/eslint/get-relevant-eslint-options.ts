@@ -1,7 +1,7 @@
-import { ESLint, Linter, Rule } from "eslint";
-import getLogger from 'loglevel-colored-level-prefix';
+import { ESLint/*, Linter, Rule*/ } from 'eslint';
+// import getLogger from 'loglevel-colored-level-prefix';
 
-const logger = getLogger({ prefix: 'prettier-eslint' });
+// const logger = getLogger({ prefix: 'prettier-eslint' });
 
 /**
  * Retrieves a sanitized ESLint options by disabling unfixable rules.

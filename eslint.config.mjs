@@ -9,7 +9,7 @@ import stylistic from '@stylistic/eslint-plugin';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [{
-    ignores: ['**/dts', '**/node_modules', '**/coverage', '**/dist']
+    ignores: ['**/dts', '**/node_modules', '**/coverage', '**/dist', '**/__tests__']
   },
   { files: ['**/*.{js,mjs,cjs,ts}'] },
   js.configs.recommended,

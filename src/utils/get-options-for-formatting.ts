@@ -1,7 +1,9 @@
-import { ESLint } from "eslint";
-import { FormattingOptions } from "../types";
-import { getRelevantESLintOptions } from "./eslint/get-relevant-eslint-options";
-import { getPrettierOptionsFromESLintRules } from "./prettier/get-prettier-options-from-eslint-rules";
+import { ESLint } from 'eslint';
+
+import { FormattingOptions } from '../types';
+
+import { getRelevantESLintOptions } from './eslint/get-relevant-eslint-options';
+import { getPrettierOptionsFromESLintRules } from './prettier/get-prettier-options-from-eslint-rules';
 
 /**
  * Extracts and prepares formatting options for ESLint and Prettier.
@@ -29,6 +31,6 @@ export const getOptionsForFormatting = (
 ): FormattingOptions => {
   return {
     eslint: getRelevantESLintOptions(eslintOptions),
-    prettier: getPrettierOptionsFromESLintRules(eslintOptions, prettierOptions, fallbackPrettierOptions),
+    prettier: getPrettierOptionsFromESLintRules(eslintOptions, prettierOptions, fallbackPrettierOptions)
   };
 };

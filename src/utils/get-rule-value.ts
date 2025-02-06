@@ -1,8 +1,10 @@
-import { oneLine } from "common-tags";
-import { extractRuleValue } from "./extract-rule-value";
-import { Linter } from "eslint";
+import { oneLine } from 'common-tags';
+import { Linter } from 'eslint';
 import getLogger from 'loglevel-colored-level-prefix';
-import { RULE_DISABLED, RULE_NOT_CONFIGURED } from "../constants";
+
+import { RULE_DISABLED, RULE_NOT_CONFIGURED } from '../constants';
+
+import { extractRuleValue } from './extract-rule-value';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
@@ -46,6 +48,7 @@ export const getRuleValue = (rules: Partial<Linter.RulesRecord>, name: string, o
           non-object value of ${value}. Using that value.
         `
       );
+
       return value;
     }
   }

@@ -1,8 +1,11 @@
-import getLogger from 'loglevel-colored-level-prefix';
-import { importModule } from '../import-module';
 import { ESLint } from 'eslint';
+import getLogger from 'loglevel-colored-level-prefix';
+
 import { ESLintModule } from '../../types';
+import { importModule } from '../import-module';
+
 const logger = getLogger({ prefix: 'prettier-eslint' });
+
 /**
  * Dynamically imports ESLint and initializes an ESLint instance with the provided options.
  *
