@@ -4,6 +4,7 @@ import getLogger from 'loglevel-colored-level-prefix';
 
 import { PrettierFormatOptions, PrettierInterface, PrettifyInput } from '../../types';
 import { importModule } from '../import-module';
+import { Linter } from 'eslint';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
@@ -14,7 +15,7 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
  *
  * @param {PrettierFormatOptions} formatOptions - The options to pass to Prettier.
  * @param {string} prettierPath - The path to the Prettier module.
- * @returns {(param: string | PrettifyInput) => Promise<{ output: string; messages: string[] }>}
+ * @returns {(param: string | PrettifyInput) => Promise<{ output: string; messages: Linter.LintMessage[] }>}
  *          A function that formats text using Prettier.
  *
  * @example
@@ -27,10 +28,10 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
 export const createPrettify = (
   formatOptions: PrettierFormatOptions,
   prettierPath: string
-): ((param: string | PrettifyInput) => Promise<{ output: string; messages: string[] }>) => {
+): ((param: string | PrettifyInput) => Promise<{ output: string; messages: Linter.LintMessage[] }>) => {
   return async function prettify(param: string | PrettifyInput) {
     let text: string;
-    let messages: string[] = [];
+    let messages: Linter.LintMessage[] = [];
 
     if (typeof param === 'string') {
       text = param;

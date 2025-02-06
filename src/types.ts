@@ -45,7 +45,7 @@ export interface PrettierFormatOptions {
  */
 export interface PrettifyInput {
   output: string;
-  text: string[];
+  text: Linter.LintMessage[];
 }
 
 
