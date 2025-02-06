@@ -65,6 +65,10 @@ module.exports = {
       description: 'Formats everything with prettier-eslint',
       script: 'prettier-eslint "**/*.{js,json,md,ts,yml}" ".*.js" --write',
     },
+    typescript: {
+      description: 'Checks if typescript is generated without errors',
+      script: 'tsc --noEmit',
+    },
   },
   options: {
     silent: false,
