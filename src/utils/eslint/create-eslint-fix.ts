@@ -53,13 +53,15 @@ export const createEslintFix = (
     // Extract specific ESLint configuration settings
     const {
       plugins,
-      ignores,
+      ignores = [],
       languageOptions,
+      language, // @todo find out why this is populated as an object
       rules,
       linterOptions,
       settings,
       ...restConfig
     } = mergedConfigs;
+
     // Construct the next ESLint options
     const nextEslintOptions = {
       ...eslintOptions,

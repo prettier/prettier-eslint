@@ -80,6 +80,8 @@ export const analyze = async (options: FormatOptions): Promise<{ output: string;
   // Retrieve ESLint options
   const eslintOptionsFromFilePath = await getESLintOptions(filePath || '', eslintPath, options.eslintOptions || {});
 
+
+
   logger.debug('ESLint options retrieved:', prettyFormat(eslintOptionsFromFilePath));
 
   // Merge provided ESLint options with retrieved options

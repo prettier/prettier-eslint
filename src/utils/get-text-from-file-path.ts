@@ -42,6 +42,7 @@ export const getTextFromFilePath = (filePath: string): string => {
         from the given filePath: "${filePath}"
       `
     );
+
     throw error; // Re-throws the error to be handled by the caller
   }
 };

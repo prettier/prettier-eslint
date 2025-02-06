@@ -6,7 +6,7 @@ const defaultConfig = {
     quotes: [
       2,
       'single',
-      { avoidEscape: true, allowTemplateLiterals: true }
+      { avoidEscape: true, allowTemplateLiterals: true },
     ],
     'comma-dangle': [
       2,
@@ -15,11 +15,11 @@ const defaultConfig = {
         objects: 'always-multiline',
         imports: 'always-multiline',
         exports: 'always-multiline',
-        functions: 'always-multiline'
-      }
+        functions: 'always-multiline',
+      },
     ],
-    'arrow-parens': [2, 'as-needed']
-  }
-};
+    'arrow-parens': [2, 'as-needed'],
+  },
+}
 
-export default defaultConfig;
+export default defaultConfig

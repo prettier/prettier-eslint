@@ -39,7 +39,5 @@ export const getRelevantESLintOptions = (eslintOptions: ESLint.Options): ESLint.
   // Append `fix: true` to enable automatic fixes
   const finalOptions = {...eslintOptions, fix: true};
 
-  console.log('finalOptions', finalOptions);
-
   return finalOptions;
 };

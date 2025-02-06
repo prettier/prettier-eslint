@@ -1,10 +1,10 @@
 import { stripIndent } from 'common-tags';
+import { Linter } from 'eslint';
 import indentString from 'indent-string';
 import getLogger from 'loglevel-colored-level-prefix';
 
 import { PrettierFormatOptions, PrettierInterface, PrettifyInput } from '../../types';
 import { importModule } from '../import-module';
-import { Linter } from 'eslint';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 

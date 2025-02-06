@@ -23,7 +23,7 @@ module.exports = {
       // `import()` in its `.cjs` file. The flag can be removed when node
       // supports modules in the VM API or the import is removed from prettier.
       default: crossEnv(
-        'glob -c "node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/index.test.ts"'
+        'glob -c "node --loader ./src/__mocks__/mock-loader.mjs --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/index.test.ts"'
         // 'glob -c "node --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/**/*.[jt]s"'
       ),
       update: crossEnv(
