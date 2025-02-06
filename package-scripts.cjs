@@ -40,7 +40,7 @@ module.exports = {
     },
     lint: {
       description: 'lint the entire project',
-      script: 'eslint . --cache',
+      script: 'eslint src --cache --max-warnings=0',
     },
     reportCoverage: {
       description:

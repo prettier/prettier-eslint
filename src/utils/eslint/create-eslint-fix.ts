@@ -39,7 +39,7 @@ export const createEslintFix = (
     const mergedConfigs = mergeObjects(eslintOptions.baseConfig) as Linter.Config;
 
       // Convert global settings from an array to an object if necessary
-      if (Array.isArray(mergedConfigs.languageOptions?.globals)) {
+      if (mergedConfigs.languageOptions && Array.isArray(mergedConfigs.languageOptions.globals)) {
         const tempGlobals: Linter.Globals = {};
         mergedConfigs.languageOptions.globals.forEach((g) => {
           const [key, value] = g.split(':');
