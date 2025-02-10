@@ -1,5 +1,5 @@
 import typescriptParser from '@typescript-eslint/parser';
-import { Linter } from 'eslint';
+import { ESLint, Linter } from 'eslint';
 import getLogger from 'loglevel-colored-level-prefix';
 import { format as prettyFormat} from 'pretty-format'; // ES2015 modules
 import svelteParser from 'svelte-eslint-parser';
@@ -12,6 +12,7 @@ import { deepMerge } from './utils/deep-merge.js';
 import { createEslintFix } from './utils/eslint/create-eslint-fix.js';
 import { getConfigPropertyFromESLintOptions } from './utils/eslint/get-config-property-from-eslint-options.js';
 import { getESLintOptions } from './utils/eslint/get-eslint-options.js';
+import { normalizeBaseConfigInESLintOptions } from './utils/eslint/normalize-base-config-in-eslint-options.js';
 import { setLanguageOptionsIntoESLintOptions } from './utils/eslint/set-language-options-into-eslint-options.js';
 import { extractFileExtensions } from './utils/extract-file-extensions.js';
 import { getDefaultLogLevel } from './utils/get-default-log-level.js';
@@ -78,17 +79,15 @@ export const analyze = async (options: FormatOptions): Promise<{ output: string;
     fallbackPrettierOptions
   } = options;
   // Retrieve ESLint options
-  const eslintOptionsFromFilePath = await getESLintOptions(filePath || '', eslintPath, options.eslintOptions || {});
-
-
+  const eslintOptionsFromFilePath = await getESLintOptions(filePath, eslintPath, options.eslintOptions || {});
 
   logger.debug('ESLint options retrieved:', prettyFormat(eslintOptionsFromFilePath));
 
-  // Merge provided ESLint options with retrieved options
-  const eslintOptions = {
-    ...options.eslintOptions,
-    ...eslintOptionsFromFilePath
-  };
+  // Merge provided ESLint options with retrieved options, options take presedence
+  const eslintOptions = deepMerge(
+    normalizeBaseConfigInESLintOptions(eslintOptionsFromFilePath) as object,
+    normalizeBaseConfigInESLintOptions(options.eslintOptions || {}) as object
+  ) as ESLint.Options;
   // Retrieve Prettier configuration
   const prettierConfigFromFilePath = await getPrettierConfig(filePath || '', prettierPath);
 
@@ -107,8 +106,17 @@ export const analyze = async (options: FormatOptions): Promise<{ output: string;
   logger.debug('Final formatting options:', prettyFormat(formattingOptions));
 
   // Determine file extension and ESLint applicability
-  const eslintFiles =( getConfigPropertyFromESLintOptions(eslintOptions, 'files') || ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.mjs', '**/*.vue', '**/*.svelte']) as string[];
-  const extensions = extractFileExtensions(eslintFiles);
+  let eslintFiles: unknown;
+
+  try{
+    eslintFiles = getConfigPropertyFromESLintOptions(eslintOptions, 'files');
+    /* eslint-disable @typescript-eslint/no-unused-vars, no-empty */
+  } catch (error) {} finally{
+    /* eslint-enable @typescript-eslint/no-unused-vars, no-empty */
+    if(!eslintFiles) eslintFiles = ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.mjs', '**/*.vue', '**/*.svelte'];
+  }
+
+  const extensions = extractFileExtensions(eslintFiles as string[]);
   const fileExtension = path.extname(filePath || '');
   const onlyPrettier = filePath ? !extensions.includes(fileExtension) : false;
   // Initialize Prettier formatter

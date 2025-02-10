@@ -22,6 +22,7 @@
     "dist",
     "scripts",
     "dts",
-    "**/__tests__/**"
+    "**/__tests__/**",
+    "**/__mocks__/**"
   ]
 }

@@ -1,75 +1,77 @@
+import { isArrayOfObjects } from './is-array-of-objects';
+
 /**
- * Deeply merges two or more objects or arrays.
+ * Deeply merges multiple objects.
  *
- * This function recursively merges multiple objects or arrays, ensuring deep cloning
- * of nested structures to prevent unintended mutations.
+ * This function recursively merges multiple objects, ensuring that nested structures
+ * are combined properly. Arrays are concatenated, and properties from later objects
+ * overwrite earlier ones.
  *
- * @param {...Array<object | unknown[]>} objs - The arrays or objects to merge.
- * @returns {object | unknown[]} The deeply merged object or array.
+ * @param {...object[]} sources - The objects to merge.
+ * @returns {object} The deeply merged object.
  *
  * @example
  * ```ts
  * const obj1 = { a: 1, b: { c: 2 } };
- * const obj2 = { b: { d: 3 }, e: 4 };
- * console.log(deepMerge(obj1, obj2)); // Output: { a: 1, b: { c: 2, d: 3 }, e: 4 }
+ * const obj2 = { b: { d: 3 }, e: [4, 5] };
+ * console.log(deepMerge(obj1, obj2));
+ * // Output: { a: 1, b: { c: 2, d: 3 }, e: [4, 5] }
  * ```
  */
-export const deepMerge = (...objs: (object | unknown[])[]): object | unknown[] | undefined => {
-  /**
-   * Retrieves the type of a given value.
-   *
-   * @param {unknown} obj - The value to determine the type of.
-   * @returns {string} The type of the value as a lowercase string.
-   */
-  const getType = (obj: unknown): string =>
-    Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-  /**
-   * Deeply merges two objects.
-   *
-   * @param {Record<string, unknown>} clone - The target object to merge into.
-   * @param {Record<string, unknown>} obj - The source object to merge from.
-   */
-  const mergeObj = (clone: Record<string, unknown>, obj: Record<string, unknown>): void => {
-    Object.entries(obj).forEach(([key, value]) => {
-      const type = getType(value);
+export const deepMerge = (...sources: object[]): object => {
+  if (sources.length === 0) return {};
 
-      if (
-        clone[key] !== undefined &&
-        getType(clone[key]) === type &&
-        ['array', 'object'].includes(type)
-      ) {
-        clone[key] = deepMerge(clone[key] as object | unknown[], value as object | unknown[]);
-      } else {
-        clone[key] = structuredClone(value);
+  /**
+   * Checks if a value is an object (excluding null).
+   *
+   * @param {unknown} obj - The value to check.
+   * @returns {boolean} `true` if the value is an object, otherwise `false`.
+   */
+  const isObject = (obj: unknown): obj is Record<string, unknown> =>
+    obj !== null && typeof obj === 'object';
+  /**
+   * Recursively merges two objects.
+   *
+   * @param {Record<string, unknown>} target - The target object to merge into.
+   * @param {Record<string, unknown>} source - The source object providing properties.
+   * @returns {Record<string, unknown>} The merged object.
+   */
+  const merge = (
+    target: Record<string, unknown>,
+    source: Record<string, unknown>
+  ): Record<string, unknown> => {
+    if (!isObject(target) || !isObject(source)) {
+      return source;
+    }
+
+    Object.keys(source).forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        const targetValue = target[key];
+        const sourceValue = source[key];
+
+        if (sourceValue === undefined && targetValue !== undefined) {
+          return;
+        }
+
+        if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+          // A hack to stop merging rules values
+          if(isArrayOfObjects(sourceValue)){
+            target[key] = [...new Set([...targetValue, ...sourceValue])];
+          } else {
+            target[key] = [...new Set([...sourceValue])];
+          }
+        } else if (isObject(targetValue) && isObject(sourceValue)) {
+          target[key] = merge({ ...targetValue }, sourceValue);
+        } else {
+          target[key] = sourceValue;
+        }
       }
     });
+
+    return target;
   };
 
-  if (objs.length === 0) return {};
-
-  // Create a clone of the first item in the objs array
-  let clone = structuredClone(objs.shift());
-
-  for (const obj of objs) {
-    const type = getType(obj);
-
-    // If types differ, replace the clone
-    if (getType(clone) !== type) {
-      clone = structuredClone(obj);
-      continue;
-    }
-
-    // Merge based on type
-    if (type === 'array') {
-      clone = [...(clone as unknown[]), ...structuredClone(obj as unknown[])];
-    } else if (type === 'object') {
-      mergeObj(clone as Record<string, unknown>, obj as Record<string, unknown>);
-    } else {
-      clone = obj;
-    }
-  }
-
-  return clone;
+  return sources.reduce((acc, source) => merge(acc as Record<string, unknown>, source as Record<string, unknown>), {});
 };
 
 

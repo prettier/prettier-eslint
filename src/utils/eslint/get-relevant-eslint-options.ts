@@ -21,7 +21,6 @@ import { ESLint/*, Linter, Rule*/ } from 'eslint';
  * ```
  */
 export const getRelevantESLintOptions = (eslintOptions: ESLint.Options): ESLint.Options => {
-  console.log('getRelevantESLintOptions', eslintOptions);
   // const linter = new Linter();
 
   // const rules = linter.getRules();

@@ -52,16 +52,16 @@ export const createEslintFix = (
 
     // Extract specific ESLint configuration settings
     const {
-      plugins,
+      plugins = {},
       ignores = [],
-      languageOptions,
+      languageOptions = {},
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       language, // @todo find out why this is populated as an object
       rules,
-      linterOptions,
-      settings,
+      linterOptions = {},
+      settings = {},
       ...restConfig
     } = mergedConfigs;
-
     // Construct the next ESLint options
     const nextEslintOptions = {
       ...eslintOptions,

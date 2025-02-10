@@ -1,5 +1,4 @@
 const npsUtils = require('nps-utils');
-
 const series = npsUtils.series;
 const concurrent = npsUtils.concurrent;
 const rimraf = npsUtils.rimraf;
@@ -23,7 +22,9 @@ module.exports = {
       // `import()` in its `.cjs` file. The flag can be removed when node
       // supports modules in the VM API or the import is removed from prettier.
       default: crossEnv(
-        'glob -c "node --loader ./src/__mocks__/mock-loader.mjs --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/index.test.ts"'
+        // 'glob -c "LOG_LEVEL=trace node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/deep-merge.test.ts"'
+        'glob -c "LOG_LEVEL=info node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/index.test.ts"'
+        // 'glob -c "node --loader ./src/__mocks__/mock-loader.mjs --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/index.test.ts"'
         // 'glob -c "node --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/**/*.[jt]s"'
       ),
       update: crossEnv(
@@ -36,7 +37,7 @@ module.exports = {
     },
     build: {
       description: 'delete the dist directory and run Rollup to build the files',
-      script: series(rimraf('dist'), 'rollup -c')
+      script: series(rimraf('dist'), 'rollup -c'),
     },
     lint: {
       description: 'lint the entire project',
@@ -55,11 +56,11 @@ module.exports = {
     validate: {
       description:
         'This runs several scripts to make sure things look good before committing or on clean install',
-        script: concurrent([
-          'nps -c ./package-scripts.cjs lint',
-          'nps -c ./package-scripts.cjs build',
-          'nps -c ./package-scripts.cjs test',
-        ])
+      script: concurrent([
+        'nps -c ./package-scripts.cjs lint',
+        'nps -c ./package-scripts.cjs build',
+        'nps -c ./package-scripts.cjs test',
+      ]),
     },
     format: {
       description: 'Formats everything with prettier-eslint',

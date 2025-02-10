@@ -6,6 +6,7 @@ import {format as prettyFormat} from 'pretty-format';
 
 import path from 'node:path';
 
+import { deepMerge } from '../deep-merge';
 import { mergeObjects } from '../merge-objects';
 
 import { getESLint } from './get-eslint';
@@ -31,7 +32,7 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
  * ```
  */
 export const getESLintOptions = async(
-  filePath: string,
+  filePath: string|undefined,
   eslintPath: string,
   eslintOptions: ESLint.Options
 ): Promise<ESLint.Options> => {
@@ -54,10 +55,10 @@ export const getESLintOptions = async(
 
     return {
       ...eslintOptions,
-      baseConfig: {
-        ...mergeObjects(eslintOptions.baseConfig as object|object[]),
-        ...mergeObjects(config)
-      }
+      baseConfig: deepMerge(
+        mergeObjects(eslintOptions.baseConfig as object|object[]),
+        mergeObjects(config)
+      )
     };
   /* eslint-disable @typescript-eslint/no-unused-vars */
   } catch (error) {
@@ -67,7 +68,7 @@ export const getESLintOptions = async(
 
     return {
       ...eslintOptions,
-      baseConfig: [{ rules: {} }]
+      baseConfig: { rules: {} }
     };
   }
 };

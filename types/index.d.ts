@@ -1,4 +1,4 @@
-import { ESLint } from 'eslint';
+import { ESLint, Linter } from 'eslint';
 
 interface FormatOptions {
     /** The path of the file being formatted. Used to find the relevant ESLint config and load text if not provided. */
@@ -51,7 +51,7 @@ declare const format: (options: FormatOptions) => Promise<string>;
  * and ESLint operations based on the `prettierLast` flag.
  *
  * @param {FormatOptions} options - The configuration options for formatting.
- * @returns {Promise<{ output: string; messages: any[] }>}
+ * @returns {Promise<{ output: string; messages: Linter.LintMessage[] }>}
  *          A promise resolving to an object containing formatted output and ESLint messages.
  *
  * @example
@@ -62,7 +62,7 @@ declare const format: (options: FormatOptions) => Promise<string>;
  */
 declare const analyze: (options: FormatOptions) => Promise<{
     output: string;
-    messages: any[];
+    messages: Linter.LintMessage[];
 }>;
 
 export { analyze, format };
