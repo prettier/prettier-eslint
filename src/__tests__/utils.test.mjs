@@ -1,7 +1,7 @@
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { beforeEach, test } from 'node:test';
-import { getOptionsForFormatting } from '../utils.mjs';
+import { getOptionsForFormatting } from '../utils/get-options-for-formatting';
 
 const getPrettierOptionsFromESLintRulesTests = [
   {
@@ -279,7 +279,7 @@ beforeEach(() => {
   global.__PRETTIER_ESLINT_TEST_STATE__ = {};
 });
 
-getPrettierOptionsFromESLintRulesTests.forEach(({title,rules, options, prettierOptions, fallbackPrettierOptions}) => {
+getPrettierOptionsFromESLintRulesTests.forEach(({ title, rules, options, prettierOptions, fallbackPrettierOptions }) => {
   test(`getPrettierOptionsFromESLintRules ${title}`, () => {
     const { prettier } = getOptionsForFormatting(
       { rules },
@@ -287,7 +287,7 @@ getPrettierOptionsFromESLintRulesTests.forEach(({title,rules, options, prettierO
       fallbackPrettierOptions,
     );
 
-    assert.strictEqual(prettier,options);
+    assert.strictEqual(prettier, options);
   })
 })
 
@@ -358,7 +358,7 @@ test('eslint config has only necessary properties', () => {
     undefined,
     undefined,
   );
-  assert.strictEqual(eslint,{
+  assert.strictEqual(eslint, {
     fix: true,
     globals: ['window:false'],
     rules: { ['no-with']: 'error', quotes: [2, 'single'] },
