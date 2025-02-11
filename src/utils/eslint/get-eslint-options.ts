@@ -47,9 +47,13 @@ export const getESLintOptions = async(
   const eslint = await getESLint(eslintPath, getESLintApiOptions(eslintOptions)) as unknown  as { calculateConfigForFile: (filePath: string) => Promise<Linter.Config>};
 
   try {
+    if(!filePath || filePath === '') throw new Error('no filePath given to getESLint options');
+
     logger.debug(`Getting ESLint config for file at "${filePath}"`);
 
     const config = await eslint.calculateConfigForFile(filePath);
+
+    if(!config) throw new Error(`No ESLint config found for file at "${filePath}"`);
 
     logger.trace(`ESLint config for "${filePath}" received`, prettyFormat(config));
 

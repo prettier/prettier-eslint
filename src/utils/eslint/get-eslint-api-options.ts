@@ -1,4 +1,8 @@
 import { ESLint } from 'eslint';
+import getLogger from 'loglevel-colored-level-prefix';
+import {format as prettyFormat} from 'pretty-format';
+
+const logger = getLogger({ prefix: 'prettier-eslint' });
 
 /**
  * Generates ESLint API options based on the provided ESLint options.
@@ -24,7 +28,7 @@ import { ESLint } from 'eslint';
  * ```
  */
 export const getESLintApiOptions = (eslintOptions: ESLint.Options): ESLint.Options => {
-  return {
+  const options = {
     ignore: eslintOptions.ignore ?? true,
     allowInlineConfig: eslintOptions.allowInlineConfig ?? true,
     baseConfig: eslintOptions.baseConfig ?? null,
@@ -32,4 +36,9 @@ export const getESLintApiOptions = (eslintOptions: ESLint.Options): ESLint.Optio
     overrideConfigFile: eslintOptions.overrideConfigFile ?? null,
     plugins: eslintOptions.plugins ?? null
   };
+
+  logger.debug('Preparing ESLint API options', prettyFormat(options));
+
+
+  return options;
 };

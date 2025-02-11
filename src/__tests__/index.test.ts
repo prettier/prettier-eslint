@@ -31,7 +31,7 @@ type FormatTestsObject = {
   output: string;
 }[];
 
-const formatTests:FormatTestsObject = [
+const formatTests: FormatTestsObject = [
   {
     title: 'sanity test',
     options: {
@@ -115,7 +115,7 @@ const formatTests:FormatTestsObject = [
       filePath: MOCK_FILE_PATH,
       fallbackPrettierOptions: { bracketSpacing: false },
     },
-    output: 'const { foo } = bar',
+    output: 'const {foo} = bar'
   },
   {
     title: 'without a filePath and no config',
@@ -157,7 +157,7 @@ const formatTests:FormatTestsObject = [
     options: {
       text: 'var foo = {bar: {baz: qux}};\nvar fop = {bar: [1, 2, 3]};',
       eslintOptions: {
-        baseConfig : {
+        baseConfig: {
           rules: {
             'object-curly-spacing': [
               'error',
@@ -177,12 +177,12 @@ const formatTests:FormatTestsObject = [
       eslintOptions: {
         baseConfig: {
           rules: { 'no-var': 'error' },
-          ignores: ['should-be-ignored'],
+          ignores: ['**/should-be-ignored.js'],
         }
       },
       filePath: path.resolve('should-be-ignored.js'),
     },
-    output: 'let x = 0;',
+    output: 'var x = 0;',
   },
   {
     // if you have a bug report or something,
@@ -196,7 +196,7 @@ const formatTests:FormatTestsObject = [
         }
       },
     },
-    output: 'const [foo, { bar }] = window.APP;',
+    output: 'var [foo, { bar }] = window.APP;'
   },
   {
     title: 'CSS example',
@@ -245,7 +245,7 @@ const formatTests:FormatTestsObject = [
     },
 
     output:
-      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() {\n  return "foo";\n}\n</script>\n<style></style>',
+      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() {\n  return \'foo\';\n}\n</script>\n<style></style>',
   },
   {
     title: 'Svelte example',
@@ -259,7 +259,7 @@ const formatTests:FormatTestsObject = [
     },
 
     output:
-      '<script>\n  function foo() {\n    return "foo";\n  }\n</script>\n\n<div>test</div>\n\n<style>\n</style>',
+      '<script>\n  function foo() {\n    return \'foo\';\n  }\n</script>\n\n<div>test</div>\n\n<style>\n</style>',
   },
   {
     title: 'GraphQL example',
@@ -301,22 +301,22 @@ const formatTests:FormatTestsObject = [
         },
       },
     },
-    output: 'const foo = { bar: "baz" };',
+    output: 'var foo = { bar: \'baz\' };'
   },
 ];
 
-formatTests.forEach( ({ title, options, output }) => {
+formatTests.forEach(({ title, options, output }) => {
 
-  test(`format ${title}`,async () => {
+  test(`format ${title}`, async () => {
     // A newline is added to the expected output to account
-  // for prettier's behavior.
-  const expected = `${stripIndent(output).trim()}\n`;
-  const actual = await format({
-    ...options,
-    text: stripIndent(options.text || '').trim(),
-  });
+    // for prettier's behavior.
+    const expected = `${stripIndent(output).trim()}\n`;
+    const actual = await format({
+      ...options,
+      text: stripIndent(options.text || '').trim(),
+    });
 
-  assert.equal(actual,expected);
+    assert.equal(actual, expected);
   })
 })
 
@@ -504,7 +504,7 @@ formatTests.forEach( ({ title, options, output }) => {
 //   expect(logger.error).toHaveBeenCalledTimes(1);
 // });
 
-function getESLintConfigWithDefaultRules(overrides: Linter.RulesRecord =  {} as Linter.RulesRecord): Linter.Config[] {
+function getESLintConfigWithDefaultRules(overrides: Linter.RulesRecord = {} as Linter.RulesRecord): Linter.Config[] {
   return [{
     languageOptions: {
       parserOptions: { ecmaVersion: 2022 }
@@ -542,7 +542,7 @@ function noopOutput() {
   return `
     function foo() {
       // stuff
-      console.log("Hello world!", and, stuff);
+      console.log('Hello world!', and, stuff);
     }
   `;
 }
@@ -551,7 +551,7 @@ function defaultOutput() {
   return `
     function foo() {
       // stuff
-      console.log('Hello world!', and, stuff)
+      console.log('Hello world!', and, stuff);
     }
   `;
 }

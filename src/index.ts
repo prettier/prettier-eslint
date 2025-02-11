@@ -88,6 +88,9 @@ export const analyze = async (options: FormatOptions): Promise<{ output: string;
     normalizeBaseConfigInESLintOptions(eslintOptionsFromFilePath) as object,
     normalizeBaseConfigInESLintOptions(options.eslintOptions || {}) as object
   ) as ESLint.Options;
+
+  logger.debug('ESLint options:', prettyFormat(eslintOptionsFromFilePath));
+
   // Retrieve Prettier configuration
   const prettierConfigFromFilePath = await getPrettierConfig(filePath || '', prettierPath);
 
@@ -100,6 +103,9 @@ export const analyze = async (options: FormatOptions): Promise<{ output: string;
     prettierConfigFromFilePath|| {},
     options.prettierOptions || {}
   ) as Record<string, unknown>;
+
+  logger.debug('Prettier options:', prettyFormat(prettierOptions));
+
   // Prepare final formatting options
   const formattingOptions = getOptionsForFormatting(eslintOptions, prettierOptions, fallbackPrettierOptions);
 

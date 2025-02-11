@@ -1,7 +1,7 @@
-import { ESLint/*, Linter, Rule*/ } from 'eslint';
-// import getLogger from 'loglevel-colored-level-prefix';
+import { ESLint, Linter, Rule } from 'eslint';
+import getLogger from 'loglevel-colored-level-prefix';
 
-// const logger = getLogger({ prefix: 'prettier-eslint' });
+const logger = getLogger({ prefix: 'prettier-eslint' });
 
 /**
  * Retrieves a sanitized ESLint options by disabling unfixable rules.
@@ -21,19 +21,18 @@ import { ESLint/*, Linter, Rule*/ } from 'eslint';
  * ```
  */
 export const getRelevantESLintOptions = (eslintOptions: ESLint.Options): ESLint.Options => {
-  // const linter = new Linter();
+  const linter = new Linter({configType: 'eslintrc'});
+  const rules = linter.getRules();
 
-  // const rules = linter.getRules();
+  logger.debug('Turning off unfixable rules');
 
-  // logger.debug('Turning off unfixable rules');
-
-  // // Iterate over rules and disable those that are not fixable
-  // rules.forEach((rule, name) => {
-  //   if (!rule.meta?.fixable) {
-  //     logger.trace('Turning off rule:', name);
-  //     rules.set(name, ['off'] as unknown as Rule.RuleModule);
-  //   }
-  // });
+  // Iterate over rules and disable those that are not fixable
+  rules.forEach((rule, name) => {
+    if (!rule.meta?.fixable) {
+      logger.trace('Turning off rule:', name);
+      rules.set(name, ['off'] as unknown as Rule.RuleModule);
+    }
+  });
 
   // Append `fix: true` to enable automatic fixes
   const finalOptions = {...eslintOptions, fix: true};
