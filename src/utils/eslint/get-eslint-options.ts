@@ -1,8 +1,8 @@
 /* global process */
 
-import { ESLint, Linter } from 'eslint';
+import { ESLint } from 'eslint';
 import getLogger from 'loglevel-colored-level-prefix';
-import {format as prettyFormat} from 'pretty-format';
+import { format as prettyFormat } from 'pretty-format';
 
 import path from 'node:path';
 
@@ -31,8 +31,8 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
  * console.log(eslintConfig);
  * ```
  */
-export const getESLintOptions = async(
-  filePath: string|undefined,
+export const getESLintOptions = async (
+  filePath: string | undefined,
   eslintPath: string,
   eslintOptions: ESLint.Options
 ): Promise<ESLint.Options> => {
@@ -44,36 +44,45 @@ export const getESLintOptions = async(
     `Creating ESLint instance to get the config for "${filePath || process.cwd()}"`
   );
 
-  const eslint = await getESLint(eslintPath, getESLintApiOptions(eslintOptions)) as unknown  as { calculateConfigForFile: (filePath: string) => Promise<Linter.Config>};
+  const ESLint = await getESLint(eslintPath);
+  const eslint = new ESLint(getESLintApiOptions(eslintOptions));
 
   try {
-    if(!filePath || filePath === '') throw new Error('no filePath given to getESLint options');
+    if (!filePath || filePath === '')
+      throw new Error('no filePath given to getESLint options');
 
     logger.debug(`Getting ESLint config for file at "${filePath}"`);
 
     const config = await eslint.calculateConfigForFile(filePath);
 
-    if(!config) throw new Error(`No ESLint config found for file at "${filePath}"`);
+    if (!config)
+      throw new Error(`No ESLint config found for file at "${filePath}"`);
 
-    logger.trace(`ESLint config for "${filePath}" received`, prettyFormat(config));
+    logger.trace(
+      `ESLint config for "${filePath}" received`,
+      prettyFormat(config)
+    );
 
     return {
       ...eslintOptions,
       baseConfig: deepMerge(
-        mergeObjects(eslintOptions.baseConfig as object|object[]),
+        mergeObjects(eslintOptions.baseConfig as object | object[]),
         mergeObjects(config)
       )
     };
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   } catch (error) {
-    /* eslint-enable @typescript-eslint/no-unused-vars */
     // Log a debug message if ESLint configuration cannot be found
     logger.debug('Unable to find ESLint config');
+    logger.error(error);
 
     return {
       ...eslintOptions,
-      baseConfig: { rules: {} }
+      baseConfig: deepMerge(
+        mergeObjects(eslintOptions.baseConfig as object | object[]),
+        {
+          rules: {}
+        }
+      )
     };
   }
 };
-

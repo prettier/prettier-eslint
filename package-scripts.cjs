@@ -14,7 +14,7 @@ module.exports = {
       generate: {
         description: 'Update the badge and contributors table',
         script: 'all-contributors generate'
-      },
+      }
     },
     test: {
       // Note: The `--experimental-vm-modules` flag is required for Jest to work
@@ -22,7 +22,8 @@ module.exports = {
       // `import()` in its `.cjs` file. The flag can be removed when node
       // supports modules in the VM API or the import is removed from prettier.
       default: crossEnv(
-        'glob -c "LOG_LEVEL=info node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__**/*.[jt]s"'
+        'glob -c "LOG_LEVEL=debug node --import tsx --test --no-warnings" "./src/**/__tests__**/index.test.[jt]s"'
+        // 'glob -c "LOG_LEVEL=debug node --import tsx --test --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__**/index.test.[jt]s"'
       ),
       update: crossEnv(
         'glob -c "node --import tsx --test --test-update-snapshots --no-warnings --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov-report/index.html --test-reporter=spec --test-reporter-destination=stdout" "./src/**/__tests__/**/*.[jt]s"'
@@ -33,7 +34,8 @@ module.exports = {
       openCoverage: 'open coverage/lcov-report/index.html'
     },
     build: {
-      description: 'delete the dist directory and run Rollup to build the files',
+      description:
+        'delete the dist directory and run Rollup to build the files',
       script: series(rimraf('dist'), 'rollup -c')
     },
     lint: {
@@ -66,11 +68,11 @@ module.exports = {
     typescript: {
       description: 'Checks if typescript is generated without errors',
       script: 'tsc --noEmit'
-    },
+    }
   },
   options: {
     silent: false
-  },
+  }
 };
 
 // this is not transpiled

@@ -45,6 +45,6 @@ test('merges multiple objects deeply', () => {
 
 // Test empty merge
 test('returns empty object when no sources provided', () => {
-  const result = deepMerge();
+  const result = deepMerge({});
   assert.deepStrictEqual(result, {});
 });

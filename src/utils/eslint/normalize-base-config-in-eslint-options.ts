@@ -1,6 +1,6 @@
 import { ESLint } from 'eslint';
 
-import { deepMerge } from '../deep-merge';
+import { mergeObjects } from '../merge-objects';
 
 /**
  * Normalizes the `baseConfig` property in ESLint options.
@@ -21,7 +21,9 @@ import { deepMerge } from '../deep-merge';
  * // Output: { baseConfig: { rules: { semi: ['error', 'always'], quotes: ['error', 'single'] } } }
  * ```
  */
-export const normalizeBaseConfigInESLintOptions = (options: ESLint.Options): ESLint.Options => {
+export const normalizeBaseConfigInESLintOptions = (
+  options: ESLint.Options
+): ESLint.Options => {
   if (!options) return {};
 
   const { baseConfig } = options;
@@ -29,14 +31,15 @@ export const normalizeBaseConfigInESLintOptions = (options: ESLint.Options): ESL
   if (baseConfig && Array.isArray(baseConfig)) {
     return {
       ...options,
-      baseConfig: deepMerge(...baseConfig)
+      baseConfig: mergeObjects(baseConfig)
     };
   }
 
-  if(!baseConfig) return {
-    ...options,
-    baseConfig: { rules: {}}
-  };
+  if (!baseConfig)
+    return {
+      ...options,
+      baseConfig: { rules: {} }
+    };
 
   return options;
 };

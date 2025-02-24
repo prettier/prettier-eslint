@@ -30,7 +30,12 @@ export const getOptionsForFormatting = (
   fallbackPrettierOptions: Record<string, unknown> = {}
 ): FormattingOptions => {
   return {
-    eslint: getRelevantESLintOptions(eslintOptions),
-    prettier: getPrettierOptionsFromESLintRules(eslintOptions, prettierOptions, fallbackPrettierOptions)
+    eslint: eslintOptions,
+    // eslint: getRelevantESLintOptions(eslintOptions),
+    prettier: getPrettierOptionsFromESLintRules(
+      eslintOptions,
+      prettierOptions,
+      fallbackPrettierOptions
+    )
   };
 };

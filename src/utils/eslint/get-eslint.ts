@@ -23,11 +23,14 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
  * console.log(eslintInstance);
  * ```
  */
-export const getESLint = async (eslintPath: string, eslintOptions: ESLint.Options): Promise<typeof ESLint> => {
-  const  { ESLint } = await importModule(eslintPath, 'eslint') as unknown as ESLintModule;
+export const getESLint = async (eslintPath: string): Promise<typeof ESLint> => {
+  const { ESLint } = (await importModule(
+    eslintPath,
+    'eslint'
+  )) as unknown as ESLintModule;
 
   try {
-    return new ESLint(eslintOptions);
+    return ESLint;
   } catch (error) {
     logger.error('There was trouble creating the ESLint instance.');
     throw error;

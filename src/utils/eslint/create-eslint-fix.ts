@@ -2,7 +2,7 @@ import { stripIndent } from 'common-tags';
 import { ESLint, Linter } from 'eslint';
 import indentString from 'indent-string';
 import getLogger from 'loglevel-colored-level-prefix';
-import {format as prettyFormat} from 'pretty-format';
+import { format as prettyFormat } from 'pretty-format';
 
 import { mergeObjects } from '../merge-objects';
 
@@ -32,17 +32,26 @@ const logger = getLogger({ prefix: 'prettier-eslint' });
 export const createEslintFix = (
   eslintOptions: ESLint.Options,
   eslintPath: string
-): ((text: string, filePath: string|undefined) => Promise<{ output: string; messages: Linter.LintMessage[] }>) => {
-  return async function eslintFix(text: string, filePath: string|undefined) {
-    if(!eslintOptions.baseConfig) throw new Error('No baseConfig found in eslintOptions');
+): ((
+  text: string,
+  filePath: string | undefined
+) => Promise<{ output: string; messages: Linter.LintMessage[] }>) => {
+  return async function eslintFix(text: string, filePath: string | undefined) {
+    if (!eslintOptions.baseConfig)
+      throw new Error('No baseConfig found in eslintOptions');
 
-    const mergedConfigs = mergeObjects(eslintOptions.baseConfig) as Linter.Config;
+    const mergedConfigs = mergeObjects(
+      eslintOptions.baseConfig
+    ) as Linter.Config;
 
     // Convert global settings from an array to an object if necessary
-    if (mergedConfigs.languageOptions && Array.isArray(mergedConfigs.languageOptions.globals)) {
+    if (
+      mergedConfigs.languageOptions &&
+      Array.isArray(mergedConfigs.languageOptions.globals)
+    ) {
       const tempGlobals: Linter.Globals = {};
 
-      mergedConfigs.languageOptions.globals.forEach((g) => {
+      mergedConfigs.languageOptions.globals.forEach(g => {
         const [key, value] = g.split(':');
 
         tempGlobals[key] = value;
@@ -65,7 +74,7 @@ export const createEslintFix = (
     // Construct the next ESLint options
     const nextEslintOptions = {
       ...eslintOptions,
-      baseConfig: {...restConfig},
+      baseConfig: { ...restConfig },
       overrideConfig: {
         ignores,
         linterOptions,
@@ -77,7 +86,8 @@ export const createEslintFix = (
       }
     };
     // Initialize ESLint instance
-    const eslint = await getESLint(eslintPath, nextEslintOptions) as unknown as ESLint;
+    const ESLint = await getESLint(eslintPath);
+    const eslint = new ESLint(nextEslintOptions);
 
     try {
       logger.trace('Calling ESLint lintText with the provided text');
@@ -88,7 +98,10 @@ export const createEslintFix = (
         warnIgnored: true
       });
 
-      logger.trace('ESLint lintText returned the following report:', prettyFormat(report));
+      logger.trace(
+        'ESLint lintText returned the following report:',
+        prettyFormat(report)
+      );
 
       // Extract the formatted output and messages
       const [{ output = text, messages }] = report;
