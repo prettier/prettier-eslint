@@ -59,20 +59,26 @@ updates:
     - 17.3.9
     - 17.4.0
     - 17.4.1
+  - dependency-name: memfs
+    versions:
+    - 4.14.1
   - dependency-name: vue-eslint-parser
     versions:
     - 7.4.1
     - 7.5.0
     - 7.6.0
-  - dependency-name: jest-cli
+  - dependency-name: vite
     versions:
-    - 26.6.3
-  - dependency-name: babel-jest
+    - 6.0.3
+  - dependency-name: vitest
     versions:
-    - 26.6.3
-  - dependency-name: jest
+    - 2.1.8
+  - dependency-name: '@vitest/coverage-v8'
     versions:
-    - 26.6.3
+    - 2.1.8
+  - dependency-name: '@vitest/ui'
+    versions:
+    - 2.1.8
   - dependency-name: pretty-format
     versions:
     - 26.6.2
