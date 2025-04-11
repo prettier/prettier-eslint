@@ -29,8 +29,8 @@ module.exports = {
     },
     build: {
       description:
-        'delete the dist directory and run Rollup to build the files',
-      script: series(rimraf('dist'), 'rollup -c'),
+        'delete the dist directory and build the files',
+      script: 'node scripts/build.mjs',
     },
     lint: {
       description: 'lint the entire project',
