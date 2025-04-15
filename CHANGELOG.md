@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.3.2
+
+### Patch Changes
+
+- [#1176](https://github.com/prettier/prettier-eslint/pull/1176) [`7f8db7c`](https://github.com/prettier/prettier-eslint/commit/7f8db7cc89639ecbd21d0af6f6b06bf306b67086) Thanks [@JounQin](https://github.com/JounQin)! - fix: remove `preinstall` script
+
 ## 16.3.1
 
 ### Patch Changes
