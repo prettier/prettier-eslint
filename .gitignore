@@ -5,8 +5,6 @@ dist
 .opt-out
 .DS_Store
 .eslintcache
-
-# these cause more harm than good
-# when working with contributors
-package-lock.json
-yarn.lock
+.yarn/*
+!.yarn/releases
+!.yarn/plugins

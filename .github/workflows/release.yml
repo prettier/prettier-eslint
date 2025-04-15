@@ -30,10 +30,10 @@ jobs:
           node-version: lts/*
 
       - name: Install Dependencies
-        run: npm i
+        run: yarn --immutable
 
       - name: Build
-        run: npm start build
+        run: yarn start build
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
