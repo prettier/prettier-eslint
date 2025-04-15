@@ -1,6 +1,12 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci:
@@ -8,19 +14,18 @@ jobs:
 
     strategy:
       matrix:
-        node-version:
-          - 10
-          - 12
-          - 14
+        node:
           - 16
           - 18
           - 20
+          - 22
+      fail-fast: false
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Use Node.js ${{ matrix.node }}
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
 
@@ -31,6 +36,6 @@ jobs:
       run: npm start validate
 
     - name: Check test coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos

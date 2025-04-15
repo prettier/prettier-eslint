@@ -5,7 +5,7 @@ import stripIndent from 'strip-indent';
 import eslintMock from 'eslint';
 import prettierMock from 'prettier';
 import loglevelMock from 'loglevel-colored-level-prefix';
-import {format, analyze} from '../';
+import { format, analyze } from '../';
 
 jest.mock('fs');
 
@@ -197,9 +197,9 @@ const tests = [
     title: 'Svelte example',
     input: {
       prettierOptions: {
-          plugins: ['prettier-plugin-svelte'],
-          overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }]
-        },
+        plugins: ['prettier-plugin-svelte'],
+        overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }]
+      },
       text: '<script>\nfunction foo() { return "foo" }\n</script>\n  <div>test</div>\n<style>\n</style>',
       filePath: path.resolve('./test.svelte')
     },
@@ -276,14 +276,14 @@ test('analyze returns the messages', async () => {
     eslintConfig: {
       rules: { 'no-var': 'error' }
     }
-  })
+  });
   expect(result.output).toBe(`${text}\n`);
   expect(result.messages).toHaveLength(1);
   const msg = result.messages[0];
   expect(msg.ruleId).toBe('no-var');
   expect(msg.column).toBe(1);
   expect(msg.endColumn).toBe(11);
-})
+});
 
 test('failure to fix with eslint throws and logs an error', async () => {
   const { lintText } = eslintMock.mock;

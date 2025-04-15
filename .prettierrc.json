@@ -1,0 +1,5 @@
+{
+  "arrowParens": "avoid",
+  "singleQuote": true,
+  "plugins": ["prettier-plugin-pkg", "prettier-plugin-svelte"]
+}

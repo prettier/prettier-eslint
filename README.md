@@ -151,7 +151,7 @@ This allows you to use `eslint` to look for bugs and/or bad practices, and use
 ## Capturing ESLint messages
 
 ```javascript
-const {analyze} = require("prettier-eslint");
+const { analyze } = require('prettier-eslint');
 
 const text = 'var x = 0;';
 const result = await analyze({
@@ -159,7 +159,7 @@ const result = await analyze({
   eslintConfig: {
     rules: { 'no-var': 'error' }
   }
-})    
+});
 console.log(result.messages);
 ```
 

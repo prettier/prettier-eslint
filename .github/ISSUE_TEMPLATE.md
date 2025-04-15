@@ -23,13 +23,11 @@ Yes || No
 
 **Relevant code or config**
 
-```javascript
+```js
 
 ```
 
 **What I did:**
-
-
 
 **What happened:**
 
@@ -44,8 +42,4 @@ minimal amount of code possible.
 
 **Problem description:**
 
-
-
 **Suggested solution:**
-
-
