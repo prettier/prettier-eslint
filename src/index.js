@@ -41,7 +41,7 @@ module.exports = format;
  * @return {Promise<String>} - the formatted string
  */
 async function format(options) {
-  const {output} = await analyze(options);
+  const { output } = await analyze(options);
   return output;
 }
 
@@ -108,14 +108,18 @@ async function analyze(options) {
   );
 
   const eslintExtensions = eslintConfig.extensions || [
+    '.cjs',
+    '.cts',
     '.js',
     '.jsx',
     '.ts',
     '.tsx',
     '.mjs',
+    '.mts',
     '.vue',
     '.svelte'
   ];
+
   const fileExtension = path.extname(filePath || '');
 
   // If we don't get filePath run eslint on text, otherwise only run eslint
@@ -155,11 +159,11 @@ async function analyze(options) {
 
 function createPrettify(formatOptions, prettierPath) {
   return async function prettify(param) {
-    let text = param
-    let messages = []
+    let text = param;
+    let messages = [];
     if (typeof param !== 'string') {
-      text = param.output
-      messages = param.text
+      text = param.output;
+      messages = param.text;
     }
     logger.debug('calling prettier on text');
     logger.trace(
@@ -181,7 +185,7 @@ function createPrettify(formatOptions, prettierPath) {
         ${indentString(output, 2)}
       `
       );
-      return {output, messages};
+      return { output, messages };
     } catch (error) {
       logger.error('prettier formatting failed due to a prettier error');
       throw error;
@@ -249,7 +253,7 @@ function createEslintFix(eslintConfig, eslintPath) {
         ${indentString(output, 2)}
       `
       );
-      return {output, messages};
+      return { output, messages };
     } catch (error) {
       logger.error('eslint fix failed due to an eslint error');
       throw error;
@@ -351,5 +355,5 @@ function getDefaultLogLevel() {
 
 // Allow named imports of either `analyze` or `format` from this module,
 // while leaving `format` in place as the default import:
-module.exports.format = format
-module.exports.analyze = analyze
+module.exports.format = format;
+module.exports.analyze = analyze;

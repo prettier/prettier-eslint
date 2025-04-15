@@ -226,13 +226,9 @@ test('if fallbacks are provided, those are preferred over disabled eslint rules'
 });
 
 test('if fallbacks are provided, those are used if not found in eslint', () => {
-  const { prettier } = getOptionsForFormatting(
-    { rules: {} },
-    undefined,
-    {
-      singleQuote: false
-    }
-  );
+  const { prettier } = getOptionsForFormatting({ rules: {} }, undefined, {
+    singleQuote: false
+  });
   expect(prettier).toMatchObject({ singleQuote: false });
 });
 

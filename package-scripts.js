@@ -52,7 +52,7 @@ module.exports = {
     release: {
       description:
         'We automate releases with changesets. This should only be run on GitHub Actions',
-      script: 'changeset publish',
+      script: series('clean-pkg-json', 'changeset publish'),
     },
     validate: {
       description:
