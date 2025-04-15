@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.3.1
+
+### Patch Changes
+
+- [#1171](https://github.com/prettier/prettier-eslint/pull/1171) [`700065e`](https://github.com/prettier/prettier-eslint/commit/700065e4bfbd0243004c5f3310a60d4256a7491f) Thanks [@JounQin](https://github.com/JounQin)! - chore: take `.cjs`, `.cts`, `.mts` into account
+
 ## 16.3.0
 
 ### Minor Changes
