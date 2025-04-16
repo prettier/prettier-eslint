@@ -1,0 +1,13 @@
+diff --git a/node_modules/@1stg/eslint-config/base.js b/node_modules/@1stg/eslint-config/base.js
+index 4aed1e4..fac5ee3 100644
+--- a/node_modules/@1stg/eslint-config/base.js
++++ b/node_modules/@1stg/eslint-config/base.js
+@@ -32,7 +32,7 @@ export const base = tseslint.config([
+   promise.configs['flat/recommended'],
+   regexp.configs['flat/recommended'],
+   sonarjs.configs.recommended,
+-  unicorn.configs.recommended,
++  unicorn.configs['flat/recommended'],
+   prettierExtends,
+   {
+     name: '@1stg/node',

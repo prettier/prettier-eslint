@@ -1,14 +1,9 @@
 {
+  "extends": "@1stg/tsconfig/node",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
-    "lib": ["ES2020", "DOM"],
-    "moduleResolution": "Node",
-    "rootDir": ".",
-    "strict": true,
     "noEmit": true,
-    "esModuleInterop": true,
-    "baseUrl": "./"
-  },
-  "exclude": ["node_modules"]
+    "paths": {
+      "prettier-eslint": ["./src/index.ts"]
+    }
+  }
 }

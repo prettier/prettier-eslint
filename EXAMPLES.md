@@ -28,15 +28,15 @@ var prettierEslint = require('prettier-eslint');
 const options = {
   eslintConfig: {
     parserOptions: {
-      ecmaVersion: 7
+      ecmaVersion: 7,
     },
     rules: {
-      semi: ['error', 'never']
-    }
+      semi: ['error', 'never'],
+    },
   },
   prettierOptions: {
-    bracketSpacing: true
-  }
+    bracketSpacing: true,
+  },
 };
 
 module.exports = function () {
@@ -49,14 +49,14 @@ module.exports = function () {
 
     if (file.isStream()) {
       return callback(
-        new utils.PluginError('prettier-eslint', "doesn't support Streams")
+        new utils.PluginError('prettier-eslint', "doesn't support Streams"),
       );
     }
 
     const sourceCode = file.contents.toString();
     const formatted = prettierEslint({
       ...config,
-      text: sourceCode
+      text: sourceCode,
     });
 
     file.contents = new Buffer(formatted, encoding);

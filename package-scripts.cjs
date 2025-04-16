@@ -34,11 +34,8 @@ module.exports = {
       openCoverage: 'open coverage/lcov-report/index.html',
     },
     build: {
-      description: 'delete the dist directory and run babel to build the files',
-      script: series(
-        rimraf('dist'),
-        'babel --out-dir dist --ignore "src/__tests__/**/*","src/__mocks__/**/*" src'
-      ),
+      description: 'delete the lib directory and run tsc to build the files',
+      script: series(rimraf('lib'), 'tsc -b src'),
     },
     lint: {
       description: 'lint the entire project',
@@ -57,7 +54,11 @@ module.exports = {
     validate: {
       description:
         'This runs several scripts to make sure things look good before committing or on clean install',
-      script: concurrent.nps('lint', 'build', 'test'),
+      script: concurrent([
+        'nps -c ./package-scripts.cjs lint',
+        'nps -c ./package-scripts.cjs build',
+        'nps -c ./package-scripts.cjs test',
+      ]),
     },
     format: {
       description: 'Formats everything with prettier-eslint',

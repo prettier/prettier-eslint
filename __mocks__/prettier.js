@@ -1,4 +1,5 @@
 const prettier = jest.requireActual('prettier');
+
 const { format } = prettier;
 
 module.exports = prettier;
@@ -7,13 +8,15 @@ const mockFormatSpy = jest.fn(mockFormat);
 
 Object.assign(prettier, {
   format: mockFormatSpy,
-  resolveConfig: jest.fn()
+  resolveConfig: jest.fn(),
 });
 
 function mockFormat(...args) {
-  global.__PRETTIER_ESLINT_TEST_STATE__.prettierPath = __filename;
+  globalThis.__PRETTIER_ESLINT_TEST_STATE__.prettierPath = __filename;
+
   if (mockFormatSpy.throwError) {
     throw mockFormatSpy.throwError;
   }
+
   return format(...args);
 }

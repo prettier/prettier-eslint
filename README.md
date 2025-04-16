@@ -48,7 +48,7 @@ npm install --save-dev prettier-eslint
 
 ### Example
 
-```javascript
+```js
 const format = require('prettier-eslint');
 
 // notice, no semicolon in the original text
@@ -58,18 +58,18 @@ const options = {
   text: sourceCode,
   eslintConfig: {
     parserOptions: {
-      ecmaVersion: 7
+      ecmaVersion: 7,
     },
     rules: {
-      semi: ['error', 'never']
-    }
+      semi: ['error', 'never'],
+    },
   },
   prettierOptions: {
-    bracketSpacing: true
+    bracketSpacing: true,
   },
   fallbackPrettierOptions: {
-    singleQuote: false
-  }
+    singleQuote: false,
+  },
 };
 
 const formatted = await format(options);
@@ -150,15 +150,15 @@ This allows you to use `eslint` to look for bugs and/or bad practices, and use
 
 ## Capturing ESLint messages
 
-```javascript
+```js
 const { analyze } = require('prettier-eslint');
 
 const text = 'var x = 0;';
 const result = await analyze({
   text,
   eslintConfig: {
-    rules: { 'no-var': 'error' }
-  }
+    rules: { 'no-var': 'error' },
+  },
 });
 console.log(result.messages);
 ```
@@ -210,7 +210,7 @@ the inference is done for each option (what rule(s) are referenced, etc.) and
 ESLint disabled entirely via `/* eslint-disable */` then prettier options will
 fall back to the `prettier` defaults:
 
-```javascript
+```js
 {
   printWidth: 80,
   tabWidth: 2,
@@ -291,8 +291,8 @@ solutions.
 - [`prettier-atom`][atom-plugin] - Atom plugin (check the "ESlint integration"
   checkbox in settings)
 - [`vs-code-prettier-eslint`][vscode-plugin] - Visual Studio Code plugin
-- [`eslint-plugin-prettier`](https://github.com/not-an-aardvark/eslint-plugin-prettier) -
-  ESLint plugin. While prettier-eslint uses `eslint --fix` to change the output of `prettier`, eslint-plugin-prettier keeps the `prettier` output as-is and integrates it with the regular ESLint workflow.
+- [`eslint-plugin-prettier`](https://github.com/prettier/eslint-plugin-prettier) -
+  ESLint plugin. While `prettier-eslint` uses `eslint --fix` to change the output of `prettier`, `eslint-plugin-prettier` keeps the `prettier` output as-is and integrates it with the regular ESLint workflow.
 - [`prettier-eslint-webpack-plugin`](https://github.com/danielterwiel/prettier-eslint-webpack-plugin) -
   Prettier ESlint Webpack Plugin
 

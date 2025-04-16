@@ -1,7 +1,11 @@
 // this mock file is so eslint doesn't attempt to actually
 // search around the file system for stuff
 
-const eslint = jest.requireActual('eslint');
+/** @import { ESLintConfig } from 'prettier-eslint' */
+
+const eslint = /** @type {typeof import('eslint')} */ (
+  jest.requireActual('eslint')
+);
 const { ESLint } = eslint;
 
 const mockCalculateConfigForFileSpy = jest.fn(mockCalculateConfigForFile);
@@ -12,12 +16,12 @@ module.exports = Object.assign(eslint, {
   ESLint: jest.fn(MockESLint),
   mock: {
     calculateConfigForFile: mockCalculateConfigForFileSpy,
-    lintText: mockLintTextSpy
-  }
+    lintText: mockLintTextSpy,
+  },
 });
 
 function MockESLint(...args) {
-  global.__PRETTIER_ESLINT_TEST_STATE__.eslintPath = __filename;
+  globalThis.__PRETTIER_ESLINT_TEST_STATE__.eslintPath = __filename;
   const eslintInstance = new ESLint(...args);
   eslintInstance.calculateConfigForFile = mockCalculateConfigForFileSpy;
   eslintInstance._originalLintText = eslintInstance.lintText;
@@ -27,14 +31,19 @@ function MockESLint(...args) {
 
 MockESLint.prototype = Object.create(ESLint.prototype);
 
-// eslint-disable-next-line complexity
+/**
+ * @param {string} filePath
+ * @returns {ESLintConfig} -- eslint config
+ * @throws {Error} -- if `throwError` is specifically set on the spy, or if the
+ *   filePath is not handled
+ */
 function mockCalculateConfigForFile(filePath) {
   if (mockCalculateConfigForFileSpy.throwError) {
     throw mockCalculateConfigForFileSpy.throwError;
   }
   if (!filePath) {
     return {
-      rules: {}
+      rules: {},
     };
   }
   if (filePath.includes('default-config')) {
@@ -46,7 +55,7 @@ function mockCalculateConfigForFile(filePath) {
         quotes: [
           2,
           'single',
-          { avoidEscape: true, allowTemplateLiterals: true }
+          { avoidEscape: true, allowTemplateLiterals: true },
         ],
         'comma-dangle': [
           2,
@@ -55,24 +64,23 @@ function mockCalculateConfigForFile(filePath) {
             objects: 'always-multiline',
             imports: 'always-multiline',
             exports: 'always-multiline',
-            functions: 'always-multiline'
-          }
+            functions: 'always-multiline',
+          },
         ],
-        'arrow-parens': [2, 'as-needed']
-      }
+        'arrow-parens': [2, 'as-needed'],
+      },
     };
-  } else if (filePath.includes('fixtures/paths')) {
-    return { rules: {} };
-  } else {
-    throw new Error(
-      `Your mock filePath (${filePath})` +
-        ' does not have a handler for finding the config'
-    );
   }
+  if (filePath.includes('fixtures/paths')) {
+    return { rules: {} };
+  }
+  throw new Error(
+    `Your mock filePath (${filePath})` +
+      ' does not have a handler for finding the config',
+  );
 }
 
 function mockLintText(...args) {
-  /* eslint no-invalid-this:0 */
   if (mockLintTextSpy.throwError) {
     throw mockLintTextSpy.throwError;
   }
