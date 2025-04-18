@@ -99,6 +99,7 @@
     "strip-indent": "^3.0.0",
     "svelte": "^4.2.19",
     "svelte-eslint-parser": "^0.33.1",
+    "tslib": "^2.8.1",
     "typescript": "^5.8.3"
   },
   "resolutions": {

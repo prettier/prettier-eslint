@@ -2903,6 +2903,7 @@ __metadata:
     strip-indent: "npm:^3.0.0"
     svelte: "npm:^4.2.19"
     svelte-eslint-parser: "npm:^0.33.1"
+    tslib: "npm:^2.8.1"
     typescript: "npm:^5.8.3"
     vue-eslint-parser: "npm:^9.4.3"
   peerDependencies:
