@@ -23,6 +23,7 @@ gulp.task('js:format', function () {
 
 ```js
 var through = require('through2');
+var PluginError = require('plugin-error');
 var prettierEslint = require('prettier-eslint');
 
 const options = {
@@ -49,13 +50,13 @@ module.exports = function () {
 
     if (file.isStream()) {
       return callback(
-        new utils.PluginError('prettier-eslint', "doesn't support Streams"),
+        new PluginError('prettier-eslint', "doesn't support Streams"),
       );
     }
 
     const sourceCode = file.contents.toString();
     const formatted = prettierEslint({
-      ...config,
+      ...options,
       text: sourceCode,
     });
 

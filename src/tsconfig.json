@@ -4,5 +4,5 @@
     "rootDir": ".",
     "outDir": "../lib"
   },
-  "include": [".", "../shim.d.ts"]
+  "include": [".", "../global.d.ts", "../shim.d.ts"]
 }

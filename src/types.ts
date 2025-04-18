@@ -6,7 +6,7 @@ import { StringLiteral } from './utils';
 /** Logging level for the traceback of the synchronous formatting process. */
 export type LogLevel = 'debug' | 'error' | 'info' | 'silent' | 'trace' | 'warn';
 
-export { PrettierOptions };
+export type { PrettierOptions };
 
 /** Options to format text with Prettier and ESLint. */
 export interface FormatOptions {
@@ -93,6 +93,10 @@ export type ESLintConfigGlobalValue = ValueOf<NonNullable<ESLintConfigGlobals>>;
 export interface ESLintConfig
   extends Omit<Linter.Config, 'globals'>,
     ESLintOptions {
+  /**
+   * ESLint globals configuration, supporting both object format and string
+   * tuple format for compatibility with different ESLint versions.
+   */
   globals?: ESLintConfigGlobals | [`${string}:${ESLintConfigGlobalValue}`];
   ignorePattern?: string[] | string;
 }

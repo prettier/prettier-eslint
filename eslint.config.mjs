@@ -9,7 +9,7 @@ export default tseslint.config(
   ...base,
   ...nodeDependencies.configs['flat/recommended'],
   {
-    ignores: ['test/fixtures'],
+    ignores: ['test/fixtures', '!test/fixtures/paths/node_modules/**/*.js'],
   },
   {
     rules: {
@@ -30,7 +30,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/__mocks__/**/*.js', '**/*.spec.ts'],
+    files: ['__mocks__/**/*.{js,ts}', 'test/**/*.spec.ts'],
     languageOptions: {
       globals: globals.jest,
     },
@@ -42,6 +42,8 @@ export default tseslint.config(
   {
     files: ['**/*.d.ts'],
     rules: {
+      // Declaration files use `declare var` for global types.
+      // `let`/`const` don’t propagate to the global object, so we disable `no-var`.
       'no-var': 'off',
     },
   },

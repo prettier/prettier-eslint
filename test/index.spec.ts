@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/unbound-method, sonarjs/fixme-tag */
 
 // eslint-disable-next-line unicorn/prefer-node-protocol -- mocked
-import fsMock from 'fs';
+import fsMock_ from 'fs';
 import path from 'node:path';
 
-import eslintMock, { type ESLint, type Linter } from 'eslint';
+import eslintMock_, { type Linter } from 'eslint';
 import loglevelMock from 'loglevel-colored-level-prefix';
-import prettierMock from 'prettier';
+import prettierMock_ from 'prettier';
 import stripIndent from 'strip-indent';
+
+import type { ESLintMock, FsMock, PrettierMock } from '../mock.js';
 
 import {
   type ESLintConfig,
@@ -19,7 +21,11 @@ import {
 jest.mock('fs');
 
 // NOTE(cedric): this is a workaround to also mock `node:fs`
-jest.mock('node:fs', () => fsMock);
+jest.mock('node:fs', () => fsMock_);
+
+const fsMock = fsMock_ as unknown as FsMock;
+const eslintMock = eslintMock_ as unknown as ESLintMock;
+const prettierMock = prettierMock_ as unknown as PrettierMock;
 
 const {
   mock: { logger },
@@ -273,15 +279,10 @@ const tests: Array<{
 ];
 
 beforeEach(() => {
-  // @ts-expect-error -- FIXME: Fix this type error
   eslintMock.mock.lintText.mockClear();
-  // @ts-expect-error -- FIXME: Fix this type error
   eslintMock.mock.calculateConfigForFile.mockClear();
-  // @ts-expect-error -- FIXME: Fix this type error
   prettierMock.format.mockClear();
-  // @ts-expect-error -- FIXME: Fix this type error
   prettierMock.resolveConfig.mockClear();
-  // @ts-expect-error -- FIXME: Fix this type error
   fsMock.readFileSync.mockClear();
   loglevelMock.mock.clearAll();
   globalThis.__PRETTIER_ESLINT_TEST_STATE__ = {};
@@ -316,16 +317,12 @@ test('analyze returns the messages', async () => {
 });
 
 test('failure to fix with eslint throws and logs an error', async () => {
-  const { lintText } =
-    // @ts-expect-error -- FIXME: Fix this type error
-    eslintMock.mock as ESLint;
+  const { lintText } = eslintMock.mock;
   const error = new Error('Something happened');
-  // @ts-expect-error -- FIXME: Fix this type error
   lintText.throwError = error;
 
   await expect(() => format({ text: '' })).rejects.toThrow(error);
   expect(logger.error).toHaveBeenCalledTimes(1);
-  // @ts-expect-error -- FIXME: Fix this type error
   lintText.throwError = null;
 });
 
@@ -338,22 +335,17 @@ test('logLevel is used to configure the logger', async () => {
 
 test('when prettier throws, log to logger.error and throw the error', async () => {
   const error = new Error('something bad happened');
-  // @ts-expect-error -- FIXME: Fix this type error
   prettierMock.format.throwError = error;
 
   await expect(() => format({ text: '' })).rejects.toThrow(error);
   expect(logger.error).toHaveBeenCalledTimes(1);
-  // @ts-expect-error -- FIXME: Fix this type error
   prettierMock.format.throwError = null;
 });
 
 test('can accept a path to an eslint module and uses that instead.', async () => {
   const eslintPath = path.join(__dirname, '../__mocks__/eslint');
   await format({ text: '', eslintPath });
-  expect(
-    // @ts-expect-error -- FIXME: Fix this type error
-    eslintMock.mock.lintText,
-  ).toHaveBeenCalledTimes(1);
+  expect(eslintMock.mock.lintText).toHaveBeenCalledTimes(1);
 });
 
 test('fails with an error if the eslint module cannot be resolved.', async () => {
@@ -476,12 +468,10 @@ test('does not raise an error if prettier.resolveConfig is not defined', async (
 
 test('logs if there is a problem making the CLIEngine', async () => {
   const error = new Error('fake error');
-  // @ts-expect-error -- FIXME: Fix this type error
   eslintMock.ESLint.mockImplementation(() => {
     throw error;
   });
   await expect(() => format({ text: '' })).rejects.toThrow(error);
-  // @ts-expect-error -- FIXME: Fix this type error
   eslintMock.ESLint.mockReset();
   expect(logger.error).toHaveBeenCalledTimes(1);
 });

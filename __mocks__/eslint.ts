@@ -1,18 +1,26 @@
-// this mock file is so eslint doesn't attempt to actually
-// search around the file system for stuff
+/**
+ * This mock file is so eslint doesn't attempt to actually search around the
+ * file system for stuff, we can not use `.ts` because it's called by
+ * `test/fixtures/node_modules/eslint/index.js`
+ */
 
-/** @import { ESLintConfig } from 'prettier-eslint' */
+import eslint_, { type ESLint as ESLint_ } from 'eslint';
 
-const eslint = /** @type {typeof import('eslint')} */ (
-  jest.requireActual('eslint')
-);
+import type { ESLintLintText, MockESLint } from '../mock.js';
+
+import type { ESLintConfig } from 'prettier-eslint';
+
+const eslint = jest.requireActual<typeof eslint_>('eslint');
+
 const { ESLint } = eslint;
 
 const mockCalculateConfigForFileSpy = jest.fn(mockCalculateConfigForFile);
-mockCalculateConfigForFileSpy.overrides = {};
+
+Object.assign(mockCalculateConfigForFileSpy, { overrides: {} });
+
 const mockLintTextSpy = jest.fn(mockLintText);
 
-module.exports = Object.assign(eslint, {
+export = Object.assign(eslint, {
   ESLint: jest.fn(MockESLint),
   mock: {
     calculateConfigForFile: mockCalculateConfigForFileSpy,
@@ -20,25 +28,30 @@ module.exports = Object.assign(eslint, {
   },
 });
 
-function MockESLint(...args) {
+function MockESLint(options: ESLint_.Options): MockESLint {
   globalThis.__PRETTIER_ESLINT_TEST_STATE__.eslintPath = __filename;
-  const eslintInstance = new ESLint(...args);
+  const eslintInstance = new ESLint(options) as MockESLint;
   eslintInstance.calculateConfigForFile = mockCalculateConfigForFileSpy;
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   eslintInstance._originalLintText = eslintInstance.lintText;
   eslintInstance.lintText = mockLintTextSpy;
   return eslintInstance;
 }
 
-MockESLint.prototype = Object.create(ESLint.prototype);
+MockESLint.prototype = Object.create(ESLint.prototype) as ESLint_;
 
 /**
- * @param {string} filePath
- * @returns {ESLintConfig} -- eslint config
- * @throws {Error} -- if `throwError` is specifically set on the spy, or if the
- *   filePath is not handled
+ * @throws If `throwError` is specifically set on the spy, or if the filePath is
+ *   not handled
  */
-function mockCalculateConfigForFile(filePath) {
-  if (mockCalculateConfigForFileSpy.throwError) {
+// eslint-disable-next-line @typescript-eslint/require-await
+async function mockCalculateConfigForFile(
+  filePath: string,
+): Promise<ESLintConfig> {
+  if (
+    'throwError' in mockCalculateConfigForFileSpy &&
+    mockCalculateConfigForFileSpy.throwError instanceof Error
+  ) {
     throw mockCalculateConfigForFileSpy.throwError;
   }
   if (!filePath) {
@@ -80,8 +93,11 @@ function mockCalculateConfigForFile(filePath) {
   );
 }
 
-function mockLintText(...args) {
-  if (mockLintTextSpy.throwError) {
+function mockLintText(this: MockESLint, ...args: Parameters<ESLintLintText>) {
+  if (
+    'throwError' in mockLintTextSpy &&
+    mockLintTextSpy.throwError instanceof Error
+  ) {
     throw mockLintTextSpy.throwError;
   }
   return this._originalLintText(...args);

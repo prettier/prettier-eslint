@@ -327,16 +327,16 @@ function getESLintApiOptions(eslintConfig: ESLintConfig): ESLintConfig {
   // https://eslint.org/docs/developer-guide/nodejs-api
   // these options affect what calculateConfigForFile produces
   return {
-    ignore: eslintConfig.ignore || true,
+    ignore: eslintConfig.ignore ?? true,
     ignorePath: eslintConfig.ignorePath,
-    allowInlineConfig: eslintConfig.allowInlineConfig || true,
+    allowInlineConfig: eslintConfig.allowInlineConfig ?? true,
     baseConfig: eslintConfig.baseConfig,
     overrideConfig: eslintConfig.overrideConfig,
     overrideConfigFile: eslintConfig.overrideConfigFile,
     plugins: eslintConfig.plugins,
     resolvePluginsRelativeTo: eslintConfig.resolvePluginsRelativeTo,
-    rulePaths: eslintConfig.rulePaths || [],
-    useEslintrc: eslintConfig.useEslintrc || true,
+    rulePaths: eslintConfig.rulePaths ?? [],
+    useEslintrc: eslintConfig.useEslintrc ?? true,
   };
 }
 
