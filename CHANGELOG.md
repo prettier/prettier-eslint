@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.4.0
+
+### Minor Changes
+
+- [#1179](https://github.com/prettier/prettier-eslint/pull/1179) [`2262e7f`](https://github.com/prettier/prettier-eslint/commit/2262e7fb1ec8bb68eebca3bbceded6612bb62467) Thanks [@JounQin](https://github.com/JounQin)! - feat: migrate to TypeScript with 100% compatibility
+
 ## 16.3.2
 
 ### Patch Changes
