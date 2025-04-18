@@ -188,7 +188,7 @@ would like to perform the formatting but also capture any errors that
 
 ## Technical details
 
-> Code ➡️ prettier ➡️ eslint --fix ➡️ Formatted Code ✨
+> Code ➡️ `prettier` ➡️ `eslint --fix` ➡️ Formatted Code ✨
 
 ### inferring prettierOptions via eslintConfig
 
