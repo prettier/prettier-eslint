@@ -29,15 +29,9 @@ const prettierMock = prettierMock_ as unknown as PrettierMock;
 
 describe('entrypoint', () => {
   test('exports the format function', () => {
-    expect(prettierESLint).toHaveProperty('format');
-    expect(prettierESLint.format).toBe(format);
+    expect(prettierESLint).toBe(format);
   });
-
-  test('exports the analyze function', () => {
-    expect(prettierESLint).toHaveProperty('analyze');
-    expect(prettierESLint.analyze).toBe(analyze);
-  });
-})
+});
 
 const {
   mock: { logger },

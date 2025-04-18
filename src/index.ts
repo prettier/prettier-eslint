@@ -423,4 +423,4 @@ function getDefaultLogLevel() {
 export type * from './types.js';
 export * from './utils.ts';
 
-export default { format, analyze };
+export default format;
