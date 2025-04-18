@@ -10,6 +10,7 @@
     "Simon Fridlund <simon@fridlund.email>",
     "JounQin <admin@1stg.me> (https://www.1stG.me)"
   ],
+  "funding": "https://opencollective.com/prettier-eslint",
   "license": "MIT",
   "packageManager": "yarn@4.9.1",
   "engines": {
