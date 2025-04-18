@@ -1,10 +1,8 @@
-node_modules
-coverage
-dist
-.opt-in
-.opt-out
 .DS_Store
-.eslintcache
+coverage
+lib
+node_modules
+.*cache
 .yarn/*
 !.yarn/releases
 !.yarn/plugins

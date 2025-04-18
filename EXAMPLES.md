@@ -55,7 +55,7 @@ module.exports = function () {
     }
 
     const sourceCode = file.contents.toString();
-    const formatted = prettierEslint({
+    const formatted = prettierEslint.format({
       ...options,
       text: sourceCode,
     });

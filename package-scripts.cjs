@@ -23,13 +23,13 @@ module.exports = {
       // `import()` in its `.cjs` file. The flag can be removed when node
       // supports modules in the VM API or the import is removed from prettier.
       default: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage'
+        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage',
       ),
       update: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --updateSnapshot'
+        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --updateSnapshot',
       ),
       watch: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch'
+        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch',
       ),
       openCoverage: 'open coverage/lcov-report/index.html',
     },
@@ -69,17 +69,3 @@ module.exports = {
     silent: false,
   },
 };
-
-// this is not transpiled
-/*
-  eslint
-  max-len: 0,
-  comma-dangle: [
-    2,
-    {
-      arrays: 'always-multiline',
-      objects: 'always-multiline',
-      functions: 'never'
-    }
-  ]
- */
