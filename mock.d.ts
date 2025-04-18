@@ -3,8 +3,9 @@ import eslint, { ESLint } from 'eslint';
 import prettier from 'prettier';
 import { ESLintConfig } from 'prettier-eslint';
 
-// prettier-ignore
-export interface FsMock extends (typeof fs) {
+type Fs = typeof fs;
+
+export interface FsMock extends Fs {
   readFileSync: jest.Mock<string, [string?]>;
 }
 
@@ -35,8 +36,9 @@ export interface ESLintMock extends (typeof eslint) {
   };
 }
 
-// prettier-ignore
-export interface PrettierMock extends (typeof prettier) {
+type Prettier = typeof prettier;
+
+export interface PrettierMock extends Prettier {
   format: jest.Mock<
     ReturnType<typeof prettier.format>,
     Parameters<typeof prettier.format>

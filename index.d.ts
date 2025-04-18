@@ -1,6 +1,14 @@
-import {analyze, format} from './lib/index.js'
+import { analyze, format } from './lib/index.js';
 
-export interface PrettierESLint extends (typeof format) {
-  analyze: typeof analyze,
-  format: typeof format,
+namespace prettierESLint {
+  type Format = typeof format;
+
+  interface PrettierESLint extends Format {
+    analyze: typeof analyze;
+    format: Format;
+  }
 }
+
+declare const prettierESLint: prettierESLint.PrettierESLint;
+
+export = prettierESLint;
