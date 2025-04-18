@@ -1,7 +1,13 @@
-import path from 'path';
-import { getOptionsForFormatting } from '../utils';
+import { Linter } from 'eslint';
 
-const getPrettierOptionsFromESLintRulesTests = [
+import { getOptionsForFormatting, PrettierOptions } from 'prettier-eslint';
+
+const getPrettierOptionsFromESLintRulesTests: Array<{
+  rules: Linter.RulesRecord;
+  options: PrettierOptions;
+  prettierOptions?: PrettierOptions;
+  fallbackPrettierOptions?: PrettierOptions;
+}> = [
   {
     rules: {
       'max-len': [2, 120, 2],
@@ -14,35 +20,35 @@ const getPrettierOptionsFromESLintRulesTests = [
           objects: 'always-multiline',
           imports: 'always-multiline',
           exports: 'always-multiline',
-          functions: 'always-multiline'
-        }
+          functions: 'always-multiline',
+        },
       ],
-      'object-curly-spacing': [2, 'never']
+      'object-curly-spacing': [2, 'never'],
     },
     options: {
       printWidth: 120,
       tabWidth: 2,
       singleQuote: true,
       trailingComma: 'all',
-      bracketSpacing: false
-    }
+      bracketSpacing: false,
+    },
   },
   {
     rules: { 'object-curly-spacing': [2, 'always'] },
-    options: { bracketSpacing: true }
+    options: { bracketSpacing: true },
   },
   {
     rules: { 'object-curly-spacing': [2, 'never'] },
-    options: { bracketSpacing: false }
+    options: { bracketSpacing: false },
   },
   { rules: { 'max-len': 2 }, options: {} },
   {
     rules: { 'comma-dangle': [2, 'never'] },
-    options: { trailingComma: 'none' }
+    options: { trailingComma: 'none' },
   },
   {
     rules: { 'comma-dangle': [2, 'always'] },
-    options: { trailingComma: 'es5' }
+    options: { trailingComma: 'es5' },
   },
   {
     rules: {
@@ -53,11 +59,11 @@ const getPrettierOptionsFromESLintRulesTests = [
           objects: 'always-multiline',
           imports: 'always-multiline',
           exports: 'always-multiline',
-          functions: 'always-multiline'
-        }
-      ]
+          functions: 'always-multiline',
+        },
+      ],
     },
-    options: { trailingComma: 'all' }
+    options: { trailingComma: 'all' },
   },
   {
     rules: {
@@ -68,11 +74,11 @@ const getPrettierOptionsFromESLintRulesTests = [
           objects: 'always-multiline',
           imports: 'always-multiline',
           exports: 'always-multiline',
-          functions: 'never'
-        }
-      ]
+          functions: 'never',
+        },
+      ],
     },
-    options: { trailingComma: 'es5' }
+    options: { trailingComma: 'es5' },
   },
   {
     rules: {
@@ -83,15 +89,15 @@ const getPrettierOptionsFromESLintRulesTests = [
           objects: 'never',
           imports: 'never',
           exports: 'never',
-          functions: 'never'
-        }
-      ]
+          functions: 'never',
+        },
+      ],
     },
-    options: { trailingComma: 'none' }
+    options: { trailingComma: 'none' },
   },
   {
     rules: { 'max-len': ['error', { code: 120 }] },
-    options: { printWidth: 120 }
+    options: { printWidth: 120 },
   },
   { rules: { quotes: [2, 'double'] }, options: { singleQuote: false } },
   { rules: { quotes: [2, 'backtick'] }, options: { singleQuote: false } },
@@ -101,60 +107,60 @@ const getPrettierOptionsFromESLintRulesTests = [
         2,
         {
           imports: 'never',
-          exports: 'never'
-        }
-      ]
+          exports: 'never',
+        },
+      ],
     },
-    options: { trailingComma: 'none' }
+    options: { trailingComma: 'none' },
   },
   {
     rules: { 'comma-dangle': [2, 'always-multiline'] },
-    options: { trailingComma: 'es5' }
+    options: { trailingComma: 'es5' },
   },
   {
     rules: {},
     options: { bracketSameLine: true },
-    fallbackPrettierOptions: { bracketSameLine: true }
+    fallbackPrettierOptions: { bracketSameLine: true },
   },
   {
     rules: { 'react/jsx-closing-bracket-location': [2, 'after-props'] },
-    options: { bracketSameLine: true }
+    options: { bracketSameLine: true },
   },
   {
     rules: { 'react/jsx-closing-bracket-location': [2, 'tag-aligned'] },
-    options: { bracketSameLine: false }
+    options: { bracketSameLine: false },
   },
   {
     rules: {
       'react/jsx-closing-bracket-location': [
         2,
         {
-          nonEmpty: 'after-props'
-        }
-      ]
+          nonEmpty: 'after-props',
+        },
+      ],
     },
-    options: { bracketSameLine: true }
+    options: { bracketSameLine: true },
   },
   {
     rules: {
-      'arrow-parens': [2, 'always']
+      'arrow-parens': [2, 'always'],
     },
-    options: { arrowParens: 'always' }
+    options: { arrowParens: 'always' },
   },
   {
     rules: {
-      'arrow-parens': [2, 'as-needed']
+      'arrow-parens': [2, 'as-needed'],
     },
-    options: { arrowParens: 'avoid' }
+    options: { arrowParens: 'avoid' },
   },
   {
     rules: {
       'prettier/prettier': [2, { singleQuote: false }],
-      quotes: [2, 'single']
+      quotes: [2, 'single'],
     },
     options: {
-      singleQuote: false
-    }
+      singleQuote: false,
+    },
   },
 
   // If an ESLint rule is disabled fall back to prettier defaults.
@@ -175,36 +181,33 @@ const getPrettierOptionsFromESLintRulesTests = [
   { rules: { indent: ['error', 'tab'] }, options: { useTabs: true } },
   { rules: { indent: [2, 'tab'] }, options: { useTabs: true } },
   { rules: { 'react/jsx-closing-bracket-location': [0] }, options: {} },
-  { rules: { 'arrow-parens': [0] }, options: {} }
+  { rules: { 'arrow-parens': [0] }, options: {} },
 ];
 
-const eslintPath = path.join(__dirname, '../__mocks__/eslint');
-
 beforeEach(() => {
-  global.__PRETTIER_ESLINT_TEST_STATE__ = {};
+  globalThis.__PRETTIER_ESLINT_TEST_STATE__ = {};
 });
 
-getPrettierOptionsFromESLintRulesTests.forEach(
-  ({ rules, options, prettierOptions, fallbackPrettierOptions }, index) => {
-    test(`getPrettierOptionsFromESLintRulesTests ${index}`, () => {
-      const { prettier } = getOptionsForFormatting(
-        { rules },
-        prettierOptions,
-        fallbackPrettierOptions
-      );
-      expect(prettier).toMatchObject(options);
-    });
-  }
-);
+for (const [
+  index,
+  { rules, options, prettierOptions, fallbackPrettierOptions },
+] of getPrettierOptionsFromESLintRulesTests.entries()) {
+  test(`getPrettierOptionsFromESLintRulesTests ${index}`, () => {
+    const { prettier } = getOptionsForFormatting(
+      { rules },
+      prettierOptions,
+      fallbackPrettierOptions,
+    );
+    expect(prettier).toMatchObject(options);
+  });
+}
 
 test('if prettierOptions are provided, those are preferred', () => {
   const { prettier } = getOptionsForFormatting(
     { rules: { quotes: [2, 'single'] } },
     {
-      singleQuote: false
+      singleQuote: false,
     },
-    undefined,
-    eslintPath
   );
   expect(prettier).toMatchObject({ singleQuote: false });
 });
@@ -212,93 +215,66 @@ test('if prettierOptions are provided, those are preferred', () => {
 // eslint-disable-next-line max-len
 test('if fallbacks are provided, those are preferred over disabled eslint rules', () => {
   const { prettier } = getOptionsForFormatting(
-    {
-      rules: {
-        quotes: [0]
-      }
-    },
+    { rules: { quotes: [0] } },
     {},
-    {
-      singleQuote: true
-    }
+    { singleQuote: true },
   );
   expect(prettier).toMatchObject({ singleQuote: true });
 });
 
 test('if fallbacks are provided, those are used if not found in eslint', () => {
   const { prettier } = getOptionsForFormatting({ rules: {} }, undefined, {
-    singleQuote: false
+    singleQuote: false,
   });
   expect(prettier).toMatchObject({ singleQuote: false });
 });
 
 test('eslint max-len.tabWidth value should be used for tabWidth when tabs are used', () => {
-  const { prettier } = getOptionsForFormatting(
-    {
-      rules: {
-        indent: ['error', 'tab'],
-        'max-len': [
-          2,
-          {
-            tabWidth: 4
-          }
-        ]
-      }
+  const { prettier } = getOptionsForFormatting({
+    rules: {
+      indent: ['error', 'tab'],
+      'max-len': [2, { tabWidth: 4 }],
     },
-    undefined,
-    undefined
-  );
+  });
 
   expect(prettier).toMatchObject({
     tabWidth: 4,
-    useTabs: true
+    useTabs: true,
   });
 });
 
 test('eslint config has only necessary properties', () => {
-  const { eslint } = getOptionsForFormatting(
-    {
-      globals: ['window:false'],
-      rules: { 'no-with': 'error', quotes: [2, 'single'] }
-    },
-    undefined,
-    undefined
-  );
+  const { eslint } = getOptionsForFormatting({
+    globals: ['window:false'],
+    rules: { 'no-with': 'error', quotes: [2, 'single'] },
+  });
   expect(eslint).toMatchObject({
     fix: true,
     useEslintrc: false,
-    rules: { quotes: [2, 'single'] }
+    rules: { quotes: [2, 'single'] },
   });
 });
 
 test('useEslintrc is set to the given config value', () => {
-  const { eslint } = getOptionsForFormatting(
-    { useEslintrc: true, rules: {} },
-    undefined,
-    undefined
-  );
+  const { eslint } = getOptionsForFormatting({ useEslintrc: true, rules: {} });
   expect(eslint).toMatchObject({ fix: true, useEslintrc: true });
 });
 
 test('Turn off unfixable rules', () => {
-  const { eslint } = getOptionsForFormatting(
-    {
-      rules: {
-        'global-require': 'error',
-        quotes: ['error', 'double']
-      }
+  const { eslint } = getOptionsForFormatting({
+    rules: {
+      'global-require': 'error',
+      quotes: ['error', 'double'],
     },
-    undefined,
-    undefined
-  );
+  });
 
   expect(eslint).toMatchObject({
     rules: {
       'global-require': ['off'],
-      quotes: ['error', 'double']
+      quotes: ['error', 'double'],
     },
     fix: true,
     globals: {},
-    useEslintrc: false
+    useEslintrc: false,
   });
 });

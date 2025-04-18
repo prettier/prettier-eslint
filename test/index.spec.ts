@@ -1,27 +1,70 @@
-/* eslint no-console:0, import/default:0 */
-import path from 'path';
-import fsMock from 'fs';
-import stripIndent from 'strip-indent';
-import eslintMock from 'eslint';
-import prettierMock from 'prettier';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/unbound-method, sonarjs/fixme-tag */
+
+// eslint-disable-next-line unicorn/prefer-node-protocol -- mocked
+import fsMock_ from 'fs';
+import path from 'node:path';
+
+import eslintMock_, { type Linter } from 'eslint';
 import loglevelMock from 'loglevel-colored-level-prefix';
-import { format, analyze } from '../';
+import prettierMock_ from 'prettier';
+import stripIndent from 'strip-indent';
+
+import type { ESLintMock, FsMock, PrettierMock } from '../mock.js';
+
+import prettierESLint, {
+  type ESLintConfig,
+  format,
+  analyze,
+  PrettierOptions,
+} from 'prettier-eslint';
 
 jest.mock('fs');
 
+// !NOTE: this is a workaround to also mock `node:fs`
+jest.mock('node:fs', () => fsMock_);
+
+const fsMock = fsMock_ as unknown as FsMock;
+const eslintMock = eslintMock_ as unknown as ESLintMock;
+const prettierMock = prettierMock_ as unknown as PrettierMock;
+
+describe('entrypoint', () => {
+  test('exports the format function', () => {
+    expect(prettierESLint).toHaveProperty('format');
+    expect(prettierESLint.format).toBe(format);
+  });
+
+  test('exports the analyze function', () => {
+    expect(prettierESLint).toHaveProperty('analyze');
+    expect(prettierESLint.analyze).toBe(analyze);
+  });
+})
+
 const {
-  mock: { logger }
+  mock: { logger },
 } = loglevelMock;
 // loglevelMock.mock.logThings = ['debug']
 
-const tests = [
+const filePath = path.resolve('./mock/default-config.js');
+
+const tests: Array<{
+  title: string;
+  input: {
+    text: string;
+    eslintConfig?: ESLintConfig;
+    filePath?: string;
+    prettierLast?: boolean;
+    prettierOptions?: PrettierOptions;
+    fallbackPrettierOptions?: PrettierOptions;
+  };
+  output: string;
+}> = [
   {
     title: 'sanity test',
     input: {
       text: defaultInputText(),
-      eslintConfig: getESLintConfigWithDefaultRules()
+      eslintConfig: getESLintConfigWithDefaultRules(),
     },
-    output: defaultOutput()
+    output: defaultOutput(),
   },
   {
     title: 'README example',
@@ -29,11 +72,11 @@ const tests = [
       text: 'const {foo} = bar',
       eslintConfig: {
         parserOptions: { ecmaVersion: 7 },
-        rules: { semi: ['error', 'never'] }
+        rules: { semi: ['error', 'never'] },
       },
-      prettierOptions: { bracketSpacing: true }
+      prettierOptions: { bracketSpacing: true },
     },
-    output: 'const { foo } = bar'
+    output: 'const { foo } = bar',
   },
   {
     // this one's actually hard to test now. This test doesn't
@@ -45,18 +88,21 @@ const tests = [
     title: 'with prettierLast: true',
     input: {
       text: defaultInputText(),
-      filePath: path.resolve('./mock/default-config.js'),
-      prettierLast: true
+      filePath,
+      prettierLast: true,
+      prettierOptions: {
+        semi: true,
+      },
     },
-    output: prettierLastOutput()
+    output: prettierLastOutput(),
   },
   {
     title: 'with a filePath and no config',
     input: {
       text: defaultInputText(),
-      filePath: path.resolve('./mock/default-config.js')
+      filePath,
     },
-    output: defaultOutput()
+    output: defaultOutput(),
   },
   {
     title: 'with a default config and overrides',
@@ -65,41 +111,41 @@ const tests = [
       eslintConfig: {
         // Won't be overridden
         parserOptions: {
-          ecmaVersion: 7
+          ecmaVersion: 7,
         },
         rules: {
           // Will be overridden
           semi: ['error', 'always'],
           // Won't be overridden
-          'object-curly-spacing': ['error', 'never']
-        }
+          'object-curly-spacing': ['error', 'never'],
+        },
       },
-      filePath: path.resolve('./mock/default-config.js')
+      filePath,
     },
-    output: 'const {foo} = bar'
+    output: 'const {foo} = bar',
   },
   {
     title: 'with an empty config and fallbacks',
     input: {
       text: 'const { foo } = bar;',
       eslintConfig: {},
-      filePath: path.resolve('./mock/default-config.js'),
-      fallbackPrettierOptions: { bracketSpacing: false }
+      filePath,
+      fallbackPrettierOptions: { bracketSpacing: false },
     },
-    output: 'const {foo} = bar'
+    output: 'const {foo} = bar',
   },
   {
     title: 'without a filePath and no config',
     input: { text: defaultInputText() },
-    output: noopOutput()
+    output: noopOutput(),
   },
   {
     title: 'inferring bracketSpacing',
     input: {
       text: 'var foo = {bar: baz};',
-      eslintConfig: { rules: { 'object-curly-spacing': ['error', 'always'] } }
+      eslintConfig: { rules: { 'object-curly-spacing': ['error', 'always'] } },
     },
-    output: 'var foo = { bar: baz };'
+    output: 'var foo = { bar: baz };',
   },
   {
     title: 'inferring bracketSpacing with eslint object-curly-spacing options',
@@ -110,12 +156,12 @@ const tests = [
           'object-curly-spacing': [
             'error',
             'always',
-            { objectsInObjects: false, arraysInObjects: false }
-          ]
-        }
-      }
+            { objectsInObjects: false, arraysInObjects: false },
+          ],
+        },
+      },
     },
-    output: 'var foo = { bar: { baz: qux }};\nvar fop = { bar: [1, 2, 3]};'
+    output: 'var foo = { bar: { baz: qux }};\nvar fop = { bar: [1, 2, 3]};',
   },
   {
     title: 'with a filePath-aware config',
@@ -123,11 +169,11 @@ const tests = [
       text: 'var x = 0;',
       eslintConfig: {
         rules: { 'no-var': 'error' },
-        ignorePattern: 'should-be-ignored'
+        ignorePattern: 'should-be-ignored',
       },
-      filePath: path.resolve('should-be-ignored.js')
+      filePath: path.resolve('should-be-ignored.js'),
     },
-    output: 'var x = 0;'
+    output: 'var x = 0;',
   },
   // if you have a bug report or something,
   // go ahead and add a test case here
@@ -135,100 +181,100 @@ const tests = [
     title: 'with code that needs no fixing',
     input: {
       text: 'var [foo, { bar }] = window.APP;',
-      eslintConfig: { rules: {} }
+      eslintConfig: { rules: {} },
     },
-    output: 'var [foo, { bar }] = window.APP;'
+    output: 'var [foo, { bar }] = window.APP;',
   },
   {
     title: 'accepts config globals as array',
     input: {
       text: defaultInputText(),
-      eslintConfig: { globals: ['window:writable'] }
+      eslintConfig: { globals: ['window:writable'] },
     },
-    output: noopOutput()
+    output: noopOutput(),
   },
   {
     title: 'CSS example',
     input: {
       text: '.stop{color:red};',
-      filePath: path.resolve('./test.css')
+      filePath: path.resolve('./test.css'),
     },
-    output: '.stop {\n  color: red;\n}'
+    output: '.stop {\n  color: red;\n}',
   },
   {
     title: 'LESS example',
     input: {
       text: '.stop{color:red};',
-      filePath: path.resolve('./test.less')
+      filePath: path.resolve('./test.less'),
     },
-    output: '.stop {\n  color: red;\n}'
+    output: '.stop {\n  color: red;\n}',
   },
   {
     title: 'SCSS example',
     input: {
       text: '.stop{color:red};',
-      filePath: path.resolve('./test.scss')
+      filePath: path.resolve('./test.scss'),
     },
-    output: '.stop {\n  color: red;\n}'
+    output: '.stop {\n  color: red;\n}',
   },
   {
     title: 'TypeScript example',
     input: {
       text: 'function Foo (this: void) { return this; }',
-      filePath: path.resolve('./test.ts')
+      filePath: path.resolve('./test.ts'),
     },
-    output: 'function Foo(this: void) {\n  return this;\n}'
+    output: 'function Foo(this: void) {\n  return this;\n}',
   },
   {
     title: 'Vue.js example',
     input: {
       eslintConfig: {
         rules: {
-          'space-before-function-paren': [2, 'always']
-        }
+          'space-before-function-paren': [2, 'always'],
+        },
       },
       text: '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
-      filePath: path.resolve('./test.vue')
+      filePath: path.resolve('./test.vue'),
     },
     output:
-      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>'
+      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>',
   },
   {
     title: 'Svelte example',
     input: {
       prettierOptions: {
         plugins: ['prettier-plugin-svelte'],
-        overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }]
+        overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }],
       },
       text: '<script>\nfunction foo() { return "foo" }\n</script>\n  <div>test</div>\n<style>\n</style>',
-      filePath: path.resolve('./test.svelte')
+      filePath: path.resolve('./test.svelte'),
     },
     output:
-      '<script>\n  function foo() {\n    return "foo";\n  }\n</script>\n\n<div>test</div>\n\n<style>\n</style>'
+      '<script>\n  function foo() {\n    return "foo";\n  }\n</script>\n\n<div>test</div>\n\n<style>\n</style>',
   },
   {
     title: 'GraphQL example',
     input: {
       text: 'type Query{test: Test}',
-      filePath: path.resolve('./test.gql')
+      filePath: path.resolve('./test.gql'),
     },
-    output: 'type Query {\n  test: Test\n}'
+    output: 'type Query {\n  test: Test\n}',
   },
   {
     title: 'JSON example',
     input: {
       text: '{  "foo": "bar"}',
-      filePath: path.resolve('./test.json')
+      filePath: path.resolve('./test.json'),
     },
-    output: '{ "foo": "bar" }'
+    output: '{ "foo": "bar" }',
   },
   {
     title: 'Markdown example',
     input: {
       text: '#   Foo\n _bar_',
-      filePath: path.resolve('./test.md')
+      filePath: path.resolve('./test.md'),
     },
-    output: '# Foo\n\n_bar_'
+    output: '# Foo\n\n_bar_',
   },
   {
     title: 'Test eslintConfig.globals as an object',
@@ -236,12 +282,12 @@ const tests = [
       text: 'var foo = {  "bar": "baz"}',
       eslintConfig: {
         globals: {
-          someGlobal: true
-        }
-      }
+          someGlobal: true,
+        },
+      },
     },
-    output: 'var foo = { bar: "baz" };'
-  }
+    output: 'var foo = { bar: "baz" };',
+  },
 ];
 
 beforeEach(() => {
@@ -251,15 +297,12 @@ beforeEach(() => {
   prettierMock.resolveConfig.mockClear();
   fsMock.readFileSync.mockClear();
   loglevelMock.mock.clearAll();
-  global.__PRETTIER_ESLINT_TEST_STATE__ = {};
+  globalThis.__PRETTIER_ESLINT_TEST_STATE__ = {};
 });
 
-tests.forEach(({ title, modifier, input, output }) => {
-  let fn = test;
-  if (modifier) {
-    fn = test[modifier];
-  }
-  fn(title, async () => {
+for (const { title, input, output } of tests) {
+  // eslint-disable-next-line jest/valid-title -- isn't this a valid title?
+  test(title, async () => {
     input.text = stripIndent(input.text).trim();
     const expected = stripIndent(output).trim();
     const actual = await format(input);
@@ -267,15 +310,15 @@ tests.forEach(({ title, modifier, input, output }) => {
     // prettier adds a newline to the end of the input
     expect(actual).toBe(`${expected}\n`);
   });
-});
+}
 
 test('analyze returns the messages', async () => {
   const text = 'var x = 0;';
   const result = await analyze({
     text,
     eslintConfig: {
-      rules: { 'no-var': 'error' }
-    }
+      rules: { 'no-var': 'error' },
+    },
   });
   expect(result.output).toBe(`${text}\n`);
   expect(result.messages).toHaveLength(1);
@@ -290,7 +333,7 @@ test('failure to fix with eslint throws and logs an error', async () => {
   const error = new Error('Something happened');
   lintText.throwError = error;
 
-  await expect(() => format({ text: '' })).rejects.toThrowError(error);
+  await expect(format({ text: '' })).rejects.toThrow(error);
   expect(logger.error).toHaveBeenCalledTimes(1);
   lintText.throwError = null;
 });
@@ -306,7 +349,7 @@ test('when prettier throws, log to logger.error and throw the error', async () =
   const error = new Error('something bad happened');
   prettierMock.format.throwError = error;
 
-  await expect(() => format({ text: '' })).rejects.toThrowError(error);
+  await expect(format({ text: '' })).rejects.toThrow(error);
   expect(logger.error).toHaveBeenCalledTimes(1);
   prettierMock.format.throwError = null;
 });
@@ -320,17 +363,17 @@ test('can accept a path to an eslint module and uses that instead.', async () =>
 test('fails with an error if the eslint module cannot be resolved.', async () => {
   const eslintPath = path.join(
     __dirname,
-    '../__mocks__/non-existent-eslint-module'
+    '../__mocks__/non-existent-eslint-module',
   );
 
-  await expect(() => format({ text: '', eslintPath })).rejects.toThrowError(
-    /non-existent-eslint-module/
+  await expect(() => format({ text: '', eslintPath })).rejects.toThrow(
+    /non-existent-eslint-module/,
   );
   expect(logger.error).toHaveBeenCalledTimes(1);
 
   const errorString = expect.stringMatching(
-    /trouble getting.*?eslint.*non-existent-eslint-module/
-  );
+    /trouble getting.*?eslint.*non-existent-eslint-module/,
+  ) as string;
 
   expect(logger.error).toHaveBeenCalledWith(errorString);
 });
@@ -345,42 +388,42 @@ test('can accept a path to a prettier module and uses that instead.', async () =
 test('fails with an error if the prettier module cannot be resolved.', async () => {
   const prettierPath = path.join(
     __dirname,
-    '../__mocks__/non-existent-prettier-module'
+    '../__mocks__/non-existent-prettier-module',
   );
 
-  await expect(() => format({ text: '', prettierPath })).rejects.toThrowError(
-    /non-existent-prettier-module/
+  await expect(() => format({ text: '', prettierPath })).rejects.toThrow(
+    /non-existent-prettier-module/,
   );
   expect(logger.error).toHaveBeenCalledTimes(1);
   const errorString = expect.stringMatching(
-    /trouble getting.*?eslint.*non-existent-prettier-module/
-  );
+    /trouble getting.*?eslint.*non-existent-prettier-module/,
+  ) as string;
   expect(logger.error).toHaveBeenCalledWith(errorString);
 });
 
 test('resolves to the eslint module relative to the given filePath', async () => {
-  const filePath = require.resolve('../../tests/fixtures/paths/foo.js');
+  const filePath = require.resolve('./fixtures/paths/foo.js');
   await format({ text: '', filePath });
   const stateObj = {
     eslintPath: require.resolve(
-      '../../tests/fixtures/paths/node_modules/eslint/index.js'
+      './fixtures/paths/node_modules/eslint/index.js',
     ),
     prettierPath: require.resolve(
-      '../../tests/fixtures/paths/node_modules/prettier/index.js'
-    )
+      './fixtures/paths/node_modules/prettier/index.js',
+    ),
   };
-  expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj);
+  expect(globalThis.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj);
 });
 
 test('resolves to the local eslint module', async () => {
   const filePath = '/blah-blah/default-config.js';
   await format({ text: '', filePath });
-  expect(global.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
+  expect(globalThis.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
     // without Jest's mocking, these would actually resolve to the
     // project modules :) The fact that jest's mocking is being
     // applied is good enough for this test.
     eslintPath: require.resolve('../__mocks__/eslint'),
-    prettierPath: require.resolve('../__mocks__/prettier')
+    prettierPath: require.resolve('../__mocks__/prettier'),
   });
 });
 
@@ -398,38 +441,39 @@ test('logs error if it cannot read the file from the filePath', async () => {
   fsMock.readFileSync = jest.fn(() => {
     throw new Error('some error');
   });
-  await expect(() =>
-    format({ filePath: '/some-path.js' })
-  ).rejects.toThrowError(/some error/);
+  await expect(() => format({ filePath: '/some-path.js' })).rejects.toThrow(
+    /some error/,
+  );
   expect(logger.error).toHaveBeenCalledTimes(1);
   fsMock.readFileSync = originalMock;
 });
 
 test('calls prettier.resolveConfig with the file path', async () => {
-  const filePath = require.resolve('../../tests/fixtures/paths/foo.js');
+  const filePath = require.resolve('./fixtures/paths/foo.js');
   await format({
     filePath,
     text: defaultInputText(),
-    eslintConfig: getESLintConfigWithDefaultRules()
+    eslintConfig: getESLintConfigWithDefaultRules(),
   });
   expect(prettierMock.resolveConfig).toHaveBeenCalledTimes(1);
   expect(prettierMock.resolveConfig).toHaveBeenCalledWith(filePath);
 });
 
 test('does not raise an error if prettier.resolveConfig is not defined', async () => {
-  const filePath = require.resolve('../../tests/fixtures/paths/foo.js');
+  const filePath = require.resolve('./fixtures/paths/foo.js');
   const originalPrettierMockResolveConfig = prettierMock.resolveConfig;
-  prettierMock.resolveConfig = undefined;
+  // @ts-expect-error -- mocking
+  delete prettierMock.resolveConfig;
 
   async function callingFormat() {
     return format({
       filePath,
       text: defaultInputText(),
-      eslintConfig: getESLintConfigWithDefaultRules()
+      eslintConfig: getESLintConfigWithDefaultRules(),
     });
   }
 
-  await expect(callingFormat).not.toThrowError();
+  await expect(callingFormat()).resolves.not.toThrow();
 
   prettierMock.resolveConfig = originalPrettierMockResolveConfig;
 });
@@ -439,12 +483,14 @@ test('logs if there is a problem making the CLIEngine', async () => {
   eslintMock.ESLint.mockImplementation(() => {
     throw error;
   });
-  await expect(() => format({ text: '' })).rejects.toThrowError(error);
+  await expect(format({ text: '' })).rejects.toThrow(error);
   eslintMock.ESLint.mockReset();
   expect(logger.error).toHaveBeenCalledTimes(1);
 });
 
-function getESLintConfigWithDefaultRules(overrides) {
+function getESLintConfigWithDefaultRules(
+  overrides?: Linter.RulesRecord,
+): ESLintConfig {
   return {
     parserOptions: { ecmaVersion: 7 },
     rules: {
@@ -459,12 +505,12 @@ function getESLintConfigWithDefaultRules(overrides) {
           objects: 'always-multiline',
           imports: 'always-multiline',
           exports: 'always-multiline',
-          functions: 'always-multiline'
-        }
+          functions: 'always-multiline',
+        },
       ],
       'arrow-parens': [2, 'as-needed'],
-      ...overrides
-    }
+      ...overrides,
+    },
   };
 }
 
@@ -498,7 +544,7 @@ function prettierLastOutput() {
   return `
     function foo() {
       // stuff
-      console.log('Hello world!', and, stuff)
+      console.log('Hello world!', and, stuff);
     }
   `;
 }

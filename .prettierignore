@@ -1,6 +1,1 @@
 .yarn
-node_modules
-.nyc_output
-coverage
-dist
-tests/fixtures/

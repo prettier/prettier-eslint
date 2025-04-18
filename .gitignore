@@ -8,3 +8,4 @@ dist
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
+!test/fixtures/paths/node_modules
