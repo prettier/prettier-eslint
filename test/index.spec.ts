@@ -333,7 +333,7 @@ test('failure to fix with eslint throws and logs an error', async () => {
   const error = new Error('Something happened');
   lintText.throwError = error;
 
-  await expect(() => format({ text: '' })).rejects.toThrow(error);
+  await expect(format({ text: '' })).rejects.toThrow(error);
   expect(logger.error).toHaveBeenCalledTimes(1);
   lintText.throwError = null;
 });
@@ -349,7 +349,7 @@ test('when prettier throws, log to logger.error and throw the error', async () =
   const error = new Error('something bad happened');
   prettierMock.format.throwError = error;
 
-  await expect(() => format({ text: '' })).rejects.toThrow(error);
+  await expect(format({ text: '' })).rejects.toThrow(error);
   expect(logger.error).toHaveBeenCalledTimes(1);
   prettierMock.format.throwError = null;
 });
@@ -483,7 +483,7 @@ test('logs if there is a problem making the CLIEngine', async () => {
   eslintMock.ESLint.mockImplementation(() => {
     throw error;
   });
-  await expect(() => format({ text: '' })).rejects.toThrow(error);
+  await expect(format({ text: '' })).rejects.toThrow(error);
   eslintMock.ESLint.mockReset();
   expect(logger.error).toHaveBeenCalledTimes(1);
 });
