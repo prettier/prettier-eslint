@@ -7,10 +7,9 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 [![version][version-badge]][package] [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-26-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-59-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Donate][donate-badge]][donate]
-[![Code of Conduct][coc-badge]][coc] [![Roadmap][roadmap-badge]][roadmap]
-[![Examples][examples-badge]][examples]
+[![Code of Conduct][coc-badge]][coc] [![Examples][examples-badge]][examples]
 
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
@@ -346,7 +345,7 @@ Thanks goes to these people ([emoji key][emojis]):
       <td align="center" valign="top" width="14.28%"><a href="https://campcode.dev/"><img src="https://avatars.githubusercontent.com/u/10620169?v=4?s=100" width="100px;" alt="Rebecca Vest"/><br /><sub><b>Rebecca Vest</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=idahogurl" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/chrisbobbe"><img src="https://avatars.githubusercontent.com/u/22248748?v=4?s=100" width="100px;" alt="Chris Bobbe"/><br /><sub><b>Chris Bobbe</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/issues?q=author%3Achrisbobbe" title="Bug reports">🐛</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=chrisbobbe" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.1stg.me/"><img src="https://avatars.githubusercontent.com/u/8336744?v=4?s=100" width="100px;" alt="JounQin"/><br /><sub><b>JounQin</b></sub></a><br /><a href="#question-JounQin" title="Answering Questions">💬</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=JounQin" title="Code">💻</a> <a href="#design-JounQin" title="Design">🎨</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=JounQin" title="Documentation">📖</a> <a href="#ideas-JounQin" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-JounQin" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-JounQin" title="Maintenance">🚧</a> <a href="#plugin-JounQin" title="Plugin/utility libraries">🔌</a> <a href="#projectManagement-JounQin" title="Project Management">📆</a> <a href="https://github.com/prettier/prettier-eslint/pulls?q=is%3Apr+reviewed-by%3AJounQin" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=JounQin" title="Tests">⚠️</a> <a href="#tool-JounQin" title="Tools">🔧</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://jonathan.rehm.me/"><img src="https://avatars.githubusercontent.com/u/999845?v=4?s=100" width="100px;" alt="Jonathan Rehm"/><br /><sub><b>Jonathan Rehm</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=jkrehm" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://jonathan.rehm.me/"><img src="https://avatars.githubusercontent.com/u/999845?v=4?s=100" width="100px;" alt="Jonathan Rehm"/><br /><sub><b>Jonathan Rehm</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/issues?q=author%3Ajkrehm" title="Bug reports">🐛</a> <a href="https://github.com/prettier/prettier-eslint/commits?author=jkrehm" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/gwhitney"><img src="https://avatars.githubusercontent.com/u/3825429?v=4?s=100" width="100px;" alt="Glen Whitney"/><br /><sub><b>Glen Whitney</b></sub></a><br /><a href="https://github.com/prettier/prettier-eslint/commits?author=gwhitney" title="Code">💻</a></td>
     </tr>
   </tbody>
@@ -364,7 +363,7 @@ Contributions of any kind welcome!
 
 MIT
 
-[prettier]: https://github.com/jlongster/prettier
+[prettier]: https://github.com/prettier/prettier
 [eslint]: http://eslint.org/
 [fix]: http://eslint.org/docs/user-guide/command-line-interface#fix
 [npm]: https://www.npmjs.com/
@@ -378,17 +377,15 @@ MIT
 [downloads-badge]: https://img.shields.io/npm/dm/prettier-eslint.svg?style=flat-square
 [npm-stat]: http://npm-stat.com/charts.html?package=prettier-eslint&from=2016-04-01
 [license-badge]: https://img.shields.io/npm/l/prettier-eslint.svg?style=flat-square
-[license]: https://github.com/prettier/prettier-eslint/blob/master/other/LICENSE
+[license]: https://github.com/prettier/prettier-eslint/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
 [donate]: https://github.com/sponsors/prettier-eslint
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/prettier/prettier-eslint/blob/master/other/CODE_OF_CONDUCT.md
-[roadmap-badge]: https://img.shields.io/badge/%F0%9F%93%94-roadmap-CD9523.svg?style=flat-square
-[roadmap]: https://github.com/prettier/prettier-eslint/blob/master/other/ROADMAP.md
+[coc]: https://github.com/prettier/prettier-eslint/blob/master/CODE_OF_CONDUCT.md
 [examples-badge]: https://img.shields.io/badge/%F0%9F%92%A1-examples-8C8E93.svg?style=flat-square
-[examples]: https://github.com/prettier/prettier-eslint/blob/master/other/EXAMPLES.md
+[examples]: https://github.com/prettier/prettier-eslint/blob/master/EXAMPLES.md
 [github-watch-badge]: https://img.shields.io/github/watchers/prettier/prettier-eslint.svg?style=social
 [github-watch]: https://github.com/prettier/prettier-eslint/watchers
 [github-star-badge]: https://img.shields.io/github/stars/prettier/prettier-eslint.svg?style=social
