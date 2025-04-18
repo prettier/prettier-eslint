@@ -11,7 +11,7 @@ import stripIndent from 'strip-indent';
 
 import type { ESLintMock, FsMock, PrettierMock } from '../mock.js';
 
-import {
+import prettierESLint, {
   type ESLintConfig,
   format,
   analyze,
@@ -20,12 +20,24 @@ import {
 
 jest.mock('fs');
 
-// NOTE(cedric): this is a workaround to also mock `node:fs`
+// !NOTE: this is a workaround to also mock `node:fs`
 jest.mock('node:fs', () => fsMock_);
 
 const fsMock = fsMock_ as unknown as FsMock;
 const eslintMock = eslintMock_ as unknown as ESLintMock;
 const prettierMock = prettierMock_ as unknown as PrettierMock;
+
+describe('entrypoint', () => {
+  test('exports the format function', () => {
+    expect(prettierESLint).toHaveProperty('format');
+    expect(prettierESLint.format).toBe(format);
+  });
+
+  test('exports the analyze function', () => {
+    expect(prettierESLint).toHaveProperty('analyze');
+    expect(prettierESLint.analyze).toBe(analyze);
+  });
+})
 
 const {
   mock: { logger },

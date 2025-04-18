@@ -5,6 +5,7 @@ import { getOptionsForFormatting, PrettierOptions } from 'prettier-eslint';
 const getPrettierOptionsFromESLintRulesTests: Array<{
   rules: Linter.RulesRecord;
   options: PrettierOptions;
+  prettierOptions?: PrettierOptions;
   fallbackPrettierOptions?: PrettierOptions;
 }> = [
   {
@@ -189,12 +190,12 @@ beforeEach(() => {
 
 for (const [
   index,
-  { rules, options, fallbackPrettierOptions },
+  { rules, options, prettierOptions, fallbackPrettierOptions },
 ] of getPrettierOptionsFromESLintRulesTests.entries()) {
   test(`getPrettierOptionsFromESLintRulesTests ${index}`, () => {
     const { prettier } = getOptionsForFormatting(
       { rules },
-      options,
+      prettierOptions,
       fallbackPrettierOptions,
     );
     expect(prettier).toMatchObject(options);

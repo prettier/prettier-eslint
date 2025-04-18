@@ -140,7 +140,8 @@ function getRelevantESLintConfig(eslintConfig: ESLintConfig): ESLintConfig {
   const relevantRules: Linter.RulesRecord = {};
 
   for (const [name, rule] of rules.entries()) {
-    if (!rule.meta?.fixable) {
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain -- test coverage
+    if (!rule.meta || !rule.meta.fixable) {
       logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
       relevantRules[name] = ['off'];
     }
@@ -187,7 +188,7 @@ function getPrettierOptionsFromESLintRules(
 ) {
   const { rules } = eslintConfig;
 
-  const prettierPluginOptions = getRuleValue(rules!, 'prettier/prettier', []);
+  const prettierPluginOptions = getRuleValue(rules, 'prettier/prettier', []);
 
   if (
     ruleValueExists(prettierPluginOptions) &&
@@ -223,7 +224,7 @@ function configureOptions(
 
   if (optionIsGiven) {
     options[key] = givenOption;
-  } else if (rules) {
+  } else {
     const { ruleValue, ruleValueToPrettierOption } = OPTION_GETTERS[key];
     const eslintRuleValue = ruleValue(rules);
 
@@ -449,7 +450,8 @@ function extractRuleValue(
  *   `RULE_NOT_CONFIGURED` if unset.
  */
 function getRuleValue(
-  rules: Partial<Linter.RulesRecord>,
+  /* istanbul ignore next */
+  rules: Partial<Linter.RulesRecord> = {},
   name: string,
   objPath?: Array<number | string> | string,
 ): StringLiteral<Linter.RuleEntry> | undefined {

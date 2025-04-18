@@ -65,7 +65,7 @@ export interface OptionGetter {
    * @returns The value of the specified ESLint rule.
    */
   ruleValue: (
-    rules: Partial<Linter.RulesRecord>,
+    rules?: Partial<Linter.RulesRecord>,
   ) => StringLiteral<Linter.RuleEntry> | undefined;
 
   /**

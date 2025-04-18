@@ -29,10 +29,11 @@
     "prettier-eslint"
   ],
   "scripts": {
-    "fix": "nps -c ./package-scripts.cjs 'lint --fix'",
+    "build": "yarn start build",
+    "fix": "yarn start 'lint --fix'",
     "prepare": "patch-package && simple-git-hooks",
     "start": "nps -c ./package-scripts.cjs",
-    "test": "nps -c ./package-scripts.cjs test"
+    "test": "yarn start test"
   },
   "peerDependencies": {
     "prettier-plugin-svelte": "^3.0.0",
