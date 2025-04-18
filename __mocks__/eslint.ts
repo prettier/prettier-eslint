@@ -1,7 +1,6 @@
 /**
  * This mock file is so eslint doesn't attempt to actually search around the
- * file system for stuff, we can not use `.ts` because it's called by
- * `test/fixtures/node_modules/eslint/index.js`
+ * file system for stuff
  */
 
 import eslint_, { type ESLint as ESLint_ } from 'eslint';

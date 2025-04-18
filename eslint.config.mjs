@@ -30,7 +30,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['__mocks__/**/*.{js,ts}', 'test/**/*.spec.ts'],
+    files: ['__mocks__/**/*.ts', 'test/**/*.spec.ts'],
     languageOptions: {
       globals: globals.jest,
     },

@@ -1,8 +1,3 @@
-/**
- * We can not use `.ts` because it's called by
- * `test/fixtures/node_modules/prettier/index.js`
- */
-
 import type { Options } from 'prettier';
 
 import type { PrettierMock } from '../mock.js';
