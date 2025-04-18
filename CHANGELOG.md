@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.4.1
+
+### Patch Changes
+
+- [#1182](https://github.com/prettier/prettier-eslint/pull/1182) [`53735a1`](https://github.com/prettier/prettier-eslint/commit/53735a11915d6375f8964d7c813c5c1a13913783) Thanks [@JounQin](https://github.com/JounQin)! - fix: export entry regression
+
 ## 16.4.0
 
 ### Minor Changes
