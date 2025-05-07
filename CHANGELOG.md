@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 16.4.2
+
+### Patch Changes
+
+- [#1186](https://github.com/prettier/prettier-eslint/pull/1186) [`96967e9`](https://github.com/prettier/prettier-eslint/commit/96967e9a4eb7a99a52f65ff94b0155c2ce679c3e) Thanks [@bpfoster](https://github.com/bpfoster)! - fix: `tslib` should be listed as `dependency`
+
 ## 16.4.1
 
 ### Patch Changes
