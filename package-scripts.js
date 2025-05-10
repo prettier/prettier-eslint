@@ -54,15 +54,16 @@ module.exports = {
     validate: {
       description:
         'This runs several scripts to make sure things look good before committing or on clean install',
-      script: concurrent([
-        'nps -c ./package-scripts.cjs lint',
-        'nps -c ./package-scripts.cjs build',
-        'nps -c ./package-scripts.cjs test',
-      ]),
+      script: concurrent.nps('lint', 'build', 'test'),
     },
     format: {
       description: 'Formats everything with prettier-eslint',
-      script: 'prettier-eslint "**/*.{js,json,md,ts,yml}" ".*.js" --write',
+      // script: 'prettier-eslint "**/*.{js,json,md,ts,yml}" ".*.js" --write',
+      // eslint-disable-line sonarjs/fixme-tag -- FIXME: temporary workaround for Flat ESLint
+      script: series(
+        'prettier "**/*.{js,json,md,ts,yml}" ".*.mjs" --write',
+        'eslint "**/*.{js,json,md,ts,yml}" ".*.mjs" --fix'
+      ),
     },
   },
   options: {
