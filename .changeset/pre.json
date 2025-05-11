@@ -4,5 +4,7 @@
   "initialVersions": {
     "prettier-eslint": "16.4.2"
   },
-  "changesets": []
+  "changesets": [
+    "soft-bees-learn"
+  ]
 }
