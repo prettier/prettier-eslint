@@ -245,17 +245,19 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
     delete eslintConfig.ignorePatterns;
     delete eslintConfig.plugins;
     delete eslintConfig.settings;
-    delete eslintConfig.overrideConfig.plugins!['@'];
+
+    // FIXME: Seems to be an ESLint core issue: `Key "plugins": Cannot redefine plugin`
+    delete eslintConfig.overrideConfig.plugins;
 
     const eslint = await getESLint(eslintPath, eslintConfig);
     try {
-      logger.trace('calling cliEngine.executeOnText with the text');
+      logger.trace('calling eslint.lintText with the text');
       const report = await eslint.lintText(text, {
         filePath,
         warnIgnored: true,
       });
       logger.trace(
-        'executeOnText returned the following report:',
+        'eslint.lintText returned the following report:',
         prettyFormat(report),
       );
       // default the output to text because if there's nothing
@@ -275,7 +277,7 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
       );
       return { output, messages };
     } catch (error) {
-      logger.error('eslint fix failed due to an eslint error');
+      logger.error('eslint --fix failed due to an eslint error');
       throw error;
     }
   };
