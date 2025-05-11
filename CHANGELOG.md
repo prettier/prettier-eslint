@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 17.0.0-alpha.0
+
+### Major Changes
+
+- [#1190](https://github.com/prettier/prettier-eslint/pull/1190) [`54d8390`](https://github.com/prettier/prettier-eslint/commit/54d839040e24be735db87c21a4d623b89b4d58cb) Thanks [@JounQin](https://github.com/JounQin)! - feat!: support ESLint v9 flat config
+
 ## 16.4.2
 
 ### Patch Changes
