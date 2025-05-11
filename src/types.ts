@@ -1,8 +1,6 @@
 import { ESLint, type Linter } from 'eslint';
 import type { Options as PrettierOptions } from 'prettier';
 
-import { StringLiteral } from './utils';
-
 /** Logging level for the traceback of the synchronous formatting process. */
 export type LogLevel = 'debug' | 'error' | 'info' | 'silent' | 'trace' | 'warn';
 
@@ -53,6 +51,8 @@ export interface PrettifyInput {
   messages: Linter.LintMessage[];
 }
 
+export type StringLiteral<T> = T | (string & { _?: never });
+
 /**
  * Represents the structure of an option getter for mapping ESLint rules to
  * Prettier options.
@@ -86,17 +86,8 @@ export type ESLintOptions = Omit<
 
 export type ValueOf<T> = T[keyof T];
 
-export type ESLintConfigGlobals = Linter.Config['globals'];
+export type ESLintConfigLanguageOptions = NonNullable<
+  Linter.Config['languageOptions']
+>;
 
-export type ESLintConfigGlobalValue = ValueOf<NonNullable<ESLintConfigGlobals>>;
-
-export interface ESLintConfig
-  extends Omit<Linter.Config, 'globals'>,
-    ESLintOptions {
-  /**
-   * ESLint globals configuration, supporting both object format and string
-   * tuple format for compatibility with different ESLint versions.
-   */
-  globals?: ESLintConfigGlobals | [`${string}:${ESLintConfigGlobalValue}`];
-  ignorePattern?: string[] | string;
-}
+export interface ESLintConfig extends Linter.Config, ESLintOptions {}

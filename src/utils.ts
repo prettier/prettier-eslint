@@ -1,10 +1,18 @@
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
 import { Linter } from 'eslint';
 import getLogger from 'loglevel-colored-level-prefix';
 import { type Options as PrettierOptions } from 'prettier';
 
-import type { ESLintOptions, ESLintConfig, OptionGetter } from './types.ts';
+import type {
+  ESLintOptions,
+  ESLintConfig,
+  OptionGetter,
+  StringLiteral,
+} from './types.ts';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
@@ -37,7 +45,6 @@ const OPTION_GETTERS: Record<keyof PrettierOptions, OptionGetter> = {
     ruleValueToPrettierOption: getPrintWidth,
   },
   tabWidth: {
-    // eslint-disable-next-line sonarjs/function-return-type -- doesn't it?
     ruleValue(rules) {
       let value = getRuleValue(rules, 'indent');
       if (value === 'tab') {
@@ -133,15 +140,14 @@ export function getOptionsForFormatting(
  *   rules disabled.
  */
 function getRelevantESLintConfig(eslintConfig: ESLintConfig): ESLintConfig {
-  const linter = new Linter();
+  const linter = new Linter({ configType: 'eslintrc' });
   const rules = linter.getRules();
   logger.debug('turning off unfixable rules');
 
   const relevantRules: Linter.RulesRecord = {};
 
   for (const [name, rule] of rules.entries()) {
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain -- test coverage
-    if (!rule.meta || !rule.meta.fixable) {
+    if (!rule.meta?.fixable) {
       logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
       relevantRules[name] = ['off'];
     }
@@ -149,12 +155,10 @@ function getRelevantESLintConfig(eslintConfig: ESLintConfig): ESLintConfig {
 
   return {
     // defaults
-    useEslintrc: false,
     ...eslintConfig,
     // overrides
     rules: { ...eslintConfig.rules, ...relevantRules },
-    fix: true,
-    globals: eslintConfig.globals || {},
+    fix: eslintConfig.fix ?? true,
   };
 }
 
@@ -547,10 +551,28 @@ function makePrettierOption(
   );
 }
 
-export function requireModule<T>(modulePath: string, name: string) {
+/**
+ * This is only a hack to load a module dynamically, `import()` won't work due
+ * to `tsc` transpilation.
+ *
+ * FIXME: Use `import()` instead of this hack when targeting ESM
+ */
+export function loadModule<T>(modulePath: string) {
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
+  return new Function('modulePath', 'return import(modulePath)')(
+    modulePath,
+  ) as Promise<T>;
+}
+
+export async function importModule<T>(modulePath: string, name = modulePath) {
   try {
-    logger.trace(`requiring "${name}" module at "${modulePath}"`);
-    return require(modulePath) as T; // eslint-disable-line @typescript-eslint/no-require-imports, sonarjs/todo-tag -- TODO: Use `import()` instead
+    logger.trace(`requiring "${name}" module via "${modulePath}"`);
+    const imported = await loadModule<T | { default: T }>(
+      path.isAbsolute(modulePath) ? pathToFileURL(modulePath).href : modulePath,
+    );
+    return typeof imported === 'object' && 'default' in imported!
+      ? imported.default
+      : imported;
   } catch (error) {
     logger.error(
       oneLine`
@@ -562,17 +584,58 @@ export function requireModule<T>(modulePath: string, name: string) {
   }
 }
 
-export function getESLint(eslintPath: string, eslintOptions: ESLintOptions) {
-  const { ESLint } = requireModule<typeof import('eslint')>(
+export async function getESLint(
+  eslintPath: string,
+  eslintOptions: ESLintOptions,
+) {
+  const { ESLint } = await importModule<typeof import('eslint')>(
     eslintPath,
     'eslint',
   );
   try {
     return new ESLint(eslintOptions);
   } catch (error) {
-    logger.error('There was trouble creating the ESLint CLIEngine.');
+    logger.error('There was trouble creating the ESLint instance.');
     throw error;
   }
 }
 
-export type StringLiteral<T> = T | (string & { _?: never });
+/**
+ * Extracts unique file extensions from an array of glob patterns.
+ *
+ * This function processes an array of glob-style patterns (e.g., `**\/*.js`,
+ * `doc/*.tex`) and extracts the unique file extensions. It also handles
+ * patterns that specify multiple extensions using curly braces (e.g.,
+ * `*.{log,txt}`).
+ *
+ * @example
+ *   const patterns = ['src/**\/*.js', 'docs/*.{md,txt}', '**\/*.ts'];
+ *   console.log(extractFileExtensions(patterns)); // Output: ['js', 'md', 'txt', 'ts']
+ *
+ * @param {string[]} patterns - An array of glob patterns containing file
+ *   extensions.
+ * @returns {string[]} An array of unique file extensions extracted from the
+ *   patterns.
+ */
+export const extractFileExtensions = (patterns: string[]): string[] => {
+  const extensions = patterns.flatMap(pattern => {
+    // Handle patterns with multiple extensions like `*.{log,txt}`
+    const matchMultiple = /\.\{([^}]+)\}/.exec(pattern);
+
+    // istanbul ignore if
+    if (matchMultiple) {
+      return matchMultiple[1].split(',').reduce<string[]>((acc, ext) => {
+        ext = ext.trim();
+        if (ext) {
+          acc.push(`.${ext}`);
+        }
+        return acc;
+      }, []);
+    }
+
+    // Match standard glob patterns like `**/*.js` or `doc/*.tex`
+    return /(\.[a-z0-9]+)$/i.exec(pattern)?.[1] ?? [];
+  });
+
+  return [...new Set(extensions)]; // Remove duplicate extensions
+};

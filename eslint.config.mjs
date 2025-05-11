@@ -26,6 +26,8 @@ export default tseslint.config(
       ],
       'import/no-import-module-exports': 'off',
       'arrow-parens': ['error', 'as-needed'],
+      'sonarjs/fixme-tag': 'off',
+      'sonarjs/function-return-type': 'off',
       quotes: ['error', 'single', { avoidEscape: true }],
     },
   },

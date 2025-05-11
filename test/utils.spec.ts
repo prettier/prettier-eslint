@@ -212,7 +212,6 @@ test('if prettierOptions are provided, those are preferred', () => {
   expect(prettier).toMatchObject({ singleQuote: false });
 });
 
-// eslint-disable-next-line max-len
 test('if fallbacks are provided, those are preferred over disabled eslint rules', () => {
   const { prettier } = getOptionsForFormatting(
     { rules: { quotes: [0] } },
@@ -245,19 +244,13 @@ test('eslint max-len.tabWidth value should be used for tabWidth when tabs are us
 
 test('eslint config has only necessary properties', () => {
   const { eslint } = getOptionsForFormatting({
-    globals: ['window:false'],
+    languageOptions: { globals: { window: false } },
     rules: { 'no-with': 'error', quotes: [2, 'single'] },
   });
   expect(eslint).toMatchObject({
     fix: true,
-    useEslintrc: false,
     rules: { quotes: [2, 'single'] },
   });
-});
-
-test('useEslintrc is set to the given config value', () => {
-  const { eslint } = getOptionsForFormatting({ useEslintrc: true, rules: {} });
-  expect(eslint).toMatchObject({ fix: true, useEslintrc: true });
 });
 
 test('Turn off unfixable rules', () => {
@@ -274,7 +267,5 @@ test('Turn off unfixable rules', () => {
       quotes: ['error', 'double'],
     },
     fix: true,
-    globals: {},
-    useEslintrc: false,
   });
 });

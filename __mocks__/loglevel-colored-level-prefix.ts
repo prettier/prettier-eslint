@@ -33,7 +33,7 @@ function getTestImplementation(level: LogLevel) {
 
   function testLogImplementation(message: string, ...args: unknown[]) {
     if (mock.logThings === 'all' || mock.logThings.includes(level)) {
-      console.log(level, message, ...args); // eslint-disable-line no-console
+      console.log(level, message, ...args);
     }
   }
 }

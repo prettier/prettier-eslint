@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import indentString from '@esm2cjs/indent-string';
 import { oneLine, stripIndent } from 'common-tags';
 import type { Linter } from 'eslint';
-import indentString from 'indent-string';
 import merge from 'lodash.merge';
 import getLogger from 'loglevel-colored-level-prefix';
 import { format as prettyFormat } from 'pretty-format';
@@ -11,13 +11,17 @@ import requireRelative from 'require-relative';
 
 import type {
   ESLintConfig,
-  PrettifyInput,
   FormatOptions,
   LogLevel,
   PrettierOptions,
-  ESLintConfigGlobalValue,
+  PrettifyInput,
 } from './types.ts';
-import { getESLint, getOptionsForFormatting, requireModule } from './utils.ts';
+import {
+  extractFileExtensions,
+  getESLint,
+  getOptionsForFormatting,
+  importModule,
+} from './utils.ts';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
 
@@ -32,6 +36,23 @@ export async function format(options: FormatOptions): Promise<string> {
   return output;
 }
 
+export const DEFAULT_ESLINT_EXTENSIONS = [
+  '.cjs',
+  '.cts',
+  '.js',
+  '.jsx',
+  '.ts',
+  '.tsx',
+  '.mjs',
+  '.mts',
+  '.vue',
+  '.svelte',
+];
+
+export const DEFAULT_ESLINT_FILES = DEFAULT_ESLINT_EXTENSIONS.map(
+  ext => `**/*${ext}`,
+);
+
 /**
  * Analyzes and formats text with prettier and eslint, based on the identical
  * options as for the `format` function. It differs from `format` only in that
@@ -44,7 +65,6 @@ export async function format(options: FormatOptions): Promise<string> {
  *   formatted string and `r.messages` is an array of message specifications
  *   from eslint.
  */
-// eslint-disable-next-line complexity
 export async function analyze(options: FormatOptions): Promise<{
   output: string;
   messages: Linter.LintMessage[];
@@ -97,20 +117,14 @@ export async function analyze(options: FormatOptions): Promise<{
     }),
   );
 
-  const eslintExtensions = eslintConfig.extensions || [
-    '.cjs',
-    '.cts',
-    '.js',
-    '.jsx',
-    '.ts',
-    '.tsx',
-    '.mjs',
-    '.mts',
-    '.vue',
-    '.svelte',
-  ];
-
   const fileExtension = path.extname(filePath || '');
+
+  // istanbul ignore next
+  const eslintFiles = eslintConfig.files?.length
+    ? eslintConfig.files
+    : DEFAULT_ESLINT_FILES;
+
+  const eslintExtensions = extractFileExtensions(eslintFiles.flat());
 
   // If we don't get filePath run eslint on text, otherwise only run eslint
   // if it's a configured extension or fall back to a "supported" file type.
@@ -124,18 +138,21 @@ export async function analyze(options: FormatOptions): Promise<{
     return prettify(text);
   }
 
-  if (['.ts', '.tsx'].includes(fileExtension)) {
-    formattingOptions.eslint.parser ||= require.resolve(
-      '@typescript-eslint/parser',
-    );
-  }
+  formattingOptions.eslint.languageOptions ??= {};
 
-  if (['.vue'].includes(fileExtension)) {
-    formattingOptions.eslint.parser ||= require.resolve('vue-eslint-parser');
-  }
-
-  if (['.svelte'].includes(fileExtension)) {
-    formattingOptions.eslint.parser ||= require.resolve('svelte-eslint-parser');
+  if (!formattingOptions.eslint.languageOptions.parser) {
+    if (['.ts', '.tsx'].includes(fileExtension)) {
+      formattingOptions.eslint.languageOptions.parser = await importModule(
+        '@typescript-eslint/parser',
+      );
+    } else if (['.vue'].includes(fileExtension)) {
+      formattingOptions.eslint.languageOptions.parser =
+        await importModule('vue-eslint-parser');
+    } else if (['.svelte'].includes(fileExtension)) {
+      formattingOptions.eslint.languageOptions.parser = await importModule(
+        'svelte-eslint-parser',
+      );
+    }
   }
 
   const eslintFix = createEslintFix(formattingOptions.eslint, eslintPath);
@@ -186,7 +203,7 @@ function createPrettify(formatOptions: PrettierOptions, prettierPath: string) {
       ${indentString(text, 2)}
     `,
     );
-    const prettier = requireModule<typeof import('prettier')>(
+    const prettier = await importModule<typeof import('prettier')>(
       prettierPath,
       'prettier',
     );
@@ -211,48 +228,36 @@ function createPrettify(formatOptions: PrettierOptions, prettierPath: string) {
 
 function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
   return async function eslintFix(text: string, filePath?: string) {
-    if (Array.isArray(eslintConfig.globals)) {
-      const tempGlobals: Linter.BaseConfig['globals'] = {};
-      for (const g of eslintConfig.globals as string[]) {
-        const [key, value] = g.split(':');
-        tempGlobals[key] = value as ESLintConfigGlobalValue;
-      }
-      eslintConfig.globals = tempGlobals;
-    }
-
     eslintConfig.overrideConfig = {
+      languageOptions: eslintConfig.languageOptions,
       rules: eslintConfig.rules,
-      parser: eslintConfig.parser,
-      globals: eslintConfig.globals,
-      parserOptions: eslintConfig.parserOptions,
-      ignorePatterns: eslintConfig.ignorePatterns || eslintConfig.ignorePattern,
-      plugins: eslintConfig.plugins,
-      env: eslintConfig.env,
-      settings: eslintConfig.settings,
-      noInlineConfig: eslintConfig.noInlineConfig,
+      ignores: eslintConfig.ignorePatterns ?? [],
+      plugins: eslintConfig.plugins ?? {},
+      settings: eslintConfig.settings ?? {},
       ...eslintConfig.overrideConfig,
     };
 
+    delete eslintConfig.baseConfig;
+    delete eslintConfig.language;
+    delete eslintConfig.languageOptions;
+    delete eslintConfig.linterOptions;
     delete eslintConfig.rules;
-    delete eslintConfig.parser;
-    delete eslintConfig.parserOptions;
-    delete eslintConfig.globals;
     delete eslintConfig.ignorePatterns;
-    delete eslintConfig.ignorePattern;
     delete eslintConfig.plugins;
-    delete eslintConfig.env;
-    delete eslintConfig.noInlineConfig;
     delete eslintConfig.settings;
 
-    const eslint = getESLint(eslintPath, eslintConfig);
+    // FIXME: Seems to be an ESLint core issue: `Key "plugins": Cannot redefine plugin`
+    delete eslintConfig.overrideConfig.plugins;
+
+    const eslint = await getESLint(eslintPath, eslintConfig);
     try {
-      logger.trace('calling cliEngine.executeOnText with the text');
+      logger.trace('calling eslint.lintText with the text');
       const report = await eslint.lintText(text, {
         filePath,
         warnIgnored: true,
       });
       logger.trace(
-        'executeOnText returned the following report:',
+        'eslint.lintText returned the following report:',
         prettyFormat(report),
       );
       // default the output to text because if there's nothing
@@ -272,7 +277,7 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
       );
       return { output, messages };
     } catch (error) {
-      logger.error('eslint fix failed due to an eslint error');
+      logger.error('eslint --fix failed due to an eslint error');
       throw error;
     }
   };
@@ -324,19 +329,15 @@ function getTextFromFilePath(filePath: string) {
  * @returns An object containing options for the ESLint API.
  */
 function getESLintApiOptions(eslintConfig: ESLintConfig): ESLintConfig {
-  // https://eslint.org/docs/developer-guide/nodejs-api
+  // https://eslint.org/docs/latest/integrate/nodejs-api
   // these options affect what calculateConfigForFile produces
   return {
-    ignore: eslintConfig.ignore || true,
-    ignorePath: eslintConfig.ignorePath,
-    allowInlineConfig: eslintConfig.allowInlineConfig || true,
+    ignore: eslintConfig.ignore ?? true,
+    allowInlineConfig: eslintConfig.allowInlineConfig ?? true,
     baseConfig: eslintConfig.baseConfig,
     overrideConfig: eslintConfig.overrideConfig,
     overrideConfigFile: eslintConfig.overrideConfigFile,
     plugins: eslintConfig.plugins,
-    resolvePluginsRelativeTo: eslintConfig.resolvePluginsRelativeTo,
-    rulePaths: eslintConfig.rulePaths || [],
-    useEslintrc: eslintConfig.useEslintrc || true,
   };
 }
 
@@ -354,7 +355,7 @@ async function getESLintConfig(
       "${filePath || process.cwd()}"
     `,
   );
-  const eslint = getESLint(eslintPath, getESLintApiOptions(eslintConfig));
+  const eslint = await getESLint(eslintPath, getESLintApiOptions(eslintConfig));
 
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
@@ -376,8 +377,11 @@ async function getESLintConfig(
   }
 }
 
-function getPrettierConfig(filePath: string | undefined, prettierPath: string) {
-  const prettier = requireModule<typeof import('prettier')>(
+async function getPrettierConfig(
+  filePath: string | undefined,
+  prettierPath: string,
+) {
+  const prettier = await importModule<typeof import('prettier')>(
     prettierPath,
     'prettier',
   );
