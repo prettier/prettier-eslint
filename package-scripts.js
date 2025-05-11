@@ -59,7 +59,7 @@ module.exports = {
     format: {
       description: 'Formats everything with prettier-eslint',
       // script: 'prettier-eslint "**/*.{js,json,md,ts,yml}" ".*.js" --write',
-      // eslint-disable-line sonarjs/fixme-tag -- FIXME: temporary workaround for Flat ESLint
+      // FIXME: temporary workaround for `prettier-eslint-cli`
       script: series(
         'prettier "**/*.{js,json,md,ts,yml}" ".*.mjs" --write',
         'eslint "**/*.{js,json,md,ts,yml}" ".*.mjs" --fix'

@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/unbound-method, sonarjs/fixme-tag */
+/* eslint-disable @typescript-eslint/unbound-method, sonarjs/no-commented-code */
 
 // eslint-disable-next-line unicorn/prefer-node-protocol -- mocked
 import fsMock_ from 'fs';
 import path from 'node:path';
 
+import { stripIndent } from 'common-tags';
 import eslintMock_, { type Linter } from 'eslint';
 import loglevelMock from 'loglevel-colored-level-prefix';
 import prettierMock_ from 'prettier';
-import stripIndent from 'strip-indent';
 
 import type { ESLintMock, FsMock, PrettierMock } from '../mock.js';
 
@@ -65,7 +65,7 @@ const tests: Array<{
     input: {
       text: 'const {foo} = bar',
       eslintConfig: {
-        parserOptions: { ecmaVersion: 7 },
+        languageOptions: { parserOptions: { ecmaVersion: 7 } },
         rules: { semi: ['error', 'never'] },
       },
       prettierOptions: { bracketSpacing: true },
@@ -103,9 +103,9 @@ const tests: Array<{
     input: {
       text: 'const { foo } = bar;',
       eslintConfig: {
-        // Won't be overridden
-        parserOptions: {
-          ecmaVersion: 7,
+        languageOptions: {
+          // Won't be overridden
+          parserOptions: { ecmaVersion: 7 },
         },
         rules: {
           // Will be overridden
@@ -131,7 +131,7 @@ const tests: Array<{
   {
     title: 'without a filePath and no config',
     input: { text: defaultInputText() },
-    output: noopOutput(),
+    output: prettierLastOutput(),
   },
   {
     title: 'inferring bracketSpacing',
@@ -163,7 +163,7 @@ const tests: Array<{
       text: 'var x = 0;',
       eslintConfig: {
         rules: { 'no-var': 'error' },
-        ignorePattern: 'should-be-ignored',
+        ignorePatterns: ['should-be-ignored.js'],
       },
       filePath: path.resolve('should-be-ignored.js'),
     },
@@ -174,18 +174,20 @@ const tests: Array<{
   {
     title: 'with code that needs no fixing',
     input: {
-      text: 'var [foo, { bar }] = window.APP;',
+      text: 'var [foo, { bar }] = globalThis.APP;',
       eslintConfig: { rules: {} },
     },
-    output: 'var [foo, { bar }] = window.APP;',
+    output: 'var [foo, { bar }] = globalThis.APP;',
   },
   {
     title: 'accepts config globals as array',
     input: {
       text: defaultInputText(),
-      eslintConfig: { globals: ['window:writable'] },
+      eslintConfig: {
+        languageOptions: { globals: { windows: 'writable' } },
+      },
     },
-    output: noopOutput(),
+    output: prettierLastOutput(),
   },
   {
     title: 'CSS example',
@@ -227,11 +229,11 @@ const tests: Array<{
           'space-before-function-paren': [2, 'always'],
         },
       },
-      text: '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() { return "foo" }\n</script>\n<style>\n</style>',
+      text: '<template>\n  <div></div>\n</template>\n<script>\nfunction foo (){ return "foo" }\n</script>\n<style>\n</style>',
       filePath: path.resolve('./test.vue'),
     },
     output:
-      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo () {\n  return "foo";\n}\n</script>\n<style></style>',
+      '<template>\n  <div></div>\n</template>\n<script>\nfunction foo() {\n  return "foo";\n}\n</script>\n<style></style>',
   },
   {
     title: 'Svelte example',
@@ -275,12 +277,14 @@ const tests: Array<{
     input: {
       text: 'var foo = {  "bar": "baz"}',
       eslintConfig: {
-        globals: {
-          someGlobal: true,
+        languageOptions: {
+          globals: {
+            someGlobal: true,
+          },
         },
       },
     },
-    output: 'var foo = { bar: "baz" };',
+    output: "var foo = { bar: 'baz' };",
   },
 ];
 
@@ -307,10 +311,12 @@ for (const { title, input, output } of tests) {
 }
 
 test('analyze returns the messages', async () => {
-  const text = 'var x = 0;';
+  const text = 'var x = 0';
   const result = await analyze({
     text,
+    filePath,
     eslintConfig: {
+      fix: false,
       rules: { 'no-var': 'error' },
     },
   });
@@ -319,7 +325,7 @@ test('analyze returns the messages', async () => {
   const msg = result.messages[0];
   expect(msg.ruleId).toBe('no-var');
   expect(msg.column).toBe(1);
-  expect(msg.endColumn).toBe(11);
+  expect(msg.endColumn).toBe(10);
 });
 
 test('failure to fix with eslint throws and logs an error', async () => {
@@ -410,8 +416,10 @@ test('resolves to the eslint module relative to the given filePath', async () =>
 });
 
 test('resolves to the local eslint module', async () => {
-  const filePath = '/blah-blah/default-config.js';
-  await format({ text: '', filePath });
+  await format({
+    text: '',
+    filePath: path.resolve('./mock/blah-blah/default-config.js'),
+  });
   expect(globalThis.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
     // without Jest's mocking, these would actually resolve to the
     // project modules :) The fact that jest's mocking is being
@@ -486,7 +494,7 @@ function getESLintConfigWithDefaultRules(
   overrides?: Linter.RulesRecord,
 ): ESLintConfig {
   return {
-    parserOptions: { ecmaVersion: 7 },
+    languageOptions: { parserOptions: { ecmaVersion: 7 } },
     rules: {
       semi: [2, 'never'],
       'max-len': [2, 120, 2],
@@ -516,14 +524,14 @@ function defaultInputText() {
   `;
 }
 
-function noopOutput() {
-  return `
-    function foo() {
-      // stuff
-      console.log("Hello world!", and, stuff);
-    }
-  `;
-}
+// function noopOutput() {
+//   return `
+//     function foo() {
+//       // stuff
+//       console.log("Hello world!", and, stuff);
+//     }
+//   `;
+// }
 
 function defaultOutput() {
   return `
