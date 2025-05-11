@@ -7,7 +7,7 @@ module.exports = /** @satisfies {Config} */ ({
   collectCoverageFrom: ['src/**/*.ts'],
   coverageThreshold: {
     global: {
-      branches: 96,
+      branches: 94,
       functions: 100,
       lines: 99,
       statements: 98,

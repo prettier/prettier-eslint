@@ -321,8 +321,8 @@ function getESLintApiOptions(eslintConfig: ESLintConfig): ESLintConfig {
   // https://eslint.org/docs/latest/integrate/nodejs-api
   // these options affect what calculateConfigForFile produces
   return {
-    ignore: eslintConfig.ignore || true,
-    allowInlineConfig: eslintConfig.allowInlineConfig || true,
+    ignore: eslintConfig.ignore ?? true,
+    allowInlineConfig: eslintConfig.allowInlineConfig ?? true,
     baseConfig: eslintConfig.baseConfig,
     overrideConfig: eslintConfig.overrideConfig,
     overrideConfigFile: eslintConfig.overrideConfigFile,

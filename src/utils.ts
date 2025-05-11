@@ -147,8 +147,7 @@ function getRelevantESLintConfig(eslintConfig: ESLintConfig): ESLintConfig {
   const relevantRules: Linter.RulesRecord = {};
 
   for (const [name, rule] of rules.entries()) {
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain -- test coverage
-    if (!rule.meta || !rule.meta.fixable) {
+    if (!rule.meta?.fixable) {
       logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
       relevantRules[name] = ['off'];
     }
