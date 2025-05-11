@@ -104,6 +104,6 @@
   "resolutions": {
     "@prettier/eslint": "portal:.",
     "eslint": "^9.26.0",
-    "eslint-plugin-unicorn": "^56.0.1"
+    "eslint-plugin-unicorn": "^59.0.0"
   }
 }
