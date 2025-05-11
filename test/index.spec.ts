@@ -229,7 +229,7 @@ const tests: Array<{
           'space-before-function-paren': [2, 'always'],
         },
       },
-      text: '<template>\n  <div></div>\n</template>\n<script>\nfunction foo (){ return "foo" }\n</script>\n<style>\n</style>',
+      text: '<template>\n  <div></div>\n</template>\n<script>\nfunction foo(){ return "foo" }\n</script>\n<style>\n</style>',
       filePath: path.resolve('./test.vue'),
     },
     output:
