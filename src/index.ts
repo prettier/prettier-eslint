@@ -119,13 +119,18 @@ export async function analyze(options: FormatOptions): Promise<{
 
   const fileExtension = path.extname(filePath || '');
 
-  const files = eslintConfig.files || DEFAULT_ESLINT_FILES;
+  // istanbul ignore next
+  const eslintFiles = eslintConfig.files?.length
+    ? eslintConfig.files
+    : DEFAULT_ESLINT_FILES;
 
-  const extensions = extractFileExtensions(files.flat());
+  const eslintExtensions = extractFileExtensions(eslintFiles.flat());
 
   // If we don't get filePath run eslint on text, otherwise only run eslint
   // if it's a configured extension or fall back to a "supported" file type.
-  const onlyPrettier = filePath ? !extensions.includes(fileExtension) : false;
+  const onlyPrettier = filePath
+    ? !eslintExtensions.includes(fileExtension)
+    : false;
 
   const prettify = createPrettify(formattingOptions.prettier, prettierPath);
 
@@ -232,11 +237,15 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
       ...eslintConfig.overrideConfig,
     };
 
+    delete eslintConfig.baseConfig;
+    delete eslintConfig.language;
     delete eslintConfig.languageOptions;
+    delete eslintConfig.linterOptions;
     delete eslintConfig.rules;
     delete eslintConfig.ignorePatterns;
     delete eslintConfig.plugins;
     delete eslintConfig.settings;
+    delete eslintConfig.overrideConfig.plugins!['@'];
 
     const eslint = await getESLint(eslintPath, eslintConfig);
     try {

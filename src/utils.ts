@@ -595,7 +595,7 @@ export async function getESLint(
   try {
     return new ESLint(eslintOptions);
   } catch (error) {
-    logger.error('There was trouble creating the ESLint CLIEngine.');
+    logger.error('There was trouble creating the ESLint instance.');
     throw error;
   }
 }
@@ -609,10 +609,8 @@ export async function getESLint(
  * `*.{log,txt}`).
  *
  * @example
- *   ```ts
  *   const patterns = ['src/**\/*.js', 'docs/*.{md,txt}', '**\/*.ts'];
  *   console.log(extractFileExtensions(patterns)); // Output: ['js', 'md', 'txt', 'ts']
- *   ```;
  *
  * @param {string[]} patterns - An array of glob patterns containing file
  *   extensions.
@@ -620,20 +618,24 @@ export async function getESLint(
  *   patterns.
  */
 export const extractFileExtensions = (patterns: string[]): string[] => {
-  const extensions = patterns
-    .flatMap(pattern => {
-      // Handle patterns with multiple extensions like `*.{log,txt}`
-      const matchMultiple = /\.\{([^}]+)\}/.exec(pattern);
+  const extensions = patterns.flatMap(pattern => {
+    // Handle patterns with multiple extensions like `*.{log,txt}`
+    const matchMultiple = /\.\{([^}]+)\}/.exec(pattern);
 
-      // istanbul ignore if
-      if (matchMultiple) {
-        return matchMultiple[1].split(',');
-      }
+    // istanbul ignore if
+    if (matchMultiple) {
+      return matchMultiple[1].split(',').reduce<string[]>((acc, ext) => {
+        ext = ext.trim();
+        if (ext) {
+          acc.push(`.${ext}`);
+        }
+        return acc;
+      }, []);
+    }
 
-      // Match standard glob patterns like `**/*.js` or `doc/*.tex`
-      return /(\.[a-z0-9]+)$/i.exec(pattern)?.[1];
-    })
-    .filter((ext): ext is string => ext != null); // Type assertion to remove `null` values
+    // Match standard glob patterns like `**/*.js` or `doc/*.tex`
+    return /(\.[a-z0-9]+)$/i.exec(pattern)?.[1] ?? [];
+  });
 
   return [...new Set(extensions)]; // Remove duplicate extensions
 };
