@@ -7,6 +7,7 @@ Formats your JavaScript using [`prettier`][prettier] followed by [`eslint --fix`
 [![version][version-badge]][package] [![downloads][downloads-badge]][npm-stat]
 [![MIT License][license-badge]][license]
 
+[![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/prettier-eslint?style=flat-square)](https://opencollective.com/prettier-eslint)
 [![All Contributors](https://img.shields.io/badge/all_contributors-59-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Donate][donate-badge]][donate]
 [![Code of Conduct][coc-badge]][coc] [![Examples][examples-badge]][examples]

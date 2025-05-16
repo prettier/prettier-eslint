@@ -32,12 +32,12 @@
     "prettier-eslint"
   ],
   "scripts": {
-    "build": "yarn start build",
-    "format": "yarn start format",
-    "lint": "yarn start lint",
+    "build": "nps build",
+    "format": "nps format",
+    "lint": "nps lint",
     "prepare": "patch-package && simple-git-hooks && yarn-berry-deduplicate || exit 0",
     "start": "nps",
-    "test": "yarn start test"
+    "test": "nps test"
   },
   "peerDependencies": {
     "prettier-plugin-svelte": "^3.0.0",
