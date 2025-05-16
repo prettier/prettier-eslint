@@ -228,6 +228,8 @@ function createPrettify(formatOptions: PrettierOptions, prettierPath: string) {
 
 function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
   return async function eslintFix(text: string, filePath?: string) {
+    eslintConfig.overrideConfigFile = true;
+
     eslintConfig.overrideConfig = {
       languageOptions: eslintConfig.languageOptions,
       rules: eslintConfig.rules,
@@ -246,8 +248,8 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
     delete eslintConfig.plugins;
     delete eslintConfig.settings;
 
-    // FIXME: Seems to be an ESLint core issue: `Key "plugins": Cannot redefine plugin`
-    delete eslintConfig.overrideConfig.plugins;
+    // FIXME: Seems like a bug in eslint - https://github.com/eslint/eslint/issues/19722
+    delete eslintConfig.overrideConfig.plugins!['@'];
 
     const eslint = await getESLint(eslintPath, eslintConfig);
     try {

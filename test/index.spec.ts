@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/unbound-method, sonarjs/no-commented-code */
+/* eslint-disable @typescript-eslint/unbound-method */
 
 // eslint-disable-next-line unicorn/prefer-node-protocol -- mocked
 import fsMock_ from 'fs';
@@ -131,7 +131,7 @@ const tests: Array<{
   {
     title: 'without a filePath and no config',
     input: { text: defaultInputText() },
-    output: prettierLastOutput(),
+    output: noopOutput(),
   },
   {
     title: 'inferring bracketSpacing',
@@ -187,7 +187,7 @@ const tests: Array<{
         languageOptions: { globals: { windows: 'writable' } },
       },
     },
-    output: prettierLastOutput(),
+    output: noopOutput(),
   },
   {
     title: 'CSS example',
@@ -284,7 +284,7 @@ const tests: Array<{
         },
       },
     },
-    output: "var foo = { bar: 'baz' };",
+    output: 'var foo = { bar: "baz" };',
   },
 ];
 
@@ -524,14 +524,14 @@ function defaultInputText() {
   `;
 }
 
-// function noopOutput() {
-//   return `
-//     function foo() {
-//       // stuff
-//       console.log("Hello world!", and, stuff);
-//     }
-//   `;
-// }
+function noopOutput() {
+  return `
+    function foo() {
+      // stuff
+      console.log("Hello world!", and, stuff);
+    }
+  `;
+}
 
 function defaultOutput() {
   return `
