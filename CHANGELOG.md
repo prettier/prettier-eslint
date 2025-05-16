@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 17.0.0-alpha.1
+
+### Patch Changes
+
+- [#1193](https://github.com/prettier/prettier-eslint/pull/1193) [`0bd2e77`](https://github.com/prettier/prettier-eslint/commit/0bd2e777392edcb0de26d819328c9ea0378caa0d) Thanks [@JounQin](https://github.com/JounQin)! - fix: use `overrideConfigFile: true` + `overrideConfig` instead
+
 ## 17.0.0-alpha.0
 
 ### Major Changes
