@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
-// eslint-disable-next-line unicorn/prefer-node-protocol -- mocked
+// eslint-disable-next-line unicorn-x/prefer-node-protocol -- mocked
 import fsMock_ from 'fs';
 import path from 'node:path';
 

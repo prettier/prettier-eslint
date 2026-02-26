@@ -4,6 +4,8 @@ import { pathToFileURL } from 'node:url';
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
 import { Linter } from 'eslint';
+// eslint-disable-next-line sonarjs/deprecation -- getRules() was removed in ESLint 10, builtinRules is the replacement
+import { builtinRules } from 'eslint/use-at-your-own-risk';
 import getLogger from 'loglevel-colored-level-prefix';
 import { type Options as PrettierOptions } from 'prettier';
 
@@ -140,8 +142,8 @@ export function getOptionsForFormatting(
  *   rules disabled.
  */
 function getRelevantESLintConfig(eslintConfig: ESLintConfig): ESLintConfig {
-  const linter = new Linter({ configType: 'eslintrc' });
-  const rules = linter.getRules();
+  // eslint-disable-next-line sonarjs/deprecation -- getRules() was removed in ESLint 10, builtinRules is the replacement
+  const rules = builtinRules;
   logger.debug('turning off unfixable rules');
 
   const relevantRules: Linter.RulesRecord = {};

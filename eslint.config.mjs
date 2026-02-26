@@ -9,7 +9,7 @@ export default tseslint.config(
   ...base,
   ...nodeDependencies.configs['flat/recommended'],
   {
-    ignores: ['test/fixtures', '!test/fixtures/paths/node_modules/**/*.js'],
+    ignores: ['test/fixtures', '!test/fixtures/paths/node_modules/**/*.js', '**/*.md'],
   },
   {
     rules: {
