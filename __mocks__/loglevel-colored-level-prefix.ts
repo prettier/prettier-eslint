@@ -1,16 +1,14 @@
 import type { Logger, LogLevelNames as LogLevel } from 'loglevel';
 import type { GetLogger } from 'loglevel-colored-level-prefix';
 
-const logger: Logger = {
+const logger = {
   setLevel: jest.fn(),
   debug: jest.fn(getTestImplementation('debug')),
   error: jest.fn(getTestImplementation('error')),
   info: jest.fn(getTestImplementation('info')),
-  // @ts-expect-error - loglevel's typings are wrong for this method
-  silent: jest.fn(getTestImplementation('silent')),
   trace: jest.fn(getTestImplementation('trace')),
   warn: jest.fn(getTestImplementation('warn')),
-};
+} as unknown as Logger;
 
 const mock: (typeof getLogger)['mock'] = { clearAll, logger, logThings: [] };
 
