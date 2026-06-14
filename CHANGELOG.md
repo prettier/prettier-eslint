@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 17.0.1
+
+### Patch Changes
+
+- [#1209](https://github.com/prettier/prettier-eslint/pull/1209) [`a381602`](https://github.com/prettier/prettier-eslint/commit/a381602018696b93f6150b005d3d684879002b46) Thanks [@JounQin](https://github.com/JounQin)! - Expose `FormatOptions` from the CommonJS type declarations.
+
+- [#1207](https://github.com/prettier/prettier-eslint/pull/1207) [`cd76500`](https://github.com/prettier/prettier-eslint/commit/cd765006f22fd8eb26e9655e370290d0363b1799) Thanks [@JounQin](https://github.com/JounQin)! - Align exported log level types with `loglevel`.
+
 ## 17.0.0
 
 ### Major Changes
