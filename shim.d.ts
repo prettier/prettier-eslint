@@ -14,12 +14,11 @@ declare module 'loglevel-colored-level-prefix' {
   namespace getLogger {
     type LogLevel = 'debug' | 'error' | 'info' | 'silent' | 'trace' | 'warn';
 
-    interface Logger
-      extends Record<
-        LogLevel,
-        jest.Mock<void, [message: string, ...args: unknown[]]>
-      > {
-      setLevel(level: LogLevel): void;
+    interface Logger extends Record<
+      LogLevel,
+      jest.Mock<void, [message: string, ...args: unknown[]]>
+    > {
+      setLevel: (level: LogLevel) => void;
     }
 
     interface GetLogger {

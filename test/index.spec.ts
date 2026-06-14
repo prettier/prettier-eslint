@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-
-// eslint-disable-next-line unicorn/prefer-node-protocol -- mocked
-import fsMock_ from 'fs';
+import fsMock_ from 'node:fs';
 import path from 'node:path';
 
 import { stripIndent } from 'common-tags';
@@ -18,10 +15,7 @@ import prettierESLint, {
   PrettierOptions,
 } from 'prettier-eslint';
 
-jest.mock('fs');
-
-// !NOTE: this is a workaround to also mock `node:fs`
-jest.mock('node:fs', () => fsMock_);
+jest.mock('node:fs');
 
 const fsMock = fsMock_ as unknown as FsMock;
 const eslintMock = eslintMock_ as unknown as ESLintMock;
@@ -405,12 +399,10 @@ test('resolves to the eslint module relative to the given filePath', async () =>
   const filePath = require.resolve('./fixtures/paths/foo.js');
   await format({ text: '', filePath });
   const stateObj = {
-    eslintPath: require.resolve(
-      './fixtures/paths/node_modules/eslint/index.js',
-    ),
-    prettierPath: require.resolve(
-      './fixtures/paths/node_modules/prettier/index.js',
-    ),
+    eslintPath:
+      require.resolve('./fixtures/paths/node_modules/eslint/index.js'),
+    prettierPath:
+      require.resolve('./fixtures/paths/node_modules/prettier/index.js'),
   };
   expect(globalThis.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj);
 });

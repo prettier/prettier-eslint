@@ -3,7 +3,9 @@ import { pathToFileURL } from 'node:url';
 
 import { oneLine } from 'common-tags';
 import delve from 'dlv';
-import { Linter } from 'eslint';
+import type { Linter } from 'eslint';
+// eslint-disable-next-line sonarjs/deprecation
+import { builtinRules } from 'eslint/use-at-your-own-risk';
 import getLogger from 'loglevel-colored-level-prefix';
 import { type Options as PrettierOptions } from 'prettier';
 
@@ -119,6 +121,8 @@ export function getOptionsForFormatting(
   return { eslint, prettier };
 }
 
+let relevantRules: Linter.RulesRecord | undefined;
+
 /**
  * Retrieves a sanitized ESLint options by disabling unfixable rules.
  *
@@ -140,16 +144,17 @@ export function getOptionsForFormatting(
  *   rules disabled.
  */
 function getRelevantESLintConfig(eslintConfig: ESLintConfig): ESLintConfig {
-  const linter = new Linter({ configType: 'eslintrc' });
-  const rules = linter.getRules();
   logger.debug('turning off unfixable rules');
 
-  const relevantRules: Linter.RulesRecord = {};
+  if (!relevantRules) {
+    relevantRules = {};
 
-  for (const [name, rule] of rules.entries()) {
-    if (!rule.meta?.fixable) {
-      logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
-      relevantRules[name] = ['off'];
+    // eslint-disable-next-line sonarjs/deprecation
+    for (const [name, rule] of builtinRules) {
+      if (!rule.meta?.fixable) {
+        logger.trace('turning off rule:', JSON.stringify({ [name]: rule }));
+        relevantRules[name] = ['off'];
+      }
     }
   }
 
