@@ -1,8 +1,9 @@
 import { ESLint, type Linter } from 'eslint';
+import type { LogLevelDesc as LogLevel } from 'loglevel';
 import type { Options as PrettierOptions } from 'prettier';
 
 /** Logging level for the traceback of the synchronous formatting process. */
-export type LogLevel = 'debug' | 'error' | 'info' | 'silent' | 'trace' | 'warn';
+export type { LogLevel };
 
 export type { PrettierOptions };
 

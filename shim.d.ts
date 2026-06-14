@@ -11,29 +11,20 @@ declare module 'eslint-plugin-node-dependencies' {
 }
 
 declare module 'loglevel-colored-level-prefix' {
-  namespace getLogger {
-    type LogLevel = 'debug' | 'error' | 'info' | 'silent' | 'trace' | 'warn';
+  import { LogLevelDesc, Logger } from 'loglevel';
 
-    interface Logger extends Record<
-      LogLevel,
-      jest.Mock<void, [message: string, ...args: unknown[]]>
-    > {
-      setLevel: (level: LogLevel) => void;
-    }
+  export interface GetLogger {
+    (options?: { level?: LogLevelDesc; prefix?: string }): Logger;
 
-    interface GetLogger {
-      (options: { prefix: string }): Logger;
-
-      // testing mock
-      mock: {
-        logThings: LogLevel[] | 'all';
-        logger: Logger;
-        clearAll(): void;
-      };
-    }
+    // testing mock
+    mock: {
+      logThings: LogLevelDesc[] | 'all';
+      logger: Logger;
+      clearAll(): void;
+    };
   }
 
-  const getLogger: getLogger.GetLogger;
+  const getLogger: GetLogger;
 
-  export = getLogger;
+  export default getLogger;
 }
