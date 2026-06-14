@@ -2,4 +2,4 @@
 "prettier-eslint": major
 ---
 
-feat!: support ESLint v9 flat config
+feat!: bump ESLint v10 with only flat config support

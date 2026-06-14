@@ -1,6 +1,6 @@
 import { analyze, format } from './lib/index.js';
 
-namespace prettierESLint {
+declare namespace prettierESLint {
   type Format = typeof format;
 
   interface PrettierESLint extends Format {

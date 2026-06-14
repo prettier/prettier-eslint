@@ -20,8 +20,10 @@ export interface ThrowError {
   throwError?: Error | null;
 }
 
+type ESLintType = typeof eslint;
+
 // prettier-ignore
-export interface ESLintMock extends (typeof eslint) {
+export interface ESLintMock extends ESLintType {
   ESLint: jest.Mock<MockESLint>;
   mock: {
     calculateConfigForFile: jest.Mock<

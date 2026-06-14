@@ -4,6 +4,7 @@
     "noEmit": true,
     "paths": {
       "prettier-eslint": ["./src/index.ts"]
-    }
+    },
+    "types": ["jest", "node"]
   }
 }

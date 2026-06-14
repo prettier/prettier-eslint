@@ -2,7 +2,8 @@
   "extends": "@1stg/tsconfig/node",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "../lib"
+    "outDir": "../lib",
+    "types": ["jest", "node"]
   },
   "include": [".", "../global.d.ts", "../shim.d.ts"]
 }
