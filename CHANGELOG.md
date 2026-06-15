@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 17.1.0
+
+### Minor Changes
+
+- [#1210](https://github.com/prettier/prettier-eslint/pull/1210) [`ffc5d0a`](https://github.com/prettier/prettier-eslint/commit/ffc5d0a81744d2a2f548afb22198afc5e8e2ab53) Thanks [@JounQin](https://github.com/JounQin)! - Migrate to pure ESM, replace Jest with Vitest, and drop legacy helper dependencies.
+
 ## 17.0.1
 
 ### Patch Changes
