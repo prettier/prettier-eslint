@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
-import fsMock_ from 'node:fs';
+import fsMock_ from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,7 +14,7 @@ import type { ESLintMock, FsMock, PrettierMock } from '../mock.js';
 
 import type { ESLintConfig, FormatOptions } from 'prettier-eslint';
 
-vi.mock('node:fs');
+vi.mock('node:fs/promises');
 vi.mock('eslint');
 vi.mock('loglevel-colored-level-prefix');
 vi.mock('prettier');
@@ -292,7 +292,7 @@ beforeEach(() => {
   eslintMock.mock.calculateConfigForFile.mockClear();
   prettierMock.format.mockClear();
   prettierMock.resolveConfig.mockClear();
-  fsMock.readFileSync.mockClear();
+  fsMock.readFile.mockClear();
   loglevelMock.mock.clearAll();
   globalThis.__PRETTIER_ESLINT_TEST_STATE__ = {};
 });
@@ -430,24 +430,24 @@ test('resolves to the local eslint module', async () => {
 });
 
 test('reads text from fs if filePath is provided but not text', async () => {
-  const readFileSyncMockSpy = vi.spyOn(fsMock, 'readFileSync');
+  const readFileMockSpy = vi.spyOn(fsMock, 'readFile');
 
   const filePath = '/blah-blah/some-file.js';
   await format({ filePath });
 
-  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
+  expect(readFileMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 });
 
 test('logs error if it cannot read the file from the filePath', async () => {
-  const originalMock = fsMock.readFileSync;
-  fsMock.readFileSync = vi.fn(() => {
+  const originalMock = fsMock.readFile;
+  fsMock.readFile = vi.fn(() => {
     throw new Error('some error');
   });
   await expect(() => format({ filePath: '/some-path.js' })).rejects.toThrow(
     /some error/,
   );
   expect(logger.error).toHaveBeenCalledTimes(1);
-  fsMock.readFileSync = originalMock;
+  fsMock.readFile = originalMock;
 });
 
 test('calls prettier.resolveConfig with the file path', async () => {
@@ -465,7 +465,7 @@ test('does not raise an error if prettier.resolveConfig is not defined', async (
   // @ts-expect-error -- mocking
   delete prettierMock.resolveConfig;
 
-  async function callingFormat() {
+ function callingFormat() {
     return format({
       filePath,
       text: defaultInputText(),

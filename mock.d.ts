@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 
 import eslint, { ESLint } from 'eslint';
 import prettier from 'prettier';
@@ -7,7 +7,7 @@ import { type Mock } from 'vitest';
 type Fs = typeof fs;
 
 export interface FsMock extends Fs {
-  readFileSync: Mock<(filename?: string) => string>;
+  readFile: Mock<(filename?: string) => Promise<string>>;
 }
 
 export type ESLintCalculateConfigForFile = ESLint['calculateConfigForFile'];

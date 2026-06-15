@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { oneLine, stripIndent } from 'common-tags';
@@ -75,7 +75,7 @@ export async function analyze(options: FormatOptions): Promise<{
 
   const {
     filePath,
-    text = getTextFromFilePath(filePath!), // `filePath` must be provided if `text` is not
+    text = await getTextFromFilePath(filePath!), // `filePath` must be provided if `text` is not
     eslintPath = getModulePath(filePath, 'eslint'),
     prettierPath = getModulePath(filePath, 'prettier'),
     prettierLast,
@@ -283,15 +283,15 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
   };
 }
 
-function getTextFromFilePath(filePath: string) {
+async function getTextFromFilePath(filePath: string) {
   try {
     logger.trace(
       oneLine`
-        attempting fs.readFileSync to get
+        attempting fs.readFile to get
         the text for file at "${filePath}"
       `,
     );
-    return fs.readFileSync(filePath, 'utf8');
+    return await fs.readFile(filePath, 'utf8');
   } catch (error) {
     logger.error(
       oneLine`
@@ -385,10 +385,8 @@ async function getPrettierConfig(
     prettierPath,
     'prettier',
   );
-  const { resolveConfig } = prettier as Pick<
-    Partial<typeof prettier>,
-    'resolveConfig'
-  >;
+  const { resolveConfig } = prettier;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- `resolveConfig` can be `undefined` if the prettier version is old
   return resolveConfig?.(filePath!); // `undefined` is actually fine
 }
 
