@@ -1,22 +1,30 @@
+import { fileURLToPath } from 'node:url';
+
 import type { Options } from 'prettier';
+import { vi } from 'vitest';
 
 import type { PrettierMock } from '../mock.js';
 
-const prettier = jest.requireActual<PrettierMock>('prettier');
+const prettier = await vi.importActual<PrettierMock>('prettier');
 
 const { format } = prettier;
 
-export = prettier;
+const mockFormatSpy = vi.fn(mockFormat);
+const resolveConfig = vi.fn();
 
-const mockFormatSpy = jest.fn(mockFormat);
-
-Object.assign(prettier, {
+const prettierMock = {
+  ...prettier,
   format: mockFormatSpy,
-  resolveConfig: jest.fn(),
-});
+  resolveConfig,
+};
+
+export { mockFormatSpy as format, resolveConfig };
+export default prettierMock;
 
 function mockFormat(source: string, options?: Options) {
-  globalThis.__PRETTIER_ESLINT_TEST_STATE__.prettierPath = __filename;
+  globalThis.__PRETTIER_ESLINT_TEST_STATE__.prettierPath = fileURLToPath(
+    import.meta.url,
+  );
 
   if (
     'throwError' in mockFormatSpy &&

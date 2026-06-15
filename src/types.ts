@@ -12,8 +12,8 @@ export interface FormatOptions {
   /** The config to use for formatting with ESLint. */
   eslintConfig?: ESLintConfig;
   /**
-   * The path to the eslint module to use. Will default to
-   * require.resolve('eslint')
+   * The path to the eslint module to use. Will default to the package
+   * dependency.
    */
   eslintPath?: string;
   /**
@@ -35,10 +35,7 @@ export interface FormatOptions {
    * `eslintConfig` value.
    */
   prettierOptions?: PrettierOptions;
-  /**
-   * The path to the `prettier` module. Will default to
-   * require.resolve('prettier')
-   */
+  /** The path to the `prettier` module. Will default to the package dependency. */
   prettierPath?: string;
   /** Run Prettier last. */
   prettierLast?: boolean;

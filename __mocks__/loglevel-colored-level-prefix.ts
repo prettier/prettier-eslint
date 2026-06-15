@@ -1,13 +1,14 @@
 import type { Logger, LogLevelNames as LogLevel } from 'loglevel';
 import type { GetLogger } from 'loglevel-colored-level-prefix';
+import { vi } from 'vitest';
 
 const logger = {
-  setLevel: jest.fn(),
-  debug: jest.fn(getTestImplementation('debug')),
-  error: jest.fn(getTestImplementation('error')),
-  info: jest.fn(getTestImplementation('info')),
-  trace: jest.fn(getTestImplementation('trace')),
-  warn: jest.fn(getTestImplementation('warn')),
+  setLevel: vi.fn(),
+  debug: vi.fn(getTestImplementation('debug')),
+  error: vi.fn(getTestImplementation('error')),
+  info: vi.fn(getTestImplementation('info')),
+  trace: vi.fn(getTestImplementation('trace')),
+  warn: vi.fn(getTestImplementation('warn')),
 } as unknown as Logger;
 
 const mock: (typeof getLogger)['mock'] = { clearAll, logger, logThings: [] };
@@ -16,11 +17,12 @@ const getLogger = (() => logger) as GetLogger;
 
 Object.assign(getLogger, { mock });
 
-export = getLogger;
+export { mock };
+export default getLogger;
 
 function clearAll() {
   for (const name of Object.keys(logger) as LogLevel[]) {
-    (logger[name] as jest.Mock).mockClear();
+    (logger[name] as ReturnType<typeof vi.fn>).mockClear();
   }
 }
 

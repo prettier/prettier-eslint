@@ -1,19 +1,22 @@
 import type Fs_ from 'node:fs';
 
-type Fs = typeof Fs_;
+import { vi } from 'vitest';
 
-const fs = jest.requireActual<Fs>('fs');
+const fs = await vi.importActual<typeof Fs_>('node:fs');
 
-// eslint-disable-next-line prefer-object-spread -- typing issue
-export = Object.assign({}, fs, {
-  readFileSync: jest.fn((filename: string) => {
-    if (filename.endsWith('package.json')) {
+const fsMock = {
+  ...fs,
+  readFileSync: vi.fn((filename?: string) => {
+    if (filename?.endsWith('package.json')) {
       return '{"name": "fake", "version": "0.0.0", "prettier": {}}';
     }
-    if (/\.[jt]s$/.test(filename)) {
+    if (/\.[jt]s$/.test(filename ?? '')) {
       return 'var fake = true';
     }
 
     return '';
   }),
-});
+};
+
+export const { readFileSync } = fsMock;
+export default fsMock;

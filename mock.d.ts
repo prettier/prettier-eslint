@@ -1,12 +1,13 @@
 import fs from 'node:fs';
+
 import eslint, { ESLint } from 'eslint';
 import prettier from 'prettier';
-import { ESLintConfig } from 'prettier-eslint';
+import { type Mock } from 'vitest';
 
 type Fs = typeof fs;
 
 export interface FsMock extends Fs {
-  readFileSync: jest.Mock<string, [string?]>;
+  readFileSync: Mock<(filename?: string) => string>;
 }
 
 export type ESLintCalculateConfigForFile = ESLint['calculateConfigForFile'];
@@ -24,31 +25,16 @@ type ESLintType = typeof eslint;
 
 // prettier-ignore
 export interface ESLintMock extends ESLintType {
-  ESLint: jest.Mock<MockESLint>;
+  ESLint: Mock<(options: ESLint.Options) => MockESLint>;
   mock: {
-    calculateConfigForFile: jest.Mock<
-      Promise<ESLintConfig>,
-      Parameters<ESLintCalculateConfigForFile>
-    >;
-    lintText: jest.Mock<
-      ReturnType<ESLintLintText>,
-      Parameters<ESLintLintText>
-    > &
-      ThrowError;
+    calculateConfigForFile: Mock<ESLintCalculateConfigForFile> & ThrowError;
+    lintText: Mock<ESLintLintText> & ThrowError;
   };
 }
 
 type Prettier = typeof prettier;
 
 export interface PrettierMock extends Prettier {
-  format: jest.Mock<
-    ReturnType<typeof prettier.format>,
-    Parameters<typeof prettier.format>
-  > &
-    ThrowError;
-  resolveConfig: jest.Mock<
-    ReturnType<typeof prettier.resolveConfig>,
-    Parameters<typeof prettier.resolveConfig>
-  > &
-    ThrowError;
+  format: Mock<typeof prettier.format> & ThrowError;
+  resolveConfig: Mock<typeof prettier.resolveConfig> & ThrowError;
 }

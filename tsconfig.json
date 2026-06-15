@@ -1,10 +1,10 @@
 {
-  "extends": "@1stg/tsconfig/node",
+  "extends": "@1stg/tsconfig/nodenext",
   "compilerOptions": {
     "noEmit": true,
     "paths": {
       "prettier-eslint": ["./src/index.ts"]
     },
-    "types": ["jest", "node"]
+    "types": ["node", "vitest/globals"]
   }
 }
