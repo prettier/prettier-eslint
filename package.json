@@ -84,7 +84,7 @@
     "nps": "^5.10.0",
     "nps-utils": "^1.7.0",
     "prettier-eslint": "portal:.",
-    "prettier-eslint-cli": "^8.0.1",
+    "prettier-eslint-cli": "^9.2.0",
     "prettier-plugin-jsdoc": "^1.8.1",
     "prettier-plugin-jsdoc-type": "^0.2.0",
     "prettier-plugin-svelte": "^4.1.0",
