@@ -465,7 +465,7 @@ test('does not raise an error if prettier.resolveConfig is not defined', async (
   // @ts-expect-error -- mocking
   delete prettierMock.resolveConfig;
 
- function callingFormat() {
+  function callingFormat() {
     return format({
       filePath,
       text: defaultInputText(),
