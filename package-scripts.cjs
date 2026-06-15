@@ -18,19 +18,9 @@ module.exports = {
       },
     },
     test: {
-      // Note: The `--experimental-vm-modules` flag is required for Jest to work
-      // with ESM. ESM support is needed due to prettier v3’s use of a dynamic
-      // `import()` in its `.cjs` file. The flag can be removed when node
-      // supports modules in the VM API or the import is removed from prettier.
-      default: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage'
-      ),
-      update: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --updateSnapshot'
-      ),
-      watch: crossEnv(
-        'NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch'
-      ),
+      default: crossEnv('NODE_ENV=test vitest run --coverage'),
+      update: crossEnv('NODE_ENV=test vitest run --coverage --update'),
+      watch: crossEnv('NODE_ENV=test vitest --coverage'),
       openCoverage: 'open coverage/lcov-report/index.html',
     },
     build: {
@@ -58,7 +48,7 @@ module.exports = {
     },
     format: {
       description: 'Formats everything with prettier-eslint',
-      script: 'prettier-eslint "**/*.{js,json,md,ts,yml}" ".*.js" --write',
+      script: 'prettier-eslint "**/*.{cjs,js,json,md,ts,yml}" ".*.js" --write',
     },
   },
   options: {

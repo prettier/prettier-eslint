@@ -1,9 +1,9 @@
 {
-  "extends": "@1stg/tsconfig/node",
+  "extends": "@1stg/tsconfig/nodenext",
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "../lib",
-    "types": ["jest", "node"]
+    "types": ["node"]
   },
   "include": [".", "../global.d.ts", "../shim.d.ts"]
 }

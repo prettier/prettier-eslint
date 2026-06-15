@@ -1,6 +1,8 @@
 import type { Linter } from 'eslint';
+import { beforeEach, expect, test } from 'vitest';
 
-import { getOptionsForFormatting, PrettierOptions } from 'prettier-eslint';
+import { getOptionsForFormatting } from 'prettier-eslint';
+import type { PrettierOptions } from 'prettier-eslint';
 
 const getPrettierOptionsFromESLintRulesTests: Array<{
   rules: Linter.RulesRecord;

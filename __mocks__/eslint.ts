@@ -1,35 +1,44 @@
-/**
- * This mock file is so eslint doesn't attempt to actually search around the
- * file system for stuff
- */
+import { fileURLToPath } from 'node:url';
 
-import eslint_, { type ESLint as ESLint_ } from 'eslint';
+import type eslint_ from 'eslint';
+import type { ESLint as ESLint_ } from 'eslint';
+import { vi } from 'vitest';
 
 import type { ESLintLintText, MockESLint } from '../mock.js';
 
 import type { ESLintConfig } from 'prettier-eslint';
 
-const eslint = jest.requireActual<typeof eslint_>('eslint');
+const eslint = await vi.importActual<typeof eslint_>('eslint');
 
-const { ESLint } = eslint;
+const { ESLint: ActualESLint } = eslint;
 
-const mockCalculateConfigForFileSpy = jest.fn(mockCalculateConfigForFile);
+const mockCalculateConfigForFileSpy = vi.fn(mockCalculateConfigForFile);
 
 Object.assign(mockCalculateConfigForFileSpy, { overrides: {} });
 
-const mockLintTextSpy = jest.fn(mockLintText);
+const mockLintTextSpy = vi.fn(mockLintText);
 
-export = Object.assign(eslint, {
-  ESLint: jest.fn(MockESLint),
-  mock: {
-    calculateConfigForFile: mockCalculateConfigForFileSpy,
-    lintText: mockLintTextSpy,
-  },
-});
+const MockedESLint = vi.fn(createMockESLint);
 
-function MockESLint(options: ESLint_.Options): MockESLint {
-  globalThis.__PRETTIER_ESLINT_TEST_STATE__.eslintPath = __filename;
-  const eslintInstance = new ESLint(options) as MockESLint;
+const mock = {
+  calculateConfigForFile: mockCalculateConfigForFileSpy,
+  lintText: mockLintTextSpy,
+};
+
+const eslintMock = {
+  ...eslint,
+  ESLint: MockedESLint,
+  mock,
+};
+
+export { MockedESLint as ESLint, mock };
+export default eslintMock;
+
+function createMockESLint(options: ESLint_.Options): MockESLint {
+  globalThis.__PRETTIER_ESLINT_TEST_STATE__.eslintPath = fileURLToPath(
+    import.meta.url,
+  );
+  const eslintInstance = new ActualESLint(options) as MockESLint;
   eslintInstance.calculateConfigForFile = mockCalculateConfigForFileSpy;
   // eslint-disable-next-line @typescript-eslint/unbound-method
   eslintInstance._originalLintText = eslintInstance.lintText;
@@ -37,7 +46,7 @@ function MockESLint(options: ESLint_.Options): MockESLint {
   return eslintInstance;
 }
 
-MockESLint.prototype = Object.create(ESLint.prototype) as ESLint_;
+MockedESLint.prototype = Object.create(ActualESLint.prototype) as ESLint_;
 
 /**
  * @throws If `throwError` is specifically set on the spy, or if the filePath is

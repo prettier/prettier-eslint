@@ -1,13 +1,10 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import indentString from '@esm2cjs/indent-string';
 import { oneLine, stripIndent } from 'common-tags';
 import type { Linter } from 'eslint';
-import merge from 'lodash.merge';
+import indentString from 'indent-string';
 import getLogger from 'loglevel-colored-level-prefix';
-import { format as prettyFormat } from 'pretty-format';
-import requireRelative from 'require-relative';
 
 import type {
   ESLintConfig,
@@ -18,9 +15,12 @@ import type {
 } from './types.ts';
 import {
   extractFileExtensions,
+  formatForLog,
   getESLint,
+  getModulePath,
   getOptionsForFormatting,
   importModule,
+  mergeConfigs,
 } from './utils.ts';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
@@ -71,25 +71,23 @@ export async function analyze(options: FormatOptions): Promise<{
 }> {
   const { logLevel = getDefaultLogLevel() } = options;
   logger.setLevel(logLevel);
-  logger.trace('called analyze with options:', prettyFormat(options));
+  logger.trace('called analyze with options:', formatForLog(options));
 
   const {
     filePath,
-    text = getTextFromFilePath(filePath!), // `filePath` must be provided if `text` is not
+    text = await getTextFromFilePath(filePath!), // `filePath` must be provided if `text` is not
     eslintPath = getModulePath(filePath, 'eslint'),
     prettierPath = getModulePath(filePath, 'prettier'),
     prettierLast,
     fallbackPrettierOptions,
   } = options;
 
-  const eslintConfig = merge(
-    {},
+  const eslintConfig = mergeConfigs<ESLintConfig>(
     options.eslintConfig,
     await getESLintConfig(filePath, eslintPath, options.eslintConfig || {}),
   );
 
-  const prettierOptions: PrettierOptions = merge(
-    {},
+  const prettierOptions = mergeConfigs<PrettierOptions>(
     // Let prettier infer the parser using the filepath, if present. Otherwise
     // assume the file is JS and default to the babel parser.
     filePath ? { filepath: filePath } : { parser: 'babel' },
@@ -105,7 +103,7 @@ export async function analyze(options: FormatOptions): Promise<{
 
   logger.debug(
     'inferred options:',
-    prettyFormat({
+    formatForLog({
       filePath,
       text,
       eslintPath,
@@ -260,7 +258,7 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
       });
       logger.trace(
         'eslint.lintText returned the following report:',
-        prettyFormat(report),
+        formatForLog(report),
       );
       // default the output to text because if there's nothing
       // to fix, eslint doesn't provide `output`
@@ -285,15 +283,15 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
   };
 }
 
-function getTextFromFilePath(filePath: string) {
+async function getTextFromFilePath(filePath: string) {
   try {
     logger.trace(
       oneLine`
-        attempting fs.readFileSync to get
+        attempting fs.readFile to get
         the text for file at "${filePath}"
       `,
     );
-    return fs.readFileSync(filePath, 'utf8');
+    return await fs.readFile(filePath, 'utf8');
   } catch (error) {
     logger.error(
       oneLine`
@@ -366,7 +364,7 @@ async function getESLintConfig(
     )) as ESLintConfig;
     logger.trace(
       `eslint config for "${filePath}" received`,
-      prettyFormat(config),
+      formatForLog(config),
     );
     return {
       ...eslintConfig,
@@ -387,39 +385,9 @@ async function getPrettierConfig(
     prettierPath,
     'prettier',
   );
-  return prettier.resolveConfig(filePath!); // `undefined` is actually fine
-}
-
-/**
- * Resolves the absolute path to a module relative to a given file path.
- *
- * This function attempts to resolve a module's path relative to the provided
- * `filePath`. If the module cannot be found in the specified location, it falls
- * back to resolving the module globally using `require.resolve`.
- *
- * @example
- *   const eslintPath = getModulePath('./example.js', 'eslint');
- *   console.log(eslintPath); // Output: Absolute path to the ESLint module
- *
- * @param filePath - The file path from which to resolve the module.
- * @param moduleName - The name of the module to resolve.
- * @returns The resolved module path.
- */
-function getModulePath(filePath = __filename, moduleName: string) {
-  try {
-    return requireRelative.resolve(moduleName, filePath);
-  } catch (err) {
-    const error = err as Error;
-    logger.debug(
-      oneLine`
-        There was a problem finding the ${moduleName}
-        module. Using prettier-eslint's version.
-      `,
-      error.message,
-      error.stack,
-    );
-    return require.resolve(moduleName);
-  }
+  const { resolveConfig } = prettier;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- `resolveConfig` can be `undefined` if the prettier version is old
+  return resolveConfig?.(filePath!); // `undefined` is actually fine
 }
 
 function getDefaultLogLevel() {

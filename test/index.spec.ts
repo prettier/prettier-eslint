@@ -1,23 +1,31 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
-import fsMock_ from 'node:fs';
+import fsMock_ from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { stripIndent } from 'common-tags';
 import eslintMock_, { type Linter } from 'eslint';
 import loglevelMock from 'loglevel-colored-level-prefix';
 import prettierMock_ from 'prettier';
+import { vi } from 'vitest';
 
 import type { ESLintMock, FsMock, PrettierMock } from '../mock.js';
 
-import prettierESLint, {
-  type ESLintConfig,
+import type { ESLintConfig, FormatOptions } from 'prettier-eslint';
+
+vi.mock('node:fs/promises');
+vi.mock('eslint');
+vi.mock('loglevel-colored-level-prefix');
+vi.mock('prettier');
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const {
+  default: prettierESLint,
   format,
   analyze,
-  PrettierOptions,
-} from 'prettier-eslint';
-
-jest.mock('node:fs');
+} = await import('prettier-eslint');
 
 const fsMock = fsMock_ as unknown as FsMock;
 const eslintMock = eslintMock_ as unknown as ESLintMock;
@@ -38,13 +46,8 @@ const filePath = path.resolve('./mock/default-config.js');
 
 const tests: Array<{
   title: string;
-  input: {
+  input: FormatOptions & {
     text: string;
-    eslintConfig?: ESLintConfig;
-    filePath?: string;
-    prettierLast?: boolean;
-    prettierOptions?: PrettierOptions;
-    fallbackPrettierOptions?: PrettierOptions;
   };
   output: string;
 }> = [
@@ -289,13 +292,13 @@ beforeEach(() => {
   eslintMock.mock.calculateConfigForFile.mockClear();
   prettierMock.format.mockClear();
   prettierMock.resolveConfig.mockClear();
-  fsMock.readFileSync.mockClear();
+  fsMock.readFile.mockClear();
   loglevelMock.mock.clearAll();
   globalThis.__PRETTIER_ESLINT_TEST_STATE__ = {};
 });
 
 for (const { title, input, output } of tests) {
-  // eslint-disable-next-line jest/valid-title -- isn't this a valid title?
+  // eslint-disable-next-line vitest/valid-title -- isn't this a valid title?
   test(title, async () => {
     input.text = stripIndent(input.text).trim();
     const expected = stripIndent(output).trim();
@@ -335,7 +338,7 @@ test('failure to fix with eslint throws and logs an error', async () => {
 });
 
 test('logLevel is used to configure the logger', async () => {
-  logger.setLevel = jest.fn();
+  logger.setLevel = vi.fn();
   await format({ text: '', logLevel: 'silent' });
   expect(logger.setLevel).toHaveBeenCalledTimes(1);
   expect(logger.setLevel).toHaveBeenCalledWith('silent');
@@ -351,7 +354,7 @@ test('when prettier throws, log to logger.error and throw the error', async () =
 });
 
 test('can accept a path to an eslint module and uses that instead.', async () => {
-  const eslintPath = path.join(__dirname, '../__mocks__/eslint');
+  const eslintPath = path.join(__dirname, '../__mocks__/eslint.ts');
   await format({ text: '', eslintPath });
   expect(eslintMock.mock.lintText).toHaveBeenCalledTimes(1);
 });
@@ -359,7 +362,7 @@ test('can accept a path to an eslint module and uses that instead.', async () =>
 test('fails with an error if the eslint module cannot be resolved.', async () => {
   const eslintPath = path.join(
     __dirname,
-    '../__mocks__/non-existent-eslint-module',
+    '../__mocks__/non-existent-eslint-module.ts',
   );
 
   await expect(() => format({ text: '', eslintPath })).rejects.toThrow(
@@ -368,14 +371,14 @@ test('fails with an error if the eslint module cannot be resolved.', async () =>
   expect(logger.error).toHaveBeenCalledTimes(1);
 
   const errorString = expect.stringMatching(
-    /trouble getting.*?eslint.*non-existent-eslint-module/,
+    /trouble importing.*?eslint.*non-existent-eslint-module/,
   ) as string;
 
   expect(logger.error).toHaveBeenCalledWith(errorString);
 });
 
 test('can accept a path to a prettier module and uses that instead.', async () => {
-  const prettierPath = path.join(__dirname, '../__mocks__/prettier');
+  const prettierPath = path.join(__dirname, '../__mocks__/prettier.ts');
   await format({ text: '', prettierPath });
 
   expect(prettierMock.format).toHaveBeenCalledTimes(1);
@@ -384,7 +387,7 @@ test('can accept a path to a prettier module and uses that instead.', async () =
 test('fails with an error if the prettier module cannot be resolved.', async () => {
   const prettierPath = path.join(
     __dirname,
-    '../__mocks__/non-existent-prettier-module',
+    '../__mocks__/non-existent-prettier-module.ts',
   );
 
   await expect(() => format({ text: '', prettierPath })).rejects.toThrow(
@@ -392,60 +395,62 @@ test('fails with an error if the prettier module cannot be resolved.', async () 
   );
   expect(logger.error).toHaveBeenCalledTimes(1);
   const errorString = expect.stringMatching(
-    /trouble getting.*?eslint.*non-existent-prettier-module/,
+    /trouble importing.*?prettier.*non-existent-prettier-module/,
   ) as string;
   expect(logger.error).toHaveBeenCalledWith(errorString);
 });
 
 test('resolves to the eslint module relative to the given filePath', async () => {
-  const filePath = require.resolve('./fixtures/paths/foo.js');
+  const filePath = fileURLToPath(
+    new URL('fixtures/paths/foo.js', import.meta.url),
+  );
   await format({ text: '', filePath });
   const stateObj = {
-    eslintPath:
-      require.resolve('./fixtures/paths/node_modules/eslint/index.js'),
-    prettierPath:
-      require.resolve('./fixtures/paths/node_modules/prettier/index.js'),
+    eslintPath: fileURLToPath(
+      new URL('fixtures/paths/node_modules/eslint/index.js', import.meta.url),
+    ),
+    prettierPath: fileURLToPath(
+      new URL('fixtures/paths/node_modules/prettier/index.js', import.meta.url),
+    ),
   };
   expect(globalThis.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject(stateObj);
 });
 
 test('resolves to the local eslint module', async () => {
-  await format({
-    text: '',
-    filePath: path.resolve('./mock/blah-blah/default-config.js'),
-  });
+  const filePath = path.resolve('./mock/default-config.js');
+  await format({ text: '', filePath });
   expect(globalThis.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
-    // without Jest's mocking, these would actually resolve to the
-    // project modules :) The fact that jest's mocking is being
-    // applied is good enough for this test.
-    eslintPath: require.resolve('../__mocks__/eslint'),
-    prettierPath: require.resolve('../__mocks__/prettier'),
+    eslintPath: fileURLToPath(
+      new URL('../__mocks__/eslint.ts', import.meta.url),
+    ),
+    prettierPath: fileURLToPath(
+      new URL('../__mocks__/prettier.ts', import.meta.url),
+    ),
   });
 });
 
 test('reads text from fs if filePath is provided but not text', async () => {
-  const readFileSyncMockSpy = jest.spyOn(fsMock, 'readFileSync');
+  const readFileMockSpy = vi.spyOn(fsMock, 'readFile');
 
   const filePath = '/blah-blah/some-file.js';
   await format({ filePath });
 
-  expect(readFileSyncMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
+  expect(readFileMockSpy).toHaveBeenCalledWith(filePath, 'utf8');
 });
 
 test('logs error if it cannot read the file from the filePath', async () => {
-  const originalMock = fsMock.readFileSync;
-  fsMock.readFileSync = jest.fn(() => {
+  const originalMock = fsMock.readFile;
+  fsMock.readFile = vi.fn(() => {
     throw new Error('some error');
   });
   await expect(() => format({ filePath: '/some-path.js' })).rejects.toThrow(
     /some error/,
   );
   expect(logger.error).toHaveBeenCalledTimes(1);
-  fsMock.readFileSync = originalMock;
+  fsMock.readFile = originalMock;
 });
 
 test('calls prettier.resolveConfig with the file path', async () => {
-  const filePath = require.resolve('./fixtures/paths/foo.js');
   await format({
     filePath,
     text: defaultInputText(),
@@ -456,12 +461,11 @@ test('calls prettier.resolveConfig with the file path', async () => {
 });
 
 test('does not raise an error if prettier.resolveConfig is not defined', async () => {
-  const filePath = require.resolve('./fixtures/paths/foo.js');
   const originalPrettierMockResolveConfig = prettierMock.resolveConfig;
   // @ts-expect-error -- mocking
   delete prettierMock.resolveConfig;
 
-  async function callingFormat() {
+  function callingFormat() {
     return format({
       filePath,
       text: defaultInputText(),
@@ -476,7 +480,7 @@ test('does not raise an error if prettier.resolveConfig is not defined', async (
 
 test('logs if there is a problem making the CLIEngine', async () => {
   const error = new Error('fake error');
-  eslintMock.ESLint.mockImplementation(() => {
+  eslintMock.ESLint.mockImplementation(function failCreateESLint() {
     throw error;
   });
   await expect(format({ text: '' })).rejects.toThrow(error);

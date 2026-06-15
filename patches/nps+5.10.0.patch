@@ -1,0 +1,13 @@
+diff --git a/node_modules/nps/dist/bin-utils/parser.js b/node_modules/nps/dist/bin-utils/parser.js
+index 89fe0c4..b4745b5 100644
+--- a/node_modules/nps/dist/bin-utils/parser.js
++++ b/node_modules/nps/dist/bin-utils/parser.js
+@@ -245,7 +245,7 @@ function parse(rawArgv) {
+     if (config) {
+       return config;
+     }
+-    return _findUp2.default.sync('package-scripts.js') || _findUp2.default.sync('package-scripts.yml') || _findUp2.default.sync('package-scripts.yaml');
++    return _findUp2.default.sync('package-scripts.js') || _findUp2.default.sync('package-scripts.cjs') || _findUp2.default.sync('package-scripts.yml') || _findUp2.default.sync('package-scripts.yaml');
+   }
+ }
+ 

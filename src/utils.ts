@@ -1,8 +1,9 @@
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { inspect } from 'node:util';
 
 import { oneLine } from 'common-tags';
-import delve from 'dlv';
 import type { Linter } from 'eslint';
 // eslint-disable-next-line sonarjs/deprecation
 import { builtinRules } from 'eslint/use-at-your-own-risk';
@@ -17,6 +18,73 @@ import type {
 } from './types.ts';
 
 const logger = getLogger({ prefix: 'prettier-eslint' });
+const require = createRequire(import.meta.url);
+
+export function formatForLog(value: unknown) {
+  return inspect(value, { depth: null });
+}
+
+export function mergeConfigs<T extends object>(
+  ...configs: Array<T | null | undefined>
+): T {
+  const merged = {};
+
+  for (const config of configs) {
+    mergeConfig(merged, config);
+  }
+
+  return merged as T;
+}
+
+function mergeConfig(target: Record<string, unknown>, source: unknown) {
+  if (!isPlainObject(source)) {
+    return;
+  }
+
+  for (const [key, value] of Object.entries(source)) {
+    if (value === undefined) {
+      continue;
+    }
+    const existing = target[key];
+    target[key] =
+      isPlainObject(existing) && isPlainObject(value)
+        ? mergeConfig({ ...existing }, value)
+        : value;
+  }
+
+  return target;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return Object.prototype.toString.call(value) === '[object Object]';
+}
+
+export function getModulePath(
+  filePath: string | undefined,
+  moduleName: string,
+) {
+  if (!filePath) {
+    return moduleName;
+  }
+
+  try {
+    const modulePath = createRequire(
+      pathToFileURL(path.resolve(filePath)),
+    ).resolve(moduleName);
+    return modulePath === require.resolve(moduleName) ? moduleName : modulePath;
+  } catch (err) {
+    const error = err as Error;
+    logger.debug(
+      oneLine`
+        There was a problem finding the ${moduleName}
+        module. Using prettier-eslint's version.
+      `,
+      error.message,
+      error.stack,
+    );
+    return moduleName;
+  }
+}
 
 const RULE_DISABLED = {} as Linter.RuleEntry;
 const RULE_NOT_CONFIGURED = 'RULE_NOT_CONFIGURED';
@@ -421,7 +489,7 @@ function extractRuleValue(
       `,
     );
 
-    return delve(value, objPath, RULE_NOT_CONFIGURED) as
+    return getPathValue(value, objPath, RULE_NOT_CONFIGURED) as
       | StringLiteral<Linter.RuleEntry>
       | undefined;
   }
@@ -436,6 +504,25 @@ function extractRuleValue(
       Please file an issue (and make a pull request?)
     `,
   );
+}
+
+function getPathValue(
+  value: object,
+  objPath: Array<number | string> | string,
+  fallback: string,
+) {
+  const pathParts = Array.isArray(objPath) ? objPath : objPath.split('.');
+  let current: unknown = value;
+
+  for (const pathPart of pathParts) {
+    if (current == null || typeof current !== 'object') {
+      return fallback;
+    }
+
+    current = (current as Record<string, unknown>)[pathPart];
+  }
+
+  return current === undefined ? fallback : current;
 }
 
 /**
@@ -556,22 +643,14 @@ function makePrettierOption(
   );
 }
 
-/**
- * This is only a hack to load a module dynamically, `import()` won't work due
- * to `tsc` transpilation.
- *
- * FIXME: Use `import()` instead of this hack when targeting ESM
- */
+/** Loads a module dynamically. */
 export function loadModule<T>(modulePath: string) {
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
-  return new Function('modulePath', 'return import(modulePath)')(
-    modulePath,
-  ) as Promise<T>;
+  return import(modulePath) as Promise<T>;
 }
 
 export async function importModule<T>(modulePath: string, name = modulePath) {
   try {
-    logger.trace(`requiring "${name}" module via "${modulePath}"`);
+    logger.trace(`importing "${name}" module via "${modulePath}"`);
     const imported = await loadModule<T | { default: T }>(
       path.isAbsolute(modulePath) ? pathToFileURL(modulePath).href : modulePath,
     );
@@ -581,7 +660,7 @@ export async function importModule<T>(modulePath: string, name = modulePath) {
   } catch (error) {
     logger.error(
       oneLine`
-      There was trouble getting "${name}".
+      There was trouble importing "${name}".
       Is "${modulePath}" a correct path to the "${name}" module?
     `,
     );
