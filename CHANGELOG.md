@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 17.1.1
+
+### Patch Changes
+
+- [#1214](https://github.com/prettier/prettier-eslint/pull/1214) [`38cdf17`](https://github.com/prettier/prettier-eslint/commit/38cdf17286014e6deb1b5ba4b9feb995141ad7b8) Thanks [@JounQin](https://github.com/JounQin)! - Improve repeated formatting performance by caching ESLint instances and resolved configs, and by skipping expensive log serialization unless verbose logging is enabled.
+
 ## 17.1.0
 
 ### Minor Changes
