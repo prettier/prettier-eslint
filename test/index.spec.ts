@@ -25,6 +25,7 @@ const {
   default: prettierESLint,
   format,
   analyze,
+  getESLint,
 } = await import('prettier-eslint');
 
 const fsMock = fsMock_ as unknown as FsMock;
@@ -288,6 +289,7 @@ const tests: Array<{
 ];
 
 beforeEach(() => {
+  eslintMock.ESLint.mockClear();
   eslintMock.mock.lintText.mockClear();
   eslintMock.mock.calculateConfigForFile.mockClear();
   prettierMock.format.mockClear();
@@ -338,7 +340,6 @@ test('failure to fix with eslint throws and logs an error', async () => {
 });
 
 test('logLevel is used to configure the logger', async () => {
-  logger.setLevel = vi.fn();
   await format({ text: '', logLevel: 'silent' });
   expect(logger.setLevel).toHaveBeenCalledTimes(1);
   expect(logger.setLevel).toHaveBeenCalledWith('silent');
@@ -419,14 +420,8 @@ test('resolves to the eslint module relative to the given filePath', async () =>
 test('resolves to the local eslint module', async () => {
   const filePath = path.resolve('./mock/default-config.js');
   await format({ text: '', filePath });
-  expect(globalThis.__PRETTIER_ESLINT_TEST_STATE__).toMatchObject({
-    eslintPath: fileURLToPath(
-      new URL('../__mocks__/eslint.ts', import.meta.url),
-    ),
-    prettierPath: fileURLToPath(
-      new URL('../__mocks__/prettier.ts', import.meta.url),
-    ),
-  });
+  expect(prettierMock.format).toHaveBeenCalledTimes(1);
+  expect(eslintMock.mock.lintText).toHaveBeenCalledTimes(1);
 });
 
 test('reads text from fs if filePath is provided but not text', async () => {
@@ -483,9 +478,93 @@ test('logs if there is a problem making the CLIEngine', async () => {
   eslintMock.ESLint.mockImplementation(function failCreateESLint() {
     throw error;
   });
-  await expect(format({ text: '' })).rejects.toThrow(error);
+  await expect(
+    format({ text: '', eslintConfig: { flags: ['fail-create'] } }),
+  ).rejects.toThrow(error);
   eslintMock.ESLint.mockReset();
   expect(logger.error).toHaveBeenCalledTimes(1);
+});
+
+test('logs detailed formatted data when trace logging is enabled', async () => {
+  await analyze({
+    text: defaultInputText(),
+    filePath: path.resolve('./mock/trace-default-config.js'),
+    logLevel: 'trace',
+  });
+
+  expect(logger.trace).toHaveBeenCalledWith(
+    'called analyze with options:',
+    expect.any(String),
+  );
+  expect(logger.debug).toHaveBeenCalledWith(
+    'inferred options:',
+    expect.any(String),
+  );
+  expect(logger.trace).toHaveBeenCalledWith(
+    expect.stringContaining('eslint config for'),
+    expect.any(String),
+  );
+  expect(logger.trace).toHaveBeenCalledWith(
+    'eslint.lintText returned the following report:',
+    expect.any(String),
+  );
+});
+
+test('caches eslint instances with equivalent options', async () => {
+  const eslintPath = path.join(__dirname, '../__mocks__/eslint.ts');
+
+  const eslint = await getESLint(eslintPath, { cwd: __dirname, fix: true });
+  const cachedEslint = await getESLint(eslintPath, {
+    cwd: __dirname,
+    fix: true,
+  });
+
+  expect(cachedEslint).toBe(eslint);
+  expect(eslintMock.ESLint).toHaveBeenCalledTimes(1);
+});
+
+test('reuses eslint config resolver across file paths', async () => {
+  const eslintConfig = { allowInlineConfig: false } satisfies ESLintConfig;
+
+  await format({
+    text: defaultInputText(),
+    filePath: path.resolve('./mock/cache-resolver-a-default-config.js'),
+    eslintConfig,
+  });
+  await format({
+    text: defaultInputText(),
+    filePath: path.resolve('./mock/cache-resolver-b-default-config.js'),
+    eslintConfig: { ...eslintConfig },
+  });
+
+  expect(eslintMock.ESLint).toHaveBeenCalledTimes(2);
+  expect(eslintMock.mock.calculateConfigForFile).toHaveBeenCalledTimes(2);
+});
+
+test('caches eslint configs with equivalent options', async () => {
+  const fixturePath = path.resolve('./mock/cache-test-default-config.js');
+
+  await format({ text: defaultInputText(), filePath: fixturePath });
+  await format({ text: defaultInputText(), filePath: fixturePath });
+
+  expect(eslintMock.mock.calculateConfigForFile).toHaveBeenCalledTimes(1);
+});
+
+test('uses caller eslint config on config cache hit', async () => {
+  const fixturePath = path.resolve(
+    './mock/cache-override-test-default-config.js',
+  );
+  const input = stripIndent('const {foo} = bar;').trim();
+
+  await format({ text: input, filePath: fixturePath });
+
+  const output = await format({
+    text: input,
+    filePath: fixturePath,
+    eslintConfig: { rules: { 'object-curly-spacing': ['error', 'never'] } },
+  });
+
+  expect(output).toBe('const {foo} = bar\n');
 });
 
 function getESLintConfigWithDefaultRules(
