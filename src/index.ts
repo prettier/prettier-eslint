@@ -4,7 +4,8 @@ import path from 'node:path';
 import { oneLine, stripIndent } from 'common-tags';
 import type { Linter } from 'eslint';
 import indentString from 'indent-string';
-import getLogger from 'loglevel-colored-level-prefix';
+import { format as prettyFormat } from 'pretty-format';
+import { hash } from 'stable-hash-x';
 
 import type {
   ESLintConfig,
@@ -15,15 +16,17 @@ import type {
 } from './types.ts';
 import {
   extractFileExtensions,
-  formatForLog,
   getESLint,
   getModulePath,
   getOptionsForFormatting,
   importModule,
+  isDebugEnabled,
+  isTraceEnabled,
+  logger,
   mergeConfigs,
 } from './utils.ts';
 
-const logger = getLogger({ prefix: 'prettier-eslint' });
+const eslintConfigCache = new Map<string, ESLintConfig>();
 
 /**
  * Formats the text with Prettier and then ESLint while obeying the user's
@@ -71,7 +74,9 @@ export async function analyze(options: FormatOptions): Promise<{
 }> {
   const { logLevel = getDefaultLogLevel() } = options;
   logger.setLevel(logLevel);
-  logger.trace('called analyze with options:', formatForLog(options));
+  if (isTraceEnabled()) {
+    logger.trace('called analyze with options:', prettyFormat(options));
+  }
 
   const {
     filePath,
@@ -82,7 +87,7 @@ export async function analyze(options: FormatOptions): Promise<{
     fallbackPrettierOptions,
   } = options;
 
-  const eslintConfig = mergeConfigs<ESLintConfig>(
+  const eslintConfig = mergeConfigs(
     options.eslintConfig,
     await getESLintConfig(filePath, eslintPath, options.eslintConfig || {}),
   );
@@ -101,19 +106,21 @@ export async function analyze(options: FormatOptions): Promise<{
     fallbackPrettierOptions,
   );
 
-  logger.debug(
-    'inferred options:',
-    formatForLog({
-      filePath,
-      text,
-      eslintPath,
-      prettierPath,
-      eslintConfig: formattingOptions.eslint,
-      prettierOptions: formattingOptions.prettier,
-      logLevel,
-      prettierLast,
-    }),
-  );
+  if (isDebugEnabled()) {
+    logger.debug(
+      'inferred options:',
+      prettyFormat({
+        filePath,
+        text,
+        eslintPath,
+        prettierPath,
+        eslintConfig: formattingOptions.eslint,
+        prettierOptions: formattingOptions.prettier,
+        logLevel,
+        prettierLast,
+      }),
+    );
+  }
 
   const fileExtension = path.extname(filePath || '');
 
@@ -226,15 +233,17 @@ function createPrettify(formatOptions: PrettierOptions, prettierPath: string) {
 
 function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
   return async function eslintFix(text: string, filePath?: string) {
-    eslintConfig.overrideConfigFile = true;
-
-    eslintConfig.overrideConfig = {
-      languageOptions: eslintConfig.languageOptions,
-      rules: eslintConfig.rules,
-      ignores: eslintConfig.ignorePatterns ?? [],
-      plugins: eslintConfig.plugins ?? {},
-      settings: eslintConfig.settings ?? {},
-      ...eslintConfig.overrideConfig,
+    eslintConfig = {
+      ...eslintConfig,
+      overrideConfig: {
+        languageOptions: eslintConfig.languageOptions,
+        rules: eslintConfig.rules,
+        ignores: eslintConfig.ignorePatterns ?? [],
+        plugins: eslintConfig.plugins ?? {},
+        settings: eslintConfig.settings ?? {},
+        ...eslintConfig.overrideConfig,
+      },
+      overrideConfigFile: true,
     };
 
     delete eslintConfig.baseConfig;
@@ -247,7 +256,7 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
     delete eslintConfig.settings;
 
     // FIXME: Seems like a bug in eslint - https://github.com/eslint/eslint/issues/19722
-    delete eslintConfig.overrideConfig.plugins!['@'];
+    delete (eslintConfig.overrideConfig as ESLintConfig).plugins!['@'];
 
     const eslint = await getESLint(eslintPath, eslintConfig);
     try {
@@ -256,10 +265,12 @@ function createEslintFix(eslintConfig: ESLintConfig, eslintPath: string) {
         filePath,
         warnIgnored: true,
       });
-      logger.trace(
-        'eslint.lintText returned the following report:',
-        formatForLog(report),
-      );
+      if (isTraceEnabled()) {
+        logger.trace(
+          'eslint.lintText returned the following report:',
+          prettyFormat(report),
+        );
+      }
       // default the output to text because if there's nothing
       // to fix, eslint doesn't provide `output`
       const [{ output = text, messages }] = report;
@@ -334,6 +345,7 @@ function getESLintApiOptions(eslintConfig: ESLintConfig): ESLintConfig {
   return {
     ignore: eslintConfig.ignore ?? true,
     allowInlineConfig: eslintConfig.allowInlineConfig ?? true,
+    cwd: eslintConfig.cwd,
     baseConfig: eslintConfig.baseConfig,
     overrideConfig: eslintConfig.overrideConfig,
     overrideConfigFile: eslintConfig.overrideConfigFile,
@@ -346,30 +358,36 @@ async function getESLintConfig(
   eslintPath: string,
   eslintConfig: ESLintConfig,
 ): Promise<ESLintConfig> {
-  if (filePath) {
-    eslintConfig.cwd = path.dirname(filePath);
+  const configPath = filePath || process.cwd();
+  const configOptions = getESLintApiOptions(eslintConfig);
+  const cacheKey = hash({ filePath, eslintPath, configOptions });
+  const cachedConfig = eslintConfigCache.get(cacheKey);
+
+  if (cachedConfig) {
+    return cachedConfig;
   }
+
   logger.trace(
     oneLine`
       creating ESLint CLI Engine to get the config for
-      "${filePath || process.cwd()}"
+      "${configPath}"
     `,
   );
-  const eslint = await getESLint(eslintPath, getESLintApiOptions(eslintConfig));
+  const eslint = await getESLint(eslintPath, configOptions);
 
   try {
     logger.debug(`getting eslint config for file at "${filePath}"`);
     const config = (await eslint.calculateConfigForFile(
       filePath!, // `undefined` is actually fine
     )) as ESLintConfig;
-    logger.trace(
-      `eslint config for "${filePath}" received`,
-      formatForLog(config),
-    );
-    return {
-      ...eslintConfig,
-      ...config,
-    };
+    if (isTraceEnabled()) {
+      logger.trace(
+        `eslint config for "${filePath}" received`,
+        prettyFormat(config),
+      );
+    }
+    eslintConfigCache.set(cacheKey, config);
+    return config;
   } catch {
     // is this noisy? Try setting options.disableLog to false
     logger.debug('Unable to find config');

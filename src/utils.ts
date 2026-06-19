@@ -1,14 +1,14 @@
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { inspect } from 'node:util';
 
 import { oneLine } from 'common-tags';
-import type { Linter } from 'eslint';
+import type { ESLint, Linter } from 'eslint';
 // eslint-disable-next-line sonarjs/deprecation
 import { builtinRules } from 'eslint/use-at-your-own-risk';
 import getLogger from 'loglevel-colored-level-prefix';
 import { type Options as PrettierOptions } from 'prettier';
+import { hash } from 'stable-hash-x';
 
 import type {
   ESLintOptions,
@@ -17,12 +17,19 @@ import type {
   StringLiteral,
 } from './types.ts';
 
-const logger = getLogger({ prefix: 'prettier-eslint' });
+export const logger = getLogger({ prefix: 'prettier-eslint' });
+
+export function isDebugEnabled() {
+  return logger.getLevel() <= logger.levels.DEBUG;
+}
+
+export function isTraceEnabled() {
+  return logger.getLevel() <= logger.levels.TRACE;
+}
+
 const require = createRequire(import.meta.url);
 
-export function formatForLog(value: unknown) {
-  return inspect(value, { depth: null });
-}
+const eslintCache = new Map<string, ESLint>();
 
 export function mergeConfigs<T extends object>(
   ...configs: Array<T | null | undefined>
@@ -672,12 +679,21 @@ export async function getESLint(
   eslintPath: string,
   eslintOptions: ESLintOptions,
 ) {
+  const cacheKey = hash({ eslintPath, eslintOptions });
+  const cachedESLint = eslintCache.get(cacheKey);
+
+  if (cachedESLint) {
+    return cachedESLint;
+  }
+
   const { ESLint } = await importModule<typeof import('eslint')>(
     eslintPath,
     'eslint',
   );
   try {
-    return new ESLint(eslintOptions);
+    const eslint = new ESLint(eslintOptions);
+    eslintCache.set(cacheKey, eslint);
+    return eslint;
   } catch (error) {
     logger.error('There was trouble creating the ESLint instance.');
     throw error;

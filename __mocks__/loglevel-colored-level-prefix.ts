@@ -1,15 +1,41 @@
-import type { Logger, LogLevelNames as LogLevel } from 'loglevel';
+import type { Logger, LogLevelDesc, LogLevelNames as LogLevel } from 'loglevel';
 import type { GetLogger } from 'loglevel-colored-level-prefix';
-import { vi } from 'vitest';
+import { vi, type Mock } from 'vitest';
+
+const levels = { TRACE: 0, DEBUG: 1, INFO: 2, WARN: 3, ERROR: 4, SILENT: 5 };
+
+let currentLevel = levels.WARN;
+
+const getLevel = vi.fn(() => currentLevel);
+const setLevel = vi.fn((level: LogLevelDesc) => {
+  currentLevel = normalizeLogLevel(level);
+});
+const debug = vi.fn(getTestImplementation('debug'));
+const error = vi.fn(getTestImplementation('error'));
+const info = vi.fn(getTestImplementation('info'));
+const trace = vi.fn(getTestImplementation('trace'));
+const warn = vi.fn(getTestImplementation('warn'));
 
 const logger = {
-  setLevel: vi.fn(),
-  debug: vi.fn(getTestImplementation('debug')),
-  error: vi.fn(getTestImplementation('error')),
-  info: vi.fn(getTestImplementation('info')),
-  trace: vi.fn(getTestImplementation('trace')),
-  warn: vi.fn(getTestImplementation('warn')),
+  levels,
+  getLevel,
+  setLevel,
+  debug,
+  error,
+  info,
+  trace,
+  warn,
 } as unknown as Logger;
+
+const mockedMethods: Mock[] = [
+  getLevel,
+  setLevel,
+  debug,
+  error,
+  info,
+  trace,
+  warn,
+];
 
 const mock: (typeof getLogger)['mock'] = { clearAll, logger, logThings: [] };
 
@@ -21,9 +47,17 @@ export { mock };
 export default getLogger;
 
 function clearAll() {
-  for (const name of Object.keys(logger) as LogLevel[]) {
-    (logger[name] as ReturnType<typeof vi.fn>).mockClear();
+  currentLevel = levels.WARN;
+  for (const method of mockedMethods) {
+    method.mockClear();
   }
+}
+
+function normalizeLogLevel(level: LogLevelDesc) {
+  if (typeof level === 'string') {
+    return levels[level.toUpperCase() as keyof typeof levels];
+  }
+  return level;
 }
 
 function getTestImplementation(level: LogLevel) {
