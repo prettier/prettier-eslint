@@ -497,8 +497,7 @@ function extractRuleValue(
     );
 
     return getPathValue(value, objPath, RULE_NOT_CONFIGURED) as
-      | StringLiteral<Linter.RuleEntry>
-      | undefined;
+      StringLiteral<Linter.RuleEntry> | undefined;
   }
 
   // istanbul ignore next
