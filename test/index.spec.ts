@@ -550,6 +550,67 @@ test('caches eslint configs with equivalent options', async () => {
   expect(eslintMock.mock.calculateConfigForFile).toHaveBeenCalledTimes(1);
 });
 
+test('does not reuse cached eslint instances across effective cwds', async () => {
+  const eslintPath = path.join(__dirname, '../__mocks__/eslint.ts');
+  const cwdSpy = vi.spyOn(process, 'cwd');
+
+  cwdSpy.mockReturnValue(path.join(__dirname, 'fixtures'));
+  const eslint = await getESLint(eslintPath, { fix: true });
+
+  cwdSpy.mockReturnValue(path.join(__dirname, 'fixtures/paths'));
+  const otherESLint = await getESLint(eslintPath, { fix: true });
+
+  cwdSpy.mockRestore();
+
+  expect(otherESLint).not.toBe(eslint);
+  expect(eslintMock.ESLint).toHaveBeenCalledTimes(2);
+});
+
+test('does not reuse cached eslint configs across effective cwds', async () => {
+  const fixturePath = path.join(
+    __dirname,
+    'fixtures/effective-cwd-default-config.js',
+  );
+  const cwdSpy = vi.spyOn(process, 'cwd');
+
+  cwdSpy.mockReturnValue(path.resolve(__dirname, '..'));
+  await format({ text: defaultInputText(), filePath: fixturePath });
+
+  cwdSpy.mockReturnValue(__dirname);
+  await format({ text: defaultInputText(), filePath: fixturePath });
+
+  cwdSpy.mockRestore();
+
+  expect(eslintMock.mock.calculateConfigForFile).toHaveBeenCalledTimes(2);
+});
+
+test('reuses cached eslint configs when an explicit cwd is given', async () => {
+  const fixturePath = path.join(
+    __dirname,
+    'fixtures/explicit-cwd-default-config.js',
+  );
+  const eslintConfig = { cwd: path.resolve(__dirname, '..') };
+  const cwdSpy = vi.spyOn(process, 'cwd');
+
+  cwdSpy.mockReturnValue(path.join(__dirname, 'fixtures'));
+  await format({
+    text: defaultInputText(),
+    filePath: fixturePath,
+    eslintConfig,
+  });
+
+  cwdSpy.mockReturnValue(path.join(__dirname, 'fixtures/paths'));
+  await format({
+    text: defaultInputText(),
+    filePath: fixturePath,
+    eslintConfig: { ...eslintConfig },
+  });
+
+  cwdSpy.mockRestore();
+
+  expect(eslintMock.mock.calculateConfigForFile).toHaveBeenCalledTimes(1);
+});
+
 test('uses caller eslint config on config cache hit', async () => {
   const fixturePath = path.resolve(
     './mock/cache-override-test-default-config.js',

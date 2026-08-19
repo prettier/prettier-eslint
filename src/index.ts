@@ -345,7 +345,7 @@ function getESLintApiOptions(eslintConfig: ESLintConfig): ESLintConfig {
   return {
     ignore: eslintConfig.ignore ?? true,
     allowInlineConfig: eslintConfig.allowInlineConfig ?? true,
-    cwd: eslintConfig.cwd,
+    cwd: eslintConfig.cwd ?? process.cwd(),
     baseConfig: eslintConfig.baseConfig,
     overrideConfig: eslintConfig.overrideConfig,
     overrideConfigFile: eslintConfig.overrideConfigFile,
@@ -358,8 +358,8 @@ async function getESLintConfig(
   eslintPath: string,
   eslintConfig: ESLintConfig,
 ): Promise<ESLintConfig> {
-  const configPath = filePath || process.cwd();
   const configOptions = getESLintApiOptions(eslintConfig);
+  const configPath = filePath || configOptions.cwd;
   const cacheKey = hash({ filePath, eslintPath, configOptions });
   const cachedConfig = eslintConfigCache.get(cacheKey);
 
