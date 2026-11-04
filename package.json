@@ -69,8 +69,8 @@
     "vue-eslint-parser": "^10.4.1"
   },
   "devDependencies": {
-    "@1stg/eslint-config": "^12.0.0",
-    "@1stg/prettier-config": "^7.0.0",
+    "@1stg/eslint-config": "^10.3.1",
+    "@1stg/prettier-config": "^5.4.0",
     "@1stg/tsconfig": "^5.0.0",
     "@changesets/changelog-github": "^1.0.0",
     "@changesets/cli": "^3.0.0",
@@ -94,9 +94,10 @@
     "simple-git-hooks": "^2.13.1",
     "svelte": "^5.56.3",
     "svelte-eslint-parser": "^1.8.0",
-    "typescript": "^7.0.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
     "vitest": "^5.0.0",
-    "yarn-berry-deduplicate": "^8.0.0"
+    "yarn-berry-deduplicate": "^7.1.0"
   },
   "resolutions": {
     "@prettier/eslint": "portal:.",
