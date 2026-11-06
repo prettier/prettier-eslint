@@ -39,8 +39,6 @@ jobs:
         id: changesets
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          commit: 'chore: release prettier-eslint'
-          title: 'chore: release prettier-eslint'
-          publish: yarn start release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: release prettier-eslint'
+          pr-title: 'chore: release prettier-eslint'
+          publish-script: yarn start release
