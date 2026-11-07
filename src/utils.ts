@@ -678,7 +678,11 @@ export async function getESLint(
   eslintPath: string,
   eslintOptions: ESLintOptions,
 ) {
-  const cacheKey = hash({ eslintPath, eslintOptions });
+  const options = {
+    ...eslintOptions,
+    cwd: eslintOptions.cwd ?? process.cwd(),
+  };
+  const cacheKey = hash({ eslintPath, eslintOptions: options });
   const cachedESLint = eslintCache.get(cacheKey);
 
   if (cachedESLint) {
@@ -690,7 +694,7 @@ export async function getESLint(
     'eslint',
   );
   try {
-    const eslint = new ESLint(eslintOptions);
+    const eslint = new ESLint(options);
     eslintCache.set(cacheKey, eslint);
     return eslint;
   } catch (error) {

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 17.1.2
+
+### Patch Changes
+
+- [#1221](https://github.com/prettier/prettier-eslint/pull/1221) [`52c1808`](https://github.com/prettier/prettier-eslint/commit/52c1808f2aa8be8a83078bc328dd12691dae3bfe) Thanks [@hamzahamidi](https://github.com/hamzahamidi)! - Include the effective `cwd` in the ESLint instance and config cache keys, so a `process.cwd()` change no longer returns an entry resolved for a different directory.
+
 ## 17.1.1
 
 ### Patch Changes
