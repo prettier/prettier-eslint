@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 17.1.3
+
+### Patch Changes
+
+- [#1227](https://github.com/prettier/prettier-eslint/pull/1227) [`f4c6636`](https://github.com/prettier/prettier-eslint/commit/f4c6636c25bd982d89fcd00230d25cdaae153eab) Thanks [@Pushkar236](https://github.com/Pushkar236)! - With `indent: tab`, read `tabWidth` from `max-len` the way ESLint does, so a positional line length (`['error', 120]`) is no longer used as the tab width.
+
 ## 17.1.2
 
 ### Patch Changes
