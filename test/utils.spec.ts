@@ -244,6 +244,23 @@ test('eslint max-len.tabWidth value should be used for tabWidth when tabs are us
   });
 });
 
+for (const [maxLen, tabWidth] of [
+  [['error', 120], undefined],
+  [['error', 120, 4], 4],
+  [['error', 100, { tabWidth: 2 }], 2],
+  [['error', 100, 8, { tabWidth: 2 }], 8],
+  [['off', 120, 4], undefined],
+  ['error', undefined],
+] satisfies Array<[Linter.RuleEntry, number | undefined]>) {
+  test(`eslint max-len ${JSON.stringify(maxLen)} gives tabWidth ${tabWidth} when tabs are used`, () => {
+    const { prettier } = getOptionsForFormatting({
+      rules: { indent: ['error', 'tab'], 'max-len': maxLen },
+    });
+
+    expect(prettier.tabWidth).toBe(tabWidth);
+  });
+}
+
 test('eslint config has only necessary properties', () => {
   const { eslint } = getOptionsForFormatting({
     languageOptions: { globals: { window: false } },
