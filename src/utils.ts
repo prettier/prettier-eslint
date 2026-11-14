@@ -125,7 +125,7 @@ const OPTION_GETTERS: Record<keyof PrettierOptions, OptionGetter> = {
     ruleValue(rules) {
       let value = getRuleValue(rules, 'indent');
       if (value === 'tab') {
-        value = getRuleValue(rules, 'max-len', 'tabWidth');
+        value = getMaxLenTabWidth(rules);
       }
       return value;
     },
@@ -584,6 +584,38 @@ function getRuleValue(
   }
 
   return RULE_NOT_CONFIGURED;
+}
+
+/**
+ * Gets `tabWidth` from the `max-len` rule the way ESLint resolves it: from the
+ * second positional option (`['error', 120, 4]`), otherwise from the trailing
+ * options object (`['error', 120, { tabWidth: 4 }]`).
+ */
+function getMaxLenTabWidth(
+  /* istanbul ignore next */
+  rules: Partial<Linter.RulesRecord> = {},
+) {
+  const ruleConfig = rules['max-len'];
+
+  if (!Array.isArray(ruleConfig)) {
+    return RULE_NOT_CONFIGURED;
+  }
+
+  const [ruleSetting, ...ruleOptions] = ruleConfig as unknown[];
+
+  if (ruleSetting === 0 || ruleSetting === 'off') {
+    return RULE_DISABLED;
+  }
+
+  if (typeof ruleOptions[1] === 'number') {
+    return ruleOptions[1] as StringLiteral<Linter.RuleEntry>;
+  }
+
+  const options = ruleOptions.at(-1);
+
+  return options != null && typeof options === 'object'
+    ? extractRuleValue('tabWidth', 'max-len', options)
+    : RULE_NOT_CONFIGURED;
 }
 
 /**
